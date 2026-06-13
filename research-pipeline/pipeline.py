@@ -32,7 +32,13 @@ PY = "/opt/homebrew/bin/python3"
 SCREENER = os.path.join(WS, "stock-discovery", "tech_screener.py")
 RDCF = os.path.join(WS, "research", "reverse_dcf.py")
 MOAT = os.path.join(WS, "moat-durability", "moat_scorecard.py")
+LEDGER = os.path.join(WS, "prediction-ledger", "prediction_ledger.py")
 OUT_DIR = os.path.join(WS, "research-pipeline", "dossiers")
+
+# 校准闭环窗口: 每次周度跑surface掉在N天内到期/已逾期的站立预测,
+# 提醒去拉一手财报resolve。没有这一步, prediction-ledger只进不出,
+# score()永不触发, Tetlock自我校准在8/31窗口静默死亡。
+DUE_SOON_DAYS = 45
 
 CN_TZ = timezone(timedelta(hours=8))
 
@@ -146,6 +152,17 @@ def build_dossier(cands):
     return "\n".join(lines)
 
 
+def ledger_due_soon():
+    """surface掉在DUE_SOON_DAYS天内到期或已逾期的站立预测。
+    纯只读转发 prediction_ledger.py list --due-soon; 子脚本拉不到就返回空串绝不编造。
+    返回 (text, has_overdue): text为空表示无临近到期项。"""
+    out, _, rc = run([PY, LEDGER, "list", "--due-soon", str(DUE_SOON_DAYS)])
+    out = out.strip()
+    if not out or "无匹配" in out:
+        return "", False
+    return out, (rc == 1)
+
+
 def main():
     ap = argparse.ArgumentParser(description="研究编排流水线 (纯只读编排器)")
     ap.add_argument("--quiet", action="store_true",
@@ -160,12 +177,23 @@ def main():
     out, err, rc = run(cmd, cwd=os.path.dirname(SCREENER))
     cands = parse_screener(out)
 
+    # 校准闭环: 无论有无新候选都surface临近到期的站立预测,
+    # 这是prediction-ledger唯一的"出"机制——否则只进不出, score()永不触发。
+    due_text, has_overdue = ledger_due_soon()
+
     if not cands:
+        if has_overdue or (due_text and not args.quiet):
+            print("研究编排流水线: 本轮无 ⭐ 新候选, 但有站立预测临近到期需校准:")
+            print(due_text)
+            print("\n→ 去拉一手财报后 prediction_ledger.py resolve <id> <correct|wrong|partial|void>")
+            sys.exit(1 if has_overdue else 0)
         if not args.quiet:
             print("研究编排流水线: 本轮无 ⭐ 价值成长候选 (发现层空)。")
         sys.exit(0)
 
     dossier = build_dossier(cands)
+    if due_text:
+        dossier += "\n\n## ⏰ 校准闭环: 临近到期的站立预测 (去resolve)\n\n```\n" + due_text + "\n```\n"
 
     if args.no_write:
         print(dossier)
