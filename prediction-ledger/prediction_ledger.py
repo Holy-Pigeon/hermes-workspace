@@ -118,7 +118,12 @@ def main():
     if not args or args[0] == "list":
         due = None
         if "--due-soon" in args:
-            due = int(args[args.index("--due-soon") + 1])
+            idx = args.index("--due-soon") + 1
+            if idx >= len(args) or not args[idx].lstrip("-").isdigit():
+                # 裸 --due-soon 不带天数 → 默认 45 天窗口, 不崩溃
+                due = 45
+            else:
+                due = int(args[idx])
         return cmd_list(preds, due_soon=due, quiet=quiet)
     elif args[0] == "resolve":
         val = None
