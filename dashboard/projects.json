@@ -16,18 +16,15 @@
     },
     {
       "id": "polymarket",
-      "name": "Polymarket 控制台",
-      "icon": "📊",
-      "desc": "全景监控 Web + Discord 异动告警",
-      "ports": {
-        "local": 5052,
-        "remote": 6012
-      },
-      "health_path": "/api/status",
-      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log",
+      "name": "Polymarket 异动监控",
+      "icon": "🔔",
+      "desc": "cron扫描器(monitor.py) · 17关键词239市场 · Discord异动告警 · 无web端口",
+      "ports": null,
       "tags": [
-        "运行中"
-      ]
+        "预测市场",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log"
     },
     {
       "id": "stockchoose",
@@ -151,13 +148,17 @@
       "id": "polymarket-dashboard",
       "name": "Polymarket 全景看板",
       "icon": "📊",
-      "desc": "launchd常驻Web服务(:5052→frpc6012), 每30min拉全量1490市场分类macro/sector并算1h异动",
-      "ports": null,
+      "desc": "launchd常驻Web(:5052→frpc6012) · 每30min拉全量市场分类macro/sector算1h异动",
+      "ports": {
+        "local": 5052,
+        "remote": 6012
+      },
       "tags": [
         "预测市场",
         "Web服务",
         "基础设施"
       ],
+      "health_path": "/api/status",
       "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
     }
   ]
