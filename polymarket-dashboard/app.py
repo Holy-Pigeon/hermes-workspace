@@ -253,6 +253,19 @@ def static_file(p):
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    # 单实例守护: 防止重复启动堆叠 bg_fetch 线程(各自30min轮询Gamma API+
+    # 无锁写同一data/目录)。用文件锁(flock)抢占, 抢不到即退出, 绝不再起第二个。
+    import fcntl, sys as _sys
+    _lock_path = BASE_DIR / ".app.lock"
+    _lock_fp = open(_lock_path, "w")
+    try:
+        fcntl.flock(_lock_fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print("[FATAL] 另一个 app.py 实例已在运行(持有 .app.lock), 本次退出避免重复 fetch/写竞争", file=_sys.stderr)
+        _sys.exit(1)
+    _lock_fp.write(str(__import__("os").getpid()))
+    _lock_fp.flush()
+
     STATIC_DIR.mkdir(exist_ok=True)
     t = threading.Thread(target=_bg_fetch, daemon=True)
     t.start()

@@ -146,6 +146,19 @@
         "脚本"
       ],
       "heartbeat_file": "~/hermes-workspace/research-pipeline"
+    },
+    {
+      "id": "polymarket-dashboard",
+      "name": "Polymarket 全景看板",
+      "icon": "📊",
+      "desc": "launchd常驻Web服务(:5052→frpc6012), 每30min拉全量1490市场分类macro/sector并算1h异动",
+      "ports": null,
+      "tags": [
+        "预测市场",
+        "Web服务",
+        "基础设施"
+      ],
+      "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
     }
   ]
 }

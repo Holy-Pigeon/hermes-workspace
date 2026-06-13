@@ -10,6 +10,7 @@
 
 ## Idea 列表
 
+2026-06-14 02:39 | ✅done | polymarket-dashboard 单实例守护加驾驶舱可见性治理(基础设施/运营纪律): 巡检发现该项目是 launchd KeepAlive 常驻 Web 服务(端口5052, frpc外露6012, 每30min拉全量1490预测市场分类macro和sector算1h异动)但从未注册进 projects.json, 驾驶舱完全看不到这个常驻服务(治理盲区)。同时 app.py 的 main 启动 bg_fetch 线程无单实例守护, 每次重启都会堆叠一个独立的30min轮询线程加无锁写同一 data 目录, 一旦 launchd 误判加手动重启叠加就会多个 fetcher 重复打 Gamma API 并争抢写 snapshots 和 changes_1h.json。已做(全可逆): (1)给 main 加 flock 单实例守护(.app.lock 抢不到即退出, 根因堵住堆叠), 实测 launchd 重启后正常持锁加5052 的 api/changes 正常返回; (2)用 register-project 把它登记进驾驶舱(total 13)。诚实纠错: 巡检初判3个重复polymarket实例有误, 实为3个不同launchd服务(dashboard 加 paper-trading-web 加 polymarket-dashboard)各占独立端口, 已核实每项目恰好1实例; snapshot文件名带18是UTC非stale, 亦false alarm。架构观察(留记不擅动): polymarket-monitor(cron每1h推异动告警)与 polymarket-dashboard(常驻拉全量做看板)都各自打 Gamma API, 取数未收口, 可作后续 marketdata 扩展到预测市场源的候选, 但非本轮动作 | 基础设施-运营纪律-治理 | 创新引擎 | 可逆 | 
 2026-06-14 00:19 | ✅done | 给研究编排流水线挂每周一次定时任务(周末跑, 紧随选股发现管线之后), 自动产出候选尽调简报。脚本已就绪, 静默模式无候选不打扰有候选才落盘。这是把研究编排从创新引擎彻底剥离的最后一步, 涉及新增定时任务故待你拍板。 | 定时任务提案 | 创新引擎 | 需拍板 | 
 2026-06-14 00:17 | ✅done | 新建研究编排流水线项目, 把发现估值护城河三件套尽调链编排成一条命令, 剥离成独立定时任务, 让创新引擎回归元层不再亲自下场做个股研究。已自测端到端跑通, 未挂定时任务待拍板, 建议每周一次。详见项目目录说明与卡片。 | 新建项目 | 创新引擎 | 可逆 | 
 2026-06-14 00:05 | ✅done | 涨价观测池从~/clawd迁移到~/hermes-workspace/price-watch: 复制目录+改cron ce19ea34681d两处路径+删旧目录+注册进驾驶舱。统一工作区收口 | 基础设施·迁移 | 用户指令 | 可逆 | hermes-workspace/price-watch
