@@ -1,32 +1,37 @@
 #!/usr/bin/env python3
-"""Review ALL AI-Teacher Notion lesson pages for UNRESOLVED reader comments.
+"""Round-robin reviewer for AI-Teacher Notion lessons: check ONE lesson per run
+for new reader comments. Designed for a 30-min cron so a full sweep of N lessons
+takes N*30min, but each tick is cheap (one page walk, not all of them).
 
-Pipeline each run:
-  1. Query the lesson database -> every lesson page (id + title).
-  2. For each page, walk all blocks and collect inline + page-level comments
-     (reuses the recursive walk; see notion skill fetch_comments.py).
-  3. Diff against resolved_comments.json (keyed by comment_id) to find NEW ones.
-  4. Print the new/unresolved comments as JSON for the agent to answer.
+State file: comment_review_state.json
+    {
+      "page_order":   [page_id, ...],      # stable rotation order
+      "page_titles":  {page_id: title},    # for human-readable output
+      "cursor":       int,                 # index into page_order for NEXT run
+      "resolved":     {comment_id: {...}}, # answered comments (never re-surface)
+      "last_review":  iso8601,
+      "last_order_refresh": iso8601
+    }
 
-State management:
-  - resolved_comments.json holds {"resolved": {comment_id: {meta}}, ...}.
-  - A comment is "resolved" only after the agent appends an answer AND calls
-    this script with --mark <comment_id> [<comment_id> ...].
-  - comment_id is Notion's stable per-comment UUID -> no confusion between an
-    already-answered comment and a brand-new one, even on the same block.
-  - We also ignore comments authored by the integration bot itself (if any).
+Why comment_id as the resolved key: it's Notion's stable per-comment UUID, so an
+already-answered comment and a brand-new comment on the same block never get
+confused.
 
 Usage:
-    # list unresolved comments across all lessons (JSON to stdout)
+    # cron tick — review the NEXT lesson in rotation, advance cursor
     python3 review_comments.py
+        -> prints JSON: which page was checked + any UNRESOLVED comments
 
-    # mark comments resolved after answering
-    python3 review_comments.py --mark <comment_id> <comment_id> ...
+    # rebuild rotation order from the DB (call when new lessons were added)
+    python3 review_comments.py --refresh-order
 
-    # limit to one page (debug)
+    # mark comments resolved after the agent appended answers
+    python3 review_comments.py --mark <comment_id> [<comment_id> ...]
+
+    # force-check a specific page without advancing the cursor (debug)
     python3 review_comments.py --page <page_id>
 
-Token resolution: $NOTION_API_KEY / $NOTION_API_TOKEN, else
+Token: $NOTION_API_KEY / $NOTION_API_TOKEN, else
 ~/.openclaw/openclaw.json skills.entries.notion.apiKey.
 """
 import argparse
@@ -40,7 +45,11 @@ NOTION_VERSION = "2025-09-03"
 BASE = os.path.dirname(os.path.abspath(__file__))
 PROJECT = os.path.dirname(BASE)
 CONFIG_PATH = os.path.join(PROJECT, ".openclaw", "notion_ai_teacher.json")
-STATE_PATH = os.path.join(PROJECT, "resolved_comments.json")
+STATE_PATH = os.path.join(PROJECT, "comment_review_state.json")
+
+
+def now_iso():
+    return time.strftime("%Y-%m-%dT%H:%M:%S%z")
 
 
 def get_token():
@@ -81,21 +90,24 @@ def make_client(token):
 def load_state():
     if os.path.exists(STATE_PATH):
         try:
-            return json.loads(open(STATE_PATH).read())
+            s = json.loads(open(STATE_PATH).read())
+            s.setdefault("page_order", [])
+            s.setdefault("page_titles", {})
+            s.setdefault("cursor", 0)
+            s.setdefault("resolved", {})
+            return s
         except Exception:
             pass
-    return {"resolved": {}, "last_review": None}
+    return {"page_order": [], "page_titles": {}, "cursor": 0,
+            "resolved": {}, "last_review": None, "last_order_refresh": None}
 
 
 def save_state(state):
-    state["last_review"] = time.strftime("%Y-%m-%dT%H:%M:%S%z")
     with open(STATE_PATH, "w") as f:
         f.write(json.dumps(state, ensure_ascii=False, indent=2) + "\n")
 
 
 def get_data_source_id(call, database_id):
-    """API version 2025-09-03 requires querying via data_sources, not databases.
-    A database can have multiple data sources; the lesson DB has exactly one."""
     db = call("GET", "https://api.notion.com/v1/databases/%s" % database_id)
     sources = db.get("data_sources", [])
     if not sources:
@@ -124,6 +136,26 @@ def list_lesson_pages(call, database_id):
         else:
             break
     return pages
+
+
+def refresh_order(call, state, database_id):
+    """Rebuild page_order from the live DB, preserving already-known ordering and
+    appending newly-found pages at the end so the rotation stays stable."""
+    pages = list_lesson_pages(call, database_id)
+    live_ids = [p["page_id"] for p in pages]
+    titles = {p["page_id"]: p["title"] for p in pages}
+
+    old_order = [pid for pid in state.get("page_order", []) if pid in set(live_ids)]
+    known = set(old_order)
+    new_ids = [pid for pid in live_ids if pid not in known]
+    new_order = old_order + new_ids
+
+    state["page_order"] = new_order
+    state["page_titles"] = titles
+    if state.get("cursor", 0) >= len(new_order):
+        state["cursor"] = 0
+    state["last_order_refresh"] = now_iso()
+    return len(new_order), len(new_ids)
 
 
 def block_text(call, block_id):
@@ -166,15 +198,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--mark", nargs="+", default=[], help="comment_ids to mark resolved")
-    ap.add_argument("--page", default="", help="restrict to a single page id (debug)")
+    ap.add_argument("--refresh-order", action="store_true",
+                    help="rebuild rotation order from the DB (run when new lessons added)")
+    ap.add_argument("--page", default="", help="force-check one page id, don't advance cursor")
     args = ap.parse_args()
 
     state = load_state()
 
+    # --- mark resolved -------------------------------------------------------
     if args.mark:
-        now = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+        ts = now_iso()
         for cid in args.mark:
-            state["resolved"][cid] = {"resolved_at": now}
+            state["resolved"][cid] = {"resolved_at": ts}
         save_state(state)
         print(json.dumps({"marked": args.mark, "total_resolved": len(state["resolved"])},
                          ensure_ascii=False))
@@ -185,35 +220,68 @@ def main():
     config = json.loads(open(CONFIG_PATH).read())
     database_id = config["database_id"]
 
-    if args.page:
-        pages = [{"page_id": args.page, "title": "(single)"}]
-    else:
-        pages = list_lesson_pages(call, database_id)
+    # --- refresh order -------------------------------------------------------
+    if args.refresh_order:
+        total, new = refresh_order(call, state, database_id)
+        save_state(state)
+        print(json.dumps({"page_order_size": total, "newly_added": new,
+                          "cursor": state["cursor"]}, ensure_ascii=False))
+        return 0
 
+    # --- single-page debug ---------------------------------------------------
+    if args.page:
+        comments = collect_comments(call, args.page)
+        resolved = state.get("resolved", {})
+        unresolved = [c for c in comments if c["comment_id"] not in resolved]
+        for c in unresolved:
+            c["page_id"] = args.page
+        print(json.dumps({"mode": "single-page", "page_id": args.page,
+                          "comments_seen": len(comments),
+                          "unresolved_count": len(unresolved),
+                          "unresolved": unresolved}, ensure_ascii=False, indent=2))
+        return 0
+
+    # --- normal cron tick: review ONE page in rotation -----------------------
+    # lazily init / heal the rotation order
+    if not state.get("page_order"):
+        refresh_order(call, state, database_id)
+
+    order = state["page_order"]
+    if not order:
+        save_state(state)
+        print(json.dumps({"reviewed_page": None, "reason": "no lessons in DB"},
+                         ensure_ascii=False))
+        return 0
+
+    idx = state["cursor"] % len(order)
+    page_id = order[idx]
+    title = state.get("page_titles", {}).get(page_id, "(unknown)")
+
+    comments = collect_comments(call, page_id)
     resolved = state.get("resolved", {})
     unresolved = []
-    total_comments = 0
-    for pg in pages:
-        comments = collect_comments(call, pg["page_id"])
-        for c in comments:
-            total_comments += 1
-            cid = c["comment_id"]
-            if cid in resolved:
-                continue
-            c["page_id"] = pg["page_id"]
-            c["page_title"] = pg["title"]
-            unresolved.append(c)
+    for c in comments:
+        if c["comment_id"] in resolved:
+            continue
+        c["page_id"] = page_id
+        c["page_title"] = title
+        unresolved.append(c)
+
+    # advance cursor for next tick (wrap around)
+    state["cursor"] = (idx + 1) % len(order)
+    state["last_review"] = now_iso()
+    save_state(state)
 
     out = {
-        "pages_scanned": len(pages),
-        "total_comments_seen": total_comments,
-        "already_resolved": len(resolved),
+        "reviewed_page": page_id,
+        "page_title": title,
+        "rotation_index": idx,
+        "rotation_size": len(order),
+        "next_cursor": state["cursor"],
+        "comments_on_page": len(comments),
         "unresolved_count": len(unresolved),
         "unresolved": unresolved,
     }
-    # don't bump last_review on a read-only scan that found nothing actionable?
-    # We DO record scan time so we can tell the system is alive.
-    save_state(state)
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0
 

@@ -262,6 +262,31 @@ https://www.notion.so/...
 - 不更新 `taught_topics.json`。
 - 如需沉淀到 Notion，可以作为原课程页面的补充内容，但不要创建新知识点记录。
 
+## 读者评论答疑（独立 cron，与出新课解耦）
+
+AI Teacher 现在有两个**完全独立**的 cron 职能，互不干扰：
+
+1. **出新课**（`ai-teacher 每日推送`，0 8,14,20）：产出新知识点 → 写 Notion → 更新 `taught_topics.json` → 推 #ai-learn。
+2. **评论答疑**（`AI Teacher 评论审阅 30m`，*/30）：轮询已发布课程的读者评论并解答。**绝不出新课、绝不碰 `taught_topics.json`。**
+
+### 评论答疑的运作机制（round-robin 轮询，避免全量慢扫）
+- 状态文件：`comment_review_state.json`，结构：`page_order`(57 篇课的稳定轮询顺序) / `page_titles` / `cursor`(下一轮要查的下标) / `resolved`(已答评论，key 是 Notion 的 `comment_id` 稳定 UUID) / `last_review`。
+- 引擎脚本：`scripts/review_comments.py`。
+  - 默认跑一个 tick：检查 `page_order[cursor]` 那**一篇**课的评论 → diff `resolved` → 输出未处理评论 → cursor 自动 +1（循环）。每次只查一篇，57 篇约 28.5 小时走一圈。
+  - `--refresh-order`：有新课时重建轮询顺序（保留老顺序、新课追加到末尾、cursor 不越界）。**每次新增课程后应跑一次**，否则新课的评论不会进入轮询。
+  - `--mark <comment_id>...`：把评论标记为已答（写入 `resolved`，防止下轮重复答疑）。
+  - `--page <id>`：调试用，强制查指定页且不动 cursor。
+- 答疑追加脚本：`~/.hermes/skills/productivity/notion/scripts/append_answer.py`，把解答以**蓝底💬callout + divider** 的格式追加到课程页面，与正文明显区分。公式自动转成 Notion inline/block equation（同样遵守下方公式格式硬约束）。
+
+### 评论状态管理铁律
+- 唯一键是 Notion 的 `comment_id`（per-comment UUID），**不是** block_id（一个段落可有多条评论）。
+- 顺序必须是：先 `append_answer.py` 成功（stdout `"ok": true`）→ 再 `--mark`。append 失败绝不 mark，留待下轮重试。
+- 已 mark 的评论不会再出现在未处理列表里——这是防重复答疑的核心。
+
+### 新增课程时的同步动作
+出新课的流程结束后，若希望新课的评论也被轮询覆盖，跑一次：
+`/usr/bin/python3 scripts/review_comments.py --refresh-order`
+
 ## 质量自检
 
 发送最终回复前检查：
