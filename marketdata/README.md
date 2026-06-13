@@ -1,0 +1,55 @@
+# marketdata — 统一行情/财务取数层
+
+## 为什么存在（根因诊断，2026-06-13）
+
+巡检发现**港股取数失败是高频现象**，根因不是 akshare 本身，而是工程结构：
+
+1. **零共享层**：全工作区 9 个脚本各自 `import akshare`，没有任何公共取数模块
+2. **同一件事 N 种调法**：取港股价散落 5 种接口（`stock_hk_spot_em`/`stock_hk_spot`/`stock_hk_hist`/`stock_hk_indicator_eniu`/`stock_hk_index_daily_em`）
+3. **失败处理不一致**：只有 2 个脚本有重试，其余 7 个裸调用，源一断就崩
+4. **全部单源东财(em)**：东财接口间歇性 `RemoteDisconnected`（实测 2026-06-13 全线断连），无任何脚本会自动切新浪/腾讯 → **这就是高频失败的直接原因**
+
+## 解决方案
+
+一个共享模块，把"取一只票的日线/快照"收敛成稳定接口，内部**多源自动降级**：
+- 港股日线：新浪(stock_hk_daily) → 东财(stock_hk_hist)
+- A股日线：新浪(stock_zh_a_daily) → 东财(stock_zh_a_hist)
+- 美股日线：新浪(stock_us_daily)
+- 每源独立重试+超时，任一活着即返回；全失败抛 `MarketDataError`（绝不返回填充值，符合数据严谨性铁律）
+
+**实测**：东财全挂时，A股/港股/美股仍可通过新浪源稳定取得。
+
+## 用法
+
+```python
+import sys; sys.path.insert(0, '/Users/xiaogexu/hermes-workspace')
+from marketdata import get_daily, get_last_close, get_spot, MarketDataError
+
+df = get_daily("00700", market="HK")          # 港股腾讯日线 DataFrame
+px, dt = get_last_close("301013", market="A") # A股利和兴最近收盘 (50.87, '2026-06-12')
+spot = get_spot("301013")                       # {price, date, source}，market 可省略(自动推断)
+```
+
+- **必须用 `/opt/homebrew/bin/python3`**（akshare 装在 homebrew python）
+- 日线列已归一：`date/open/high/low/close/volume/_source`
+- `market` 可省略，按代码格式自动推断（5位→HK，6位→A，纯字母→US）
+
+## 迁移清单（待逐步收口的脚本，全部可逆）
+
+这些脚本目前各自取数，应逐步改为调本模块。**不一次性大改**，每改一个单独验证：
+
+- [ ] paper-trading/daily_mark.py（盯市，最高频，优先级最高）
+- [ ] paper-trading/correlation_check.py
+- [ ] paper-trading/valuation_percentile.py
+- [ ] paper-trading/alpha_check.py
+- [ ] paper-trading/pt.py（建仓价护栏）
+- [ ] paper-trading/holder_concentration.py
+- [ ] paper-trading/southbound_flow.py
+- [ ] stock-discovery/tech_screener.py
+- [ ] moat-durability/moat_scorecard.py
+
+## 边界
+
+- 暂只覆盖日线+快照（最高频需求）。财务指标(stock_financial_abstract)、
+  估值分位(stock_hk_indicator_eniu)等低频接口暂未纳入，后续按需扩展。
+- 美股源较单一（只新浪），失败容忍度低于 A/港股。

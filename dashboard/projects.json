@@ -1,0 +1,151 @@
+{
+  "projects": [
+    {
+      "id": "paper-trading",
+      "name": "模拟持仓",
+      "icon": "💼",
+      "desc": "纸面账户回测基石 · SQLite · 6 账户",
+      "ports": {
+        "local": 5050,
+        "remote": 6010
+      },
+      "health_path": "/api/accounts",
+      "tags": [
+        "运行中"
+      ]
+    },
+    {
+      "id": "polymarket",
+      "name": "Polymarket 控制台",
+      "icon": "📊",
+      "desc": "全景监控 Web + Discord 异动告警",
+      "ports": {
+        "local": 5052,
+        "remote": 6012
+      },
+      "health_path": "/api/status",
+      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log",
+      "tags": [
+        "运行中"
+      ]
+    },
+    {
+      "id": "stockchoose",
+      "name": "StockChoose 选股池",
+      "icon": "📈",
+      "desc": "A 股 / 港股价值选股 · 暂无控制台",
+      "ports": null,
+      "heartbeat_file": "~/hermes-workspace/StockChoose/logs",
+      "tags": [
+        "脚本"
+      ]
+    },
+    {
+      "id": "research",
+      "name": "个股研究库",
+      "icon": "🔬",
+      "desc": "深度研究 note · 反向DCF/证伪/护城河 · INDEX 自动索引",
+      "ports": null,
+      "heartbeat_file": "~/hermes-workspace/research",
+      "tags": [
+        "研究",
+        "脚本"
+      ]
+    },
+    {
+      "id": "ai-teacher",
+      "name": "AI 教师",
+      "icon": "🎓",
+      "desc": "脚本 · 暂无控制台",
+      "ports": null,
+      "heartbeat_file": "~/hermes-workspace/ai-teacher/taught_topics.json",
+      "tags": [
+        "脚本"
+      ]
+    },
+    {
+      "id": "stock-discovery",
+      "name": "标的发现管线",
+      "icon": "🔭",
+      "desc": "科技股价值-成长筛选 · 组合外新标的发现 · 反向DCF+护城河尽调入口",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/stock-discovery"
+    },
+    {
+      "id": "moat-durability",
+      "name": "护城河耐久度",
+      "icon": "🏰",
+      "desc": "护城河强度与耐久性量化评估 · 网络效应/转换成本/规模经济打分",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/moat-durability"
+    },
+    {
+      "id": "prediction-ledger",
+      "name": "预测台账",
+      "icon": "🎯",
+      "desc": "Tetlock式校准 · 可证伪论点登记+结算 · 对抗过度自信",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/prediction-ledger"
+    },
+    {
+      "id": "marketdata",
+      "name": "统一取数层",
+      "icon": "🔌",
+      "desc": "A股/港股/美股行情+财报统一取数 · 多源容错 · 根治高频取数失败",
+      "ports": null,
+      "tags": [
+        "基础设施",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/marketdata"
+    },
+    {
+      "id": "innovation-engine",
+      "name": "创新引擎",
+      "icon": "🧠",
+      "desc": "元层统筹官 · 架构/准则/赚钱逻辑审视 · idea登记唯一入口ie.py",
+      "ports": null,
+      "tags": [
+        "元层",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/innovation-engine/ideas_log.md"
+    },
+    {
+      "id": "price-watch",
+      "name": "涨价观测池",
+      "icon": "💹",
+      "desc": "自下而上涨价预期跟踪 · 入池≥20%/移出跌破15% · 真实价格序列驱动",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/price-watch/pool.json"
+    },
+    {
+      "id": "research-pipeline",
+      "name": "研究编排流水线",
+      "icon": "🔗",
+      "desc": "发现估值护城河三件套尽调链编排器 输出候选简报stub",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/research-pipeline"
+    }
+  ]
+}

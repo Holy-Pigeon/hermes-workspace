@@ -1,0 +1,71 @@
+# ─────────────────────────────────────────────────────────────
+# Hermes 工作区 .gitignore
+# 原则：源码/文档/规则/研究笔记 入库；运行时数据/密钥/缓存/大二进制 排除
+# ─────────────────────────────────────────────────────────────
+
+# ── Python 缓存与编译产物 ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ── 虚拟环境（如有）──
+venv/
+.venv/
+env/
+ENV/
+
+# ── Node（polymarket-dashboard 等如有前端构建）──
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# ── 数据库实例与本地数据（PostgreSQL 数据目录，绝不入库）──
+StockChoose/pgdata/
+StockChoose/tmp/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ── 备份文件（用户偏好：靠 git 回退，不留本地备份）──
+*.bak
+*.bak.*
+*.backup
+*.bak_*
+*~
+
+# ── 日志 ──
+*.log
+logs/
+*/logs/
+
+# ── 运行时配置 / 密钥目录（含 token、page_id 等环境配置）──
+.openclaw/
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+credentials.json
+
+# ── 大体积数据快照 / 抓取缓存（可再生，不入库）──
+polymarket-dashboard/data/snapshot_latest.json
+polymarket-dashboard/data/snapshots/
+*/data/snapshot_*.json
+*/data/snapshots/
+*.cache
+.cache/
+
+# ── 系统文件 ──
+.DS_Store
+Thumbs.db
+
+# ── 心跳 / 进程状态（运行时产物）──
+*.pid
+heartbeat.txt
+workspace-state.json

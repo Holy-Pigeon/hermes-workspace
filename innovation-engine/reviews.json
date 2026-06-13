@@ -1,0 +1,73 @@
+[
+  {
+    "idea_id": "2026-06-11 14:30::Polymarket 异动监控做成独立项目（和 StockChoose 平行，独",
+    "action": "approve",
+    "comment": "",
+    "ts": "2026-06-11 17:51:15",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 00:53::【实盘·需你拍板】中信建投两融账户回血换马清单(卖低期望票→换StockChoo",
+    "action": "reject",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 11:21:46",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-12 15:50::组合巡检编排器(portfolio_watchdog.py, 纯只读): 把已建",
+    "action": "approve",
+    "comment": "",
+    "stage": "progress",
+    "ts": "2026-06-13 22:47:13",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】科技股价值-成长发现管线(tech_screener",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 23:09:54",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】预测台账计分卡(prediction-ledger)",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 23:09:55",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 22:30::利和兴(301013)购入判断=框架内零价值, 待你拍板要不要碰(纯投机款)",
+    "action": "reject",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 23:10:02",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】资本配置层纪律预承诺(源自第六篇配置诊断研究note",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 23:10:40",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 22:30::把9个取数脚本逐个迁移到marketdata统一层, 待你拍板(涉及改动在跑的盯",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-13 23:10:43",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-14 00:19::给研究编排流水线挂每周一次定时任务(周末跑, 紧随选股发现管线之后), 自动产出",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-14 00:30:59",
+    "processed": false
+  }
+]

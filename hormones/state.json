@@ -1,0 +1,66 @@
+{
+  "_doc": "激素系统状态。门控型设计:驱动方(好奇素/行动素)被克制方(饱足素/克制素)门控。本文件由 update_hormones.py 读写,人工勿手改数值(改 config 段即可)。",
+  "version": "0.1-calibration",
+  "phase": "calibration",
+  "_phase_doc": "calibration=只记录不驱动行为; active=过阈值触发动作。校准期观察曲线是否合理。",
+  "last_updated": "2026-06-14T00:19:52.324181+08:00",
+  "hormones": {
+    "curiosity": {
+      "value": 0.0,
+      "_doc": "好奇素(认知驱动方)。异动/数据矛盾累积↑; 产出真alpha则清零。过阈值→主动深度research。"
+    },
+    "satiety": {
+      "value": 47.194,
+      "_doc": "饱足素(好奇素拮抗方)。短期research次数累积↑。抑制好奇素,强制先消化再开新坑。"
+    },
+    "restraint": {
+      "value": 0.0,
+      "_doc": "克制素(纪律核心刹车)。近期'想动手'信号密集↑; 用户刚交易则↑。越高→越强制冷却,要求先列看空理由+下行亏损。门控行动素。"
+    }
+  },
+  "config": {
+    "_doc": "可人工调的参数。decay_per_hour=指数衰减率(每小时衰减比例,惰性求值); threshold=过阈值触发行为(校准期仅记录); cap=封顶,防单一驱动力无限累积绑架行为。",
+    "curiosity": {
+      "decay_per_hour": 0.04,
+      "threshold": 50.0,
+      "cap": 100.0,
+      "baseline": 0.0
+    },
+    "satiety": {
+      "decay_per_hour": 0.1,
+      "threshold": 40.0,
+      "cap": 60.0,
+      "baseline": 0.0
+    },
+    "restraint": {
+      "decay_per_hour": 0.06,
+      "threshold": 50.0,
+      "cap": 100.0,
+      "baseline": 0.0
+    }
+  },
+  "event_weights": {
+    "_doc": "每类客观事件对激素的增量。必须挂可从数据查到的客观数字,绝不凭感觉。",
+    "unexplained_anomaly": {
+      "curiosity": 8.0,
+      "_doc": "创新引擎本轮每条'无法解释的异动/数据矛盾'"
+    },
+    "produced_alpha": {
+      "curiosity": -999.0,
+      "satiety": 20.0,
+      "_doc": "本轮确实ping了高信号→好奇素清零(用-999触发clamp到0)、饱足素+20"
+    },
+    "research_done": {
+      "satiety": 12.0,
+      "_doc": "完成一次深度research"
+    },
+    "bullish_urge": {
+      "restraint": 15.0,
+      "_doc": "出现一次'看多/想下注'冲动信号"
+    },
+    "user_traded": {
+      "restraint": 25.0,
+      "_doc": "用户刚下真实交易→进冷却观察期"
+    }
+  }
+}

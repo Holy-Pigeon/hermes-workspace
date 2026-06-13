@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=393, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>合伙人驾驶舱</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:       #080810;
+  --surface:  rgba(255,255,255,0.05);
+  --surface2: rgba(255,255,255,0.09);
+  --border:   rgba(255,255,255,0.09);
+  --text:     #e2e2f0;
+  --text2:    #7878a0;
+  --green:    #34d399;
+  --red:      #f87171;
+  --yellow:   #fbbf24;
+  --blue:     #60a5fa;
+  --purple:   #a78bfa;
+  --accent:   #818cf8;
+  --r:        14px;
+  --r-sm:     9px;
+  --phone-w:  393px;
+}
+html, body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system,'SF Pro Text','PingFang SC',sans-serif;
+  font-size: 14px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+#shell {
+  width: var(--phone-w); min-height: 100vh;
+  margin: 0 auto; overflow-x: hidden; background: var(--bg);
+}
+/* topbar */
+#topbar {
+  position: sticky; top: 0; z-index: 100;
+  padding: calc(env(safe-area-inset-top,44px) + 8px) 16px 10px;
+  background: rgba(8,8,16,.88);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+#topbar h1 { font-size: 17px; font-weight: 700; }
+.tb-right { display: flex; align-items: center; gap: 8px; }
+#last-update { font-size: 11px; color: var(--text2); }
+#refresh-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface2); border: none; cursor: pointer;
+  color: var(--text2); font-size: 15px; display: flex; align-items: center; justify-content: center;
+  transition: transform .3s;
+}
+#refresh-btn.spin { animation: spin .6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* bottom tab bar */
+#tabbar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: var(--phone-w); z-index: 100;
+  background: rgba(8,8,16,.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; padding-bottom: env(safe-area-inset-bottom,0);
+}
+.tb-tab {
+  flex: 1; padding: 10px 4px 6px; border: none; background: none;
+  cursor: pointer; color: var(--text2); font-size: 11px; font-weight: 500;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tb-tab .icon { font-size: 20px; line-height: 1; }
+.tb-tab.active { color: var(--accent); }
+
+/* pages */
+.page { display: none; padding: 14px 14px 90px; }
+.page.active { display: block; }
+
+/* section title */
+.stitle {
+  font-size: 11px; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: .9px;
+  margin: 18px 0 8px;
+}
+.stitle:first-child { margin-top: 2px; }
+
+/* card base */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px; margin-bottom: 10px;
+}
+.card-sm { border-radius: var(--r-sm); padding: 10px 12px; }
+
+/* row */
+.row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.row:last-child { margin-bottom: 0; }
+.key { color: var(--text2); font-size: 12px; }
+.val { font-size: 13px; font-weight: 500; }
+
+/* status badge */
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .3px;
+}
+.badge-ok     { background: rgba(52,211,153,.15); color: var(--green); }
+.badge-err    { background: rgba(248,113,113,.15); color: var(--red); }
+.badge-sched  { background: rgba(96,165,250,.13); color: var(--blue); }
+.badge-dis    { background: rgba(120,120,160,.15); color: var(--text2); }
+.badge-build  { background: rgba(251,191,36,.13); color: var(--yellow); }
+.badge-prop   { background: rgba(167,139,250,.15); color: var(--purple); }
+.badge-done   { background: rgba(52,211,153,.13); color: var(--green); }
+.badge-parked { background: rgba(120,120,160,.15); color: var(--text2); }
+
+/* ── filter chips (Idea/项目 分类筛选) ── */
+.filter-bar {
+  display: flex; gap: 7px; overflow-x: auto; padding: 2px 0 10px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-bar.wrap { flex-wrap: wrap; overflow-x: visible; }
+.chip {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2); font-size: 12px; font-weight: 500; cursor: pointer;
+  white-space: nowrap; transition: all .14s;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip:active { transform: scale(.95); }
+.chip.active { background: rgba(129,140,248,.18); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.chip .cnt { opacity: .65; font-size: 11px; margin-left: 3px; }
+.filter-label { font-size: 11px; color: var(--text2); font-weight: 700; margin: 8px 0 5px; text-transform: uppercase; letter-spacing: .5px; }
+/* load more */
+.load-more {
+  display: block; width: 100%; margin: 6px 0 4px;
+  padding: 11px; border: 1px solid var(--border); border-radius: 12px;
+  background: var(--surface); color: var(--accent);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; transition: background .14s;
+}
+.load-more:active { background: var(--surface2); }
+.list-meta { text-align: center; font-size: 11px; color: var(--text2); padding: 8px 0 2px; }
+
+/* job card */
+.job-card { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.job-card:active { background: var(--surface2); }
+.job-name { font-size: 14px; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.job-meta { font-size: 11px; color: var(--text2); margin-top: 4px; }
+.job-snippet {
+  margin-top: 10px; padding: 8px 10px;
+  background: rgba(0,0,0,.3); border-radius: 8px;
+  font-family: 'SF Mono',monospace; font-size: 10px;
+  color: #9999cc; line-height: 1.6;
+  max-height: 80px; overflow: hidden; position: relative;
+}
+.job-snippet::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 24px;
+  background: linear-gradient(transparent, rgba(0,0,0,.3));
+}
+.job-snippet.expanded { max-height: none; }
+.job-snippet.expanded::after { display: none; }
+
+/* progress bar */
+.pbar-wrap { background: rgba(255,255,255,.07); border-radius: 4px; height: 6px; margin: 6px 0 2px; overflow: hidden; }
+.pbar { height: 100%; border-radius: 4px; transition: width .4s; }
+
+/* idea card */
+.idea-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.idea-meta { font-size: 11px; color: var(--text2); }
+.idea-note { font-size: 11px; color: var(--text2); margin-top: 6px; line-height: 1.6; border-left: 2px solid var(--border); padding-left: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+/* idea 详情完整内容块 */
+.idea-full { background: var(--surface2); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+.idea-full-label { font-size: 11px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
+.idea-full-text { font-size: 13px; line-height: 1.75; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+
+/* idea review actions */
+.idea-actions { margin-top: 10px; display: flex; gap: 7px; flex-wrap: wrap; }
+.btn-review {
+  flex: 1; min-width: 70px;
+  padding: 7px 4px; border: none; border-radius: 8px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: opacity .15s, transform .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-review:active { opacity: .75; transform: scale(.97); }
+.btn-approve { background: rgba(52,211,153,.2); color: var(--green); border: 1px solid rgba(52,211,153,.35); }
+.btn-refine  { background: rgba(251,191,36,.15); color: var(--yellow); border: 1px solid rgba(251,191,36,.3); }
+.btn-reject  { background: rgba(248,113,113,.15); color: var(--red); border: 1px solid rgba(248,113,113,.3); }
+.refine-box {
+  display: none; margin-top: 8px;
+}
+.refine-box textarea {
+  width: 100%; background: rgba(0,0,0,.35); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 12px; padding: 8px 10px;
+  resize: vertical; min-height: 64px; font-family: inherit; line-height: 1.5;
+}
+.refine-box textarea:focus { outline: none; border-color: var(--accent); }
+.btn-submit-refine {
+  margin-top: 6px; width: 100%; padding: 7px; border: none; border-radius: 8px;
+  background: rgba(129,140,248,.2); color: var(--accent);
+  border: 1px solid rgba(129,140,248,.35);
+  font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.review-done {
+  margin-top: 8px; padding: 6px 10px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; text-align: center;
+}
+.review-done.approved { background: rgba(52,211,153,.15); color: var(--green); }
+.review-done.refined  { background: rgba(251,191,36,.12); color: var(--yellow); }
+.review-done.rejected { background: rgba(248,113,113,.12); color: var(--red); }
+
+
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.metric-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 12px;
+}
+.metric-card .m-lbl { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+.metric-card .m-val { font-size: 22px; font-weight: 700; line-height: 1; }
+.metric-card .m-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+.m-green { color: var(--green); }
+.m-yellow { color: var(--yellow); }
+.m-red { color: var(--red); }
+.m-blue { color: var(--blue); }
+
+/* process list */
+.proc-item { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.proc-item:last-child { border-bottom: none; }
+.proc-name { color: var(--text); max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.proc-cpu { color: var(--yellow); font-weight: 600; min-width: 38px; text-align: right; }
+.proc-mem { color: var(--blue); min-width: 38px; text-align: right; }
+
+/* bottom sheet */
+#sheet {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  width: var(--phone-w); background: #0f0f1e;
+  border-top-left-radius: 22px; border-top-right-radius: 22px;
+  z-index: 200; transition: transform .33s cubic-bezier(.32,.72,0,1);
+  padding: 0 0 calc(env(safe-area-inset-bottom,0) + 10px);
+  max-height: 82vh; display: flex; flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+#sheet.open { transform: translateX(-50%) translateY(0); }
+.sh-handle { width: 34px; height: 4px; background: rgba(255,255,255,.2); border-radius: 2px; margin: 12px auto 0; }
+.sh-header { padding: 12px 16px; border-bottom: 1px solid var(--border); position: relative; }
+.sh-title { font-size: 15px; font-weight: 700; }
+.sh-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.sh-close {
+  position: absolute; right: 14px; top: 12px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--surface2); border: none; cursor: pointer;
+  color: var(--text2); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.sh-body { overflow-y: auto; flex: 1; padding: 12px 14px; font-family: 'SF Mono',monospace; font-size: 11px; color: #9999cc; line-height: 1.7; white-space: pre-wrap; word-break: break-all; }
+#overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 190; opacity: 0; pointer-events: none; transition: opacity .3s; }
+#overlay.show { opacity: 1; pointer-events: all; }
+
+/* utils */
+.green { color: var(--green); } .red { color: var(--red); }
+.yellow { color: var(--yellow); } .blue { color: var(--blue); } .dim { color: var(--text2); }
+.divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+/* ── Idea 详情时间线 ── */
+.timeline { margin: 4px 0 0; padding: 0; }
+.tl-item {
+  display: flex; gap: 10px;
+  padding: 10px 0 10px 16px;
+  border-left: 2px solid var(--border);
+  margin-left: 8px;
+  position: relative;
+}
+.tl-item:last-child { border-left-color: transparent; }
+.tl-dot {
+  position: absolute; left: -7px; top: 13px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--bg); flex-shrink: 0;
+}
+.tl-dot-proposed { background: var(--purple); }
+.tl-dot-approve  { background: var(--green); }
+.tl-dot-refine   { background: var(--yellow); }
+.tl-dot-reject   { background: var(--red); }
+.tl-dot-progress { background: var(--blue); }
+.tl-dot-done     { background: var(--green); }
+.tl-dot-agent    { background: var(--accent); }
+.tl-body { flex: 1; min-width: 0; }
+.tl-header { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; flex-wrap: wrap; }
+.tl-label { font-size: 12px; font-weight: 700; }
+.tl-ts    { font-size: 11px; color: var(--text2); }
+.tl-author { font-size: 10px; color: var(--text2); background: var(--surface2); padding: 1px 6px; border-radius: 4px; }
+.tl-text  { font-size: 12px; color: var(--text2); line-height: 1.6; margin-top: 2px; white-space: pre-wrap; word-break: break-all; }
+.tl-comment {
+  margin-top: 5px; padding: 6px 10px;
+  background: rgba(0,0,0,.25); border-radius: 7px;
+  font-size: 12px; color: var(--text); line-height: 1.5;
+  border-left: 3px solid var(--yellow);
+}
+.tl-comment.tl-green { border-left-color: var(--green); }
+.tl-comment.tl-red   { border-left-color: var(--red); }
+/* progress 审批区 */
+.progress-review {
+  margin: 10px 0 4px; padding: 11px 12px;
+  background: rgba(96,165,250,.07); border: 1px solid rgba(96,165,250,.2);
+  border-radius: 10px;
+}
+.progress-review .pr-title { font-size: 12px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+/* idea card clickable */
+.idea-card { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s; }
+.idea-card:active { background: var(--surface2); }
+/* sh-body normal 模式（非 monospace） */
+.sh-body-normal { font-family: -apple-system,'SF Pro Text','PingFang SC',sans-serif; font-size: 13px; color: var(--text); line-height: 1.6; white-space: normal; word-break: normal; }
+
+@media (min-width: 600px) and (max-width: 899px) {
+  body { display: flex; justify-content: center; background: #030306; align-items: flex-start; }
+  #shell { box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 40px 80px rgba(0,0,0,.8); border-radius: 42px; margin: 24px auto; min-height: auto; overflow: hidden; }
+  #topbar { border-radius: 42px 42px 0 0; }
+  #tabbar { border-radius: 0 0 42px 42px; }
+  #sheet { border-radius: 22px 22px 42px 42px; }
+}
+
+/* ═══ DESKTOP ≥ 900px ══════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  :root { --phone-w: 100%; }
+  html, body { min-height: 100vh; }
+  body { background: #030306; display: block; }
+
+  #shell {
+    width: min(1440px, 96vw);
+    margin: 20px auto;
+    border-radius: 18px;
+    min-height: calc(100vh - 40px);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 32px 64px rgba(0,0,0,.7);
+    /* grid: topbar spans both cols; sidebar | content */
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "topbar  topbar"
+      "sidebar content";
+    overflow: hidden;
+  }
+
+  /* ── Topbar ── */
+  #topbar {
+    grid-area: topbar;
+    border-radius: 18px 18px 0 0;
+    position: sticky; top: 20px; z-index: 100;
+    padding-top: 14px; padding-bottom: 14px;
+  }
+  #topbar h1 { font-size: 18px; }
+
+  /* ── Sidebar nav (was bottom tabbar) ── */
+  #tabbar {
+    grid-area: sidebar;
+    position: static; transform: none;
+    width: auto;
+    flex-direction: column;
+    border-top: none;
+    border-right: 1px solid var(--border);
+    border-radius: 0 0 0 18px;
+    padding: 16px 10px 20px;
+    gap: 4px;
+    align-items: stretch;
+    background: rgba(8,8,16,.9);
+    padding-bottom: 0;
+  }
+  .tb-tab {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: left;
+    transition: background .15s;
+  }
+  .tb-tab .icon { font-size: 18px; }
+  .tb-tab:hover { background: var(--surface2); }
+  .tb-tab.active { background: rgba(129,140,248,.15); color: var(--accent); }
+
+  /* ── Pages ── */
+  .page {
+    grid-area: content;
+    padding: 24px 28px 32px;
+    overflow-y: auto;
+    max-height: calc(100vh - 40px - 52px);
+    /* desktop: 所有page叠在同一grid-area，靠display切换 */
+  }
+
+  /* ── Cron cards: fluid multi-column ── */
+  #cron-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+
+  /* ── Ideas: 2-col fluid ── */
+  #ideas-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+  /* stitle 是动态插入，用属性选择 */
+  #ideas-list .stitle { grid-column: 1 / -1; margin-top: 4px; }
+
+  /* ── System: 4-col metrics ── */
+  .metric-grid { grid-template-columns: repeat(4, 1fr); }
+
+  /* ── Sheet → centered modal ── */
+  #sheet {
+    left: 50%; bottom: auto; top: 50%;
+    transform: translate(-50%, -44%) scale(.96);
+    width: min(740px, 88vw);
+    max-height: 78vh;
+    border-radius: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .25s cubic-bezier(.32,.72,0,1), opacity .2s;
+  }
+  #sheet.open {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .sh-body { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topbar">
+    <h1>🛸 合伙人驾驶舱</h1>
+    <div class="tb-right">
+      <span id="last-update"></span>
+      <button id="refresh-btn" onclick="refreshAll()">↻</button>
+    </div>
+  </div>
+
+  <!-- PROJECTS PAGE (统一门户) -->
+  <div id="page-projects" class="page active">
+    <div class="stitle">项目门户</div>
+    <div id="proj-filters"></div>
+    <div id="proj-list"><div class="dim" style="padding:20px;text-align:center">加载中…</div></div>
+    <div id="proj-pager"></div>
+  </div>
+
+  <!-- CRON PAGE -->
+  <div id="page-cron" class="page">
+    <div class="stitle">定时任务</div>
+    <div id="cron-list"><div class="dim" style="padding:20px;text-align:center">加载中…</div></div>
+    <div class="stitle">汇总</div>
+    <div id="cron-summary"></div>
+  </div>
+
+  <!-- IDEAS PAGE -->
+  <div id="page-ideas" class="page">
+    <div class="stitle">项目 / Idea 评估登记册</div>
+    <div id="ideas-filters"></div>
+    <div id="ideas-list"><div class="dim" style="padding:20px;text-align:center">加载中…</div></div>
+    <div id="ideas-pager"></div>
+  </div>
+
+  <!-- SYSTEM PAGE -->
+  <div id="page-sys" class="page">
+    <div class="stitle">系统状态</div>
+    <div id="sys-content"><div class="dim" style="padding:20px;text-align:center">加载中…</div></div>
+  </div>
+
+  <div id="tabbar">
+    <button class="tb-tab active" onclick="switchTab('projects',this)">
+      <span class="icon">🏠</span>项目
+    </button>
+    <button class="tb-tab" onclick="switchTab('cron',this)">
+      <span class="icon">⏱</span>Cron
+    </button>
+    <button class="tb-tab" onclick="switchTab('ideas',this)">
+      <span class="icon">💡</span>Idea
+    </button>
+    <button class="tb-tab" onclick="switchTab('sys',this)">
+      <span class="icon">📡</span>系统
+    </button>
+  </div>
+</div>
+
+<div id="overlay" onclick="closeSheet()"></div>
+<div id="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-header" style="position:relative">
+    <div class="sh-title" id="sh-title"></div>
+    <div class="sh-sub" id="sh-sub"></div>
+    <button class="sh-close" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sh-body" id="sh-body"></div>
+</div>
+
+<script>
+const BASE = '';
+let sysTimer = null;
+
+// ── Tab ───────────────────────────────────────────────────────────────────
+function isDesktop() { return window.innerWidth >= 900; }
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tb-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'sys') startSysPoll();
+  else stopSysPoll();
+  if (name === 'projects') loadProjects();
+}
+
+function switchTabByName(name) {
+  const btns = document.querySelectorAll('.tb-tab');
+  for (const b of btns) {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.includes("'" + name + "'")) { b.click(); return; }
+  }
+}
+
+// ── Refresh ───────────────────────────────────────────────────────────────
+async function refreshAll() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spin');
+  await Promise.all([loadProjects(), loadCron(), loadIdeas(), loadSys()]);
+  btn.classList.remove('spin');
+  document.getElementById('last-update').textContent =
+    new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── Projects (统一门户) ───────────────────────────────────────────────────
+const PROJ_PAGE_SIZE = 8;
+let projState = { tag: '', online: '', page: 1, items: [], total: 0, hasMore: false, facets: {} };
+
+async function loadProjects(reset = true) {
+  if (reset) { projState.page = 1; projState.items = []; }
+  const qs = new URLSearchParams();
+  if (projState.tag) qs.set('tag', projState.tag);
+  if (projState.online !== '') qs.set('online', projState.online);
+  qs.set('page', projState.page);
+  qs.set('page_size', PROJ_PAGE_SIZE);
+  try {
+    const data = await fetch(BASE + '/api/projects?' + qs.toString()).then(r => r.json());
+    // 兼容：带参数时返回信封；facets 仅在信封模式有
+    const items = data.projects || [];
+    projState.items = reset ? items : projState.items.concat(items);
+    projState.total = data.total != null ? data.total : items.length;
+    projState.hasMore = !!data.has_more;
+    if (data.facets) projState.facets = data.facets;
+    renderProjFilters();
+    renderProjects(projState.items);
+    renderProjPager();
+  } catch (e) {
+    document.getElementById('proj-list').innerHTML =
+      '<div class="dim" style="padding:20px;text-align:center">加载失败: ' + escHtml(String(e)) + '</div>';
+  }
+}
+
+function renderProjFilters() {
+  const f = projState.facets || {};
+  const tags = f.tag || {};
+  let html = '<div class="filter-bar wrap">';
+  // 在线状态
+  html += `<button class="chip ${projState.online===''?'active':''}" onclick="setProjOnline('')">全部</button>`;
+  html += `<button class="chip ${projState.online==='1'?'active':''}" onclick="setProjOnline('1')">🟢 在线<span class="cnt">${f.online||0}</span></button>`;
+  const offline = (f.total_projects||0) - (f.online||0);
+  html += `<button class="chip ${projState.online==='0'?'active':''}" onclick="setProjOnline('0')">⚪ 离线<span class="cnt">${offline}</span></button>`;
+  html += '</div>';
+  // 标签
+  const tagKeys = Object.keys(tags).sort((a,b)=>tags[b]-tags[a]);
+  if (tagKeys.length) {
+    html += '<div class="filter-bar wrap">';
+    html += `<button class="chip ${projState.tag===''?'active':''}" onclick="setProjTag('')">全部标签</button>`;
+    tagKeys.forEach(t => {
+      html += `<button class="chip ${projState.tag===t?'active':''}" onclick="setProjTag('${escQ(t)}')">${escHtml(t)}<span class="cnt">${tags[t]}</span></button>`;
+    });
+    html += '</div>';
+  }
+  document.getElementById('proj-filters').innerHTML = html;
+}
+
+function setProjTag(t)    { projState.tag = (projState.tag===t?'':t); loadProjects(true); }
+function setProjOnline(v) { projState.online = (projState.online===v?'':v); loadProjects(true); }
+
+function renderProjPager() {
+  const el = document.getElementById('proj-pager');
+  let html = `<div class="list-meta">已显示 ${projState.items.length} / ${projState.total}</div>`;
+  if (projState.hasMore) {
+    html += `<button class="load-more" onclick="projState.page++;loadProjects(false)">加载更多 ↓</button>`;
+  }
+  el.innerHTML = html;
+}
+
+function projectUrl(p) {
+  // 用页面所在 host 拼端口 — 本地访问拿 local 端口，外网访问拿 remote 端口
+  const host = window.location.hostname;
+  const isLocal = host === 'localhost' || host === '127.0.0.1';
+  if (!p.ports) return null;
+  const port = isLocal ? p.ports.local : p.ports.remote;
+  if (!port) return null;
+  return 'http://' + host + ':' + port + '/';
+}
+
+function renderProjects(projects) {
+  const el = document.getElementById('proj-list');
+  if (!projects.length) {
+    el.innerHTML = '<div class="dim" style="padding:20px;text-align:center">尚无项目</div>';
+    return;
+  }
+  el.innerHTML = projects.map(p => {
+    const dotColor = p.online ? 'var(--green)' : 'var(--text2)';
+    const dot = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dotColor};margin-right:8px;flex-shrink:0"></span>`;
+
+    let entryRow = '';
+    let cardAttrs = '';
+    const url = projectUrl(p);
+    if (url) {
+      const port = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? p.ports.local : p.ports.remote;
+      entryRow = `<div class="row"><span class="key">入口</span><span class="val blue" style="font-size:12px">:${port} ↗</span></div>`;
+      cardAttrs = `onclick="openProject('${url}')" style="cursor:pointer"`;
+    } else if (p.internal_tab) {
+      entryRow = `<div class="row"><span class="key">入口</span><span class="val" style="font-size:12px;color:var(--accent)">本驾驶舱 →</span></div>`;
+      cardAttrs = `onclick="switchTabByName('${p.internal_tab}')" style="cursor:pointer"`;
+    } else {
+      entryRow = `<div class="row"><span class="key">入口</span><span class="val dim" style="font-size:12px">无控制台</span></div>`;
+    }
+
+    const tagHtml = (p.tags || []).map(t =>
+      `<span style="background:var(--surface2);color:var(--text2);font-size:10px;padding:2px 7px;border-radius:6px;margin-left:4px">${escHtml(t)}</span>`
+    ).join('');
+
+    return `
+      <div class="card" ${cardAttrs}>
+        <div class="job-name" style="align-items:flex-start">
+          <span style="display:flex;align-items:center;min-width:0;flex:1">
+            ${dot}
+            <span style="font-size:18px;margin-right:8px;flex-shrink:0">${escHtml(p.icon || '📦')}</span>
+            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(p.name || '')}</span>
+          </span>
+          <span style="flex-shrink:0">${tagHtml}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin:6px 0 6px 16px">${escHtml(p.desc || '')}</div>
+        ${entryRow}
+        <div class="row">
+          <span class="key">最后心跳</span>
+          <span class="val dim" style="font-size:12px">${escHtml(p.last_seen || '--')}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function openProject(url) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// ── Cron ──────────────────────────────────────────────────────────────────
+async function loadCron() {
+  const jobs = await fetch(BASE + '/api/cron/jobs').then(r => r.json());
+  renderCron(jobs);
+}
+
+function fmtDT(s) {
+  if (!s) return '--';
+  return s.slice(0, 16).replace('T', ' ');
+}
+
+function statusBadge(j) {
+  if (!j.enabled) return '<span class="badge badge-dis">已暂停</span>';
+  if (j.last_status === 'ok')    return '<span class="badge badge-ok">✓ 正常</span>';
+  if (j.last_status === 'error') return '<span class="badge badge-err">✗ 出错</span>';
+  return '<span class="badge badge-sched">等待中</span>';
+}
+
+function renderCron(jobs) {
+  const el = document.getElementById('cron-list');
+  const ok = jobs.filter(j => j.last_status === 'ok').length;
+  const err = jobs.filter(j => j.last_status === 'error').length;
+  const pending = jobs.filter(j => !j.last_status).length;
+
+  // summary strip
+  document.getElementById('cron-summary').innerHTML = `
+    <div class="card card-sm">
+      <div class="row">
+        <span class="key">任务总数</span><span class="val">${jobs.length}</span>
+      </div>
+      <div class="row">
+        <span class="key">上次成功</span><span class="val green">${ok}</span>
+      </div>
+      <div class="row">
+        <span class="key">出错</span><span class="val red">${err}</span>
+      </div>
+      <div class="row">
+        <span class="key">从未运行</span><span class="val dim">${pending}</span>
+      </div>
+    </div>`;
+
+  el.innerHTML = jobs.map(j => {
+    const snippet = j.last_output_snippet
+      ? `<div class="job-snippet" id="snip-${j.id}" onclick="toggleSnip('${j.id}')">${escHtml(j.last_output_snippet.slice(-400))}</div>`
+      : '';
+    const noAgent = j.no_agent ? ' <span style="font-size:10px;color:var(--text2)">[脚本]</span>' : '';
+    return `
+    <div class="card job-card" onclick="openJobSheet('${j.id}','${escQ(j.name)}')">
+      <div class="job-name">
+        <span>${escHtml(j.name)}${noAgent}</span>
+        ${statusBadge(j)}
+      </div>
+      <div class="row" style="margin-top:2px">
+        <span class="key">计划</span><span class="val" style="font-size:12px">${escHtml(j.schedule)}</span>
+      </div>
+      <div class="row">
+        <span class="key">上次</span><span class="val dim" style="font-size:12px">${fmtDT(j.last_run_at)}</span>
+      </div>
+      <div class="row">
+        <span class="key">下次</span><span class="val blue" style="font-size:12px">${fmtDT(j.next_run_at)}</span>
+      </div>
+      <div class="row">
+        <span class="key">累计执行</span><span class="val">${j.completed} 次</span>
+      </div>
+      ${j.deliver ? `<div class="row"><span class="key">推送</span><span class="val dim" style="font-size:11px">${escHtml(j.deliver)}</span></div>` : ''}
+      ${snippet}
+      <div class="job-meta">点击查看完整输出</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSnip(id) {
+  const el = document.getElementById('snip-' + id);
+  if (el) el.classList.toggle('expanded');
+  event.stopPropagation();
+}
+
+async function openJobSheet(jobId, name) {
+  document.getElementById('sh-title').textContent = name;
+  document.getElementById('sh-sub').textContent = jobId;
+  document.getElementById('sh-body').textContent = '加载中…';
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  const data = await fetch(BASE + `/api/cron/output/${jobId}`).then(r => r.json());
+  if (!data.latest) {
+    document.getElementById('sh-body').textContent = '（暂无输出记录）';
+    return;
+  }
+  document.getElementById('sh-sub').textContent = `${jobId} · ${data.files.length} 条历史`;
+  document.getElementById('sh-body').textContent = data.latest;
+}
+
+// ── Ideas ─────────────────────────────────────────────────────────────────
+let _pendingReviews = {};  // idea_id -> {action, comment}
+const IDEAS_PAGE_SIZE = 15;
+let ideaState = { status: '', bucket: '', page: 1, items: [], total: 0, hasMore: false, facets: {} };
+
+async function loadIdeas(reset = true) {
+  if (reset) { ideaState.page = 1; ideaState.items = []; }
+  const qs = new URLSearchParams();
+  if (ideaState.status) qs.set('status', ideaState.status);
+  if (ideaState.bucket) qs.set('bucket', ideaState.bucket);
+  qs.set('page', ideaState.page);
+  qs.set('page_size', IDEAS_PAGE_SIZE);
+
+  const [data, reviews] = await Promise.all([
+    fetch(BASE + '/api/ideas?' + qs.toString()).then(r => r.json()),
+    fetch(BASE + '/api/ideas/reviews').then(r => r.json()).catch(() => []),
+  ]);
+  _pendingReviews = {};
+  reviews.forEach(rv => { if (!rv.processed) _pendingReviews[rv.idea_id] = rv; });
+
+  // 信封模式（带参数时一定是信封）
+  const items = data.items || (Array.isArray(data) ? data : []);
+  ideaState.items = reset ? items : ideaState.items.concat(items);
+  ideaState.total = data.total != null ? data.total : items.length;
+  ideaState.hasMore = !!data.has_more;
+  if (data.facets) ideaState.facets = data.facets;
+
+  renderIdeaFilters();
+  renderIdeas(ideaState.items);
+  renderIdeaPager();
+}
+
+const STATUS_LABEL = {
+  building: ['🛠', 'badge-build', '进行中'],
+  proposed: ['💡', 'badge-prop', '待拍板'],
+  done:     ['✅', 'badge-done', '完成'],
+  parked:   ['❄️', 'badge-parked', '搁置'],
+  rejected: ['❌', 'badge-err', '已否'],
+  unknown:  ['?',  'badge-dis', '未知'],
+};
+
+function renderIdeaFilters() {
+  const f = ideaState.facets || {};
+  const sf = f.status || {}, bf = f.bucket || {};
+  // 状态行（按固定顺序）
+  const order = ['building','proposed','done','parked','rejected','unknown'];
+  let html = '<div class="filter-bar">';
+  html += `<button class="chip ${ideaState.status===''?'active':''}" onclick="setIdeaStatus('')">全部状态</button>`;
+  order.forEach(s => {
+    if (!sf[s]) return;
+    const [icon,, label] = STATUS_LABEL[s];
+    html += `<button class="chip ${ideaState.status===s?'active':''}" onclick="setIdeaStatus('${s}')">${icon} ${label}<span class="cnt">${sf[s]}</span></button>`;
+  });
+  html += '</div>';
+  // 分类行
+  const bKeys = Object.keys(bf).sort((a,b)=>bf[b]-bf[a]);
+  if (bKeys.length) {
+    html += '<div class="filter-bar wrap">';
+    html += `<button class="chip ${ideaState.bucket===''?'active':''}" onclick="setIdeaBucket('')">全部分类</button>`;
+    bKeys.forEach(b => {
+      html += `<button class="chip ${ideaState.bucket===b?'active':''}" onclick="setIdeaBucket('${escQ(b)}')">${escHtml(b)}<span class="cnt">${bf[b]}</span></button>`;
+    });
+    html += '</div>';
+  }
+  document.getElementById('ideas-filters').innerHTML = html;
+}
+
+function setIdeaStatus(s) { ideaState.status = (ideaState.status===s?'':s); loadIdeas(true); }
+function setIdeaBucket(b) { ideaState.bucket = (ideaState.bucket===b?'':b); loadIdeas(true); }
+
+function renderIdeaPager() {
+  const el = document.getElementById('ideas-pager');
+  let html = `<div class="list-meta">已显示 ${ideaState.items.length} / ${ideaState.total}</div>`;
+  if (ideaState.hasMore) {
+    html += `<button class="load-more" onclick="ideaState.page++;loadIdeas(false)">加载更多 ↓</button>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderIdeas(ideas) {
+  const el = document.getElementById('ideas-list');
+  if (!ideas.length) {
+    el.innerHTML = '<div class="dim" style="padding:20px;text-align:center">暂无记录</div>';
+    return;
+  }
+  // 无状态筛选时按状态分组显示标题；有筛选时平铺（已是单一状态）
+  const showGroups = !ideaState.status;
+  let html = '';
+  if (showGroups) {
+    const order = ['building','proposed','done','parked','rejected','unknown'];
+    const grouped = {};
+    order.forEach(s => grouped[s] = []);
+    ideas.forEach(i => (grouped[i.status] || grouped['unknown']).push(i));
+    order.forEach(s => {
+      if (!grouped[s].length) return;
+      const [icon,, label] = STATUS_LABEL[s];
+      html += `<div class="stitle" style="margin-top:14px">${icon} ${label} (${grouped[s].length})</div>`;
+      grouped[s].forEach(idea => { html += ideaCardHtml(idea); });
+    });
+  } else {
+    ideas.forEach(idea => { html += ideaCardHtml(idea); });
+  }
+  el.innerHTML = html;
+}
+
+function ideaCardHtml(idea) {
+  const s = idea.status;
+  const [, cls, label] = STATUS_LABEL[s] || STATUS_LABEL.unknown;
+  const rv = _pendingReviews[idea.id];
+  let reviewBadge = '';
+  if (s === 'proposed') {
+    if (rv) {
+      const rvLabel = rv.action === 'approve' ? '✓ 已通过 — 等待执行'
+                    : rv.action === 'reject'  ? '✕ 已驳回 — 等待清除'
+                    : `↻ 待优化 — "${escHtml(rv.comment)}"`;
+      const rvCls = rv.action==='approve'?'approved':rv.action==='reject'?'rejected':'refined';
+      reviewBadge = `<div class="review-done ${rvCls}" style="margin-top:8px">${rvLabel}</div>`;
+    } else {
+      const eid = idea.id.replace(/[^a-zA-Z0-9]/g,'_');
+      reviewBadge = `
+        <div class="idea-actions" onclick="event.stopPropagation()">
+          <button class="btn-review btn-approve" onclick="reviewIdea('${escQ(idea.id)}','approve',null,this)">✓ 通过</button>
+          <button class="btn-review btn-refine"  onclick="toggleRefineBox('${eid}')">↻ 待优化</button>
+          <button class="btn-review btn-reject"  onclick="reviewIdea('${escQ(idea.id)}','reject',null,this)">✕ 驳回</button>
+        </div>
+        <div class="refine-box" id="refinebox-${eid}" onclick="event.stopPropagation()">
+          <textarea id="refinetxt-${eid}" placeholder="说明优化方向…"></textarea>
+          <button class="btn-submit-refine" onclick="submitRefine('${escQ(idea.id)}','${eid}')">提交优化意见</button>
+        </div>`;
+    }
+  }
+  let buildingHint = '';
+  if (s === 'building') {
+    buildingHint = `<div style="margin-top:8px;font-size:11px;color:var(--accent)">▶ 点击查看进度 / 添加过程审批</div>`;
+  }
+  return `
+  <div class="card idea-card" onclick="openIdeaSheet('${escQ(idea.id)}')">
+    <div class="idea-title">${escHtml(idea.title_short || idea.title)}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+      <span class="badge ${cls}">${label}</span>
+      ${idea.category ? `<span class="badge badge-sched">${escHtml(idea.category)}</span>` : ''}
+      ${idea.author ? `<span class="badge badge-dis">${escHtml(idea.author)}</span>` : ''}
+    </div>
+    <div class="idea-meta">${escHtml(idea.date)}</div>
+    ${idea.note ? `<div class="idea-note">${escHtml(idea.note)}</div>` : ''}
+    ${reviewBadge}
+    ${buildingHint}
+  </div>`;
+}
+
+// ── Idea 详情 Sheet ───────────────────────────────────────────────────────
+async function openIdeaSheet(ideaId) {
+  const shBody = document.getElementById('sh-body');
+  document.getElementById('sh-title').textContent = '加载中…';
+  document.getElementById('sh-sub').textContent = '';
+  shBody.className = 'sh-body sh-body-normal';
+  shBody.innerHTML = '<div class="dim" style="padding:20px;text-align:center">加载中…</div>';
+  document.getElementById('sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+
+  const data = await fetch(BASE + `/api/ideas/timeline?idea_id=${encodeURIComponent(ideaId)}`).then(r => r.json());
+  const idea = data.idea || {};
+  const events = data.events || [];
+
+  const [,, statusLabel] = STATUS_LABEL[idea.status] || ['','','未知'];
+  document.getElementById('sh-title').textContent = idea.title_short || idea.title || ideaId;
+  document.getElementById('sh-sub').textContent = `${statusLabel}  ·  ${idea.category || ''}  ·  ${idea.author || ''}`;
+
+  // 完整内容块（列表精简，详情看全文）
+  let fullHtml = '';
+  if (idea.title) {
+    fullHtml = `
+      <div class="idea-full">
+        <div class="idea-full-label">📄 完整内容</div>
+        <div class="idea-full-text">${escHtml(idea.title)}</div>
+      </div>`;
+  }
+
+  // 构造时间线 HTML
+  let tlHtml = '<div class="timeline">';
+  events.forEach(ev => {
+    if (ev.type === 'proposed') {
+      tlHtml += `
+        <div class="tl-item">
+          <div class="tl-dot tl-dot-proposed"></div>
+          <div class="tl-body">
+            <div class="tl-header">
+              <span class="tl-label" style="color:var(--purple)">💡 Idea 提出</span>
+              <span class="tl-ts">${escHtml(ev.ts)}</span>
+              ${ev.author ? `<span class="tl-author">${escHtml(ev.author)}</span>` : ''}
+            </div>
+            ${ev.text ? `<div class="tl-text">${escHtml(ev.text)}</div>` : ''}
+          </div>
+        </div>`;
+    } else if (ev.type === 'review') {
+      const isProgress = ev.stage === 'progress';
+      const actionMap = {
+        approve: ['✓ 通过', 'var(--green)', 'tl-dot-approve', 'tl-green'],
+        refine:  ['↻ 待优化', 'var(--yellow)', 'tl-dot-refine', ''],
+        reject:  ['✕ 驳回', 'var(--red)', 'tl-dot-reject', 'tl-red'],
+      };
+      const [actionLabel, actionColor, dotCls, commentCls] = actionMap[ev.action] || ['？','var(--text2)','',''];
+      const stageLabel = isProgress ? '过程审批' : '初始审批';
+      const pendingNote = !ev.processed ? ' <span style="font-size:10px;color:var(--yellow)">(等待创新引擎处理)</span>' : '';
+      tlHtml += `
+        <div class="tl-item">
+          <div class="tl-dot ${dotCls}"></div>
+          <div class="tl-body">
+            <div class="tl-header">
+              <span class="tl-label" style="color:${actionColor}">${actionLabel}</span>
+              <span class="tl-ts">${escHtml(ev.ts)}</span>
+              <span class="tl-author">${stageLabel}</span>
+              ${pendingNote}
+            </div>
+            ${ev.comment ? `<div class="tl-comment ${commentCls}">${escHtml(ev.comment)}</div>` : ''}
+          </div>
+        </div>`;
+    }
+  });
+  tlHtml += '</div>';
+
+  // building 状态：在时间线下方加过程审批区
+  let progressHtml = '';
+  if (idea.status === 'building') {
+    const eid = ideaId.replace(/[^a-zA-Z0-9]/g,'_') + '_prog';
+    progressHtml = `
+      <div class="progress-review">
+        <div class="pr-title">📋 过程审批 / 备注</div>
+        <div style="display:flex;gap:7px;margin-bottom:8px">
+          <button class="btn-review btn-approve" style="flex:1" onclick="reviewIdea('${escQ(ideaId)}','approve',null,this,'progress')">✓ 确认完成</button>
+          <button class="btn-review btn-refine"  style="flex:1" onclick="toggleRefineBox('${eid}')">↻ 要求修改</button>
+          <button class="btn-review btn-reject"  style="flex:1" onclick="reviewIdea('${escQ(ideaId)}','reject',null,this,'progress')">✕ 终止</button>
+        </div>
+        <div class="refine-box" id="refinebox-${eid}">
+          <textarea id="refinetxt-${eid}" placeholder="说明修改要求…"></textarea>
+          <button class="btn-submit-refine" onclick="submitRefine('${escQ(ideaId)}','${eid}','progress')">提交</button>
+        </div>
+      </div>`;
+  }
+
+  shBody.innerHTML = fullHtml + tlHtml + progressHtml;
+}
+
+// ── System ────────────────────────────────────────────────────────────────
+async function loadSys() {
+  const d = await fetch(BASE + '/api/system').then(r => r.json());
+  renderSys(d);
+}
+
+function pctColor(v) {
+  if (v >= 85) return 'm-red';
+  if (v >= 60) return 'm-yellow';
+  return 'm-green';
+}
+
+function renderSys(d) {
+  const el = document.getElementById('sys-content');
+  const cpu = d.cpu, mem = d.memory;
+
+  const diskHtml = d.disks.map(dk => `
+    <div class="row">
+      <span class="key">${dk.mountpoint} (${dk.fstype})</span>
+      <span class="val ${pctColor(dk.pct)}">${dk.pct}%</span>
+    </div>
+    <div class="pbar-wrap"><div class="pbar" style="width:${dk.pct}%;background:${dk.pct>=85?'var(--red)':dk.pct>=60?'var(--yellow)':'var(--green)'}"></div></div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:8px">${dk.used_gb} GB / ${dk.total_gb} GB 已用，剩余 ${dk.free_gb} GB</div>
+  `).join('');
+
+  const procHtml = d.processes.map(p => `
+    <div class="proc-item">
+      <span class="proc-name">${escHtml(p.name || '')} <span style="color:var(--text2)">·${p.pid}</span></span>
+      <span class="proc-cpu">${(p.cpu_percent||0).toFixed(1)}%</span>
+      <span class="proc-mem">${(p.memory_percent||0).toFixed(1)}%</span>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="m-lbl">CPU 占用</div>
+        <div class="m-val ${pctColor(cpu.percent)}">${cpu.percent}%</div>
+        <div class="m-sub">${cpu.count} 核 · ${cpu.freq_mhz||'--'}MHz</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-lbl">内存占用</div>
+        <div class="m-val ${pctColor(mem.pct)}">${mem.pct}%</div>
+        <div class="m-sub">${mem.used_gb}/${mem.total_gb} GB</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-lbl">负载 (1m)</div>
+        <div class="m-val ${pctColor(cpu.load_1/cpu.count*100)}">${cpu.load_1}</div>
+        <div class="m-sub">5m: ${cpu.load_5} · 15m: ${cpu.load_15}</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-lbl">Swap</div>
+        <div class="m-val ${pctColor(mem.swap_pct)} ">${mem.swap_pct}%</div>
+        <div class="m-sub">${mem.swap_used_gb}/${mem.swap_total_gb} GB</div>
+      </div>
+    </div>
+
+    <div class="card card-sm">
+      <div class="row"><span class="key">网络发送</span><span class="val">${d.network.bytes_sent_gb} GB</span></div>
+      <div class="row"><span class="key">网络接收</span><span class="val">${d.network.bytes_recv_gb} GB</span></div>
+      <div class="row"><span class="key">活跃网卡</span><span class="val dim">${d.network.active_if.join(', ')}</span></div>
+      <div class="row"><span class="key">运行时长</span><span class="val green">${d.uptime}</span></div>
+      <div class="row"><span class="key">启动时间</span><span class="val dim">${d.boot_time}</span></div>
+      <div class="row"><span class="key">当前时间</span><span class="val dim">${d.now}</span></div>
+    </div>
+
+    <div class="stitle">磁盘</div>
+    <div class="card card-sm">${diskHtml || '<span class="dim">无数据</span>'}</div>
+
+    <div class="stitle">进程 Top 8 (CPU)</div>
+    <div class="card card-sm">
+      <div class="proc-item" style="border-bottom:1px solid var(--border);margin-bottom:2px">
+        <span class="dim" style="font-size:11px">进程名 · PID</span>
+        <span class="dim" style="font-size:11px;min-width:38px;text-align:right">CPU</span>
+        <span class="dim" style="font-size:11px;min-width:38px;text-align:right">MEM</span>
+      </div>
+      ${procHtml}
+    </div>`;
+}
+
+function startSysPoll() {
+  loadSys();
+  if (!sysTimer) sysTimer = setInterval(loadSys, 8000);
+}
+function stopSysPoll() {
+  if (sysTimer) { clearInterval(sysTimer); sysTimer = null; }
+}
+
+// ── Sheet ─────────────────────────────────────────────────────────────────
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ── Utils ─────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escQ(s) { return String(s||'').replace(/'/g,"\\'"); }
+
+// ── Idea Review ───────────────────────────────────────────────────────────
+function toggleRefineBox(eid) {
+  const box = document.getElementById('refinebox-' + eid);
+  if (box) { box.style.display = box.style.display === 'block' ? 'none' : 'block'; }
+  event.stopPropagation();
+}
+
+async function reviewIdea(ideaId, action, comment, btn, stage='initial') {
+  if (btn) { btn.disabled = true; btn.textContent = '提交中…'; }
+  try {
+    const resp = await fetch(BASE + '/api/ideas/review', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ idea_id: ideaId, action, comment: comment || '', stage }),
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      await loadIdeas();
+      // 如果是从 sheet 里提交的，刷新 sheet 内容
+      if (document.getElementById('sheet').classList.contains('open')) {
+        await openIdeaSheet(ideaId);
+      }
+    } else {
+      alert('提交失败: ' + (data.error || '未知错误'));
+      if (btn) { btn.disabled = false; btn.textContent = action === 'approve' ? '✓ 通过' : '✕ 驳回'; }
+    }
+  } catch(e) {
+    alert('网络错误: ' + e);
+    if (btn) { btn.disabled = false; }
+  }
+}
+
+async function submitRefine(ideaId, eid, stage='initial') {
+  const txt = document.getElementById('refinetxt-' + eid);
+  const comment = txt ? txt.value.trim() : '';
+  if (!comment) { alert('请填写优化方向'); return; }
+  await reviewIdea(ideaId, 'refine', comment, null, stage);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+refreshAll();
+</script>
+</body>
+</html>

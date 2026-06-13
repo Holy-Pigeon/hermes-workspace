@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=393, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>模拟持仓</title>
+<style>
+  /* ── Reset & Base ─────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #0a0a0f;
+    --surface:   rgba(255,255,255,0.05);
+    --surface2:  rgba(255,255,255,0.08);
+    --border:    rgba(255,255,255,0.10);
+    --text:      #e8e8f0;
+    --text2:     #8888aa;
+    --green:     #34d399;
+    --red:       #f87171;
+    --accent:    #818cf8;
+    --accent2:   #c084fc;
+    --gold:      #fbbf24;
+    --radius:    16px;
+    --radius-sm: 10px;
+    --phone-w:   393px;
+    --safe-top:  env(safe-area-inset-top, 44px);
+    --safe-bot:  env(safe-area-inset-bottom, 34px);
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Display', 'PingFang SC', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* ── Phone shell (PC centering) ─────────────────────────── */
+  #shell {
+    width: var(--phone-w);
+    min-height: 100vh;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    background: var(--bg);
+  }
+
+  /* ── Top bar ─────────────────────────────────────────────── */
+  #topbar {
+    position: sticky; top: 0; z-index: 100;
+    padding: calc(var(--safe-top) + 8px) 20px 12px;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #topbar h1 { font-size: 17px; font-weight: 600; letter-spacing: 0.3px; }
+  #topbar .subtitle { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  #refresh-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface2); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 16px; transition: transform .3s;
+  }
+  #refresh-btn.spinning { animation: spin .6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Scroll container ────────────────────────────────────── */
+  #main { padding: 16px 16px calc(var(--safe-bot) + 80px); }
+
+  /* ── Summary card ────────────────────────────────────────── */
+  #summary-card {
+    background: linear-gradient(135deg, rgba(129,140,248,.15), rgba(192,132,252,.10));
+    border: 1px solid rgba(129,140,248,.25);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .summary-label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; }
+  .summary-nav { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin: 4px 0; }
+  .summary-row { display: flex; gap: 20px; margin-top: 12px; }
+  .summary-item { flex: 1; }
+  .summary-item .val { font-size: 15px; font-weight: 600; }
+  .summary-item .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ── Account tabs ────────────────────────────────────────── */
+  #account-tabs {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+    scrollbar-width: none; margin-bottom: 20px;
+  }
+  #account-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0; padding: 8px 16px; border-radius: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    cursor: pointer; font-size: 13px; color: var(--text2);
+    transition: all .2s; white-space: nowrap;
+  }
+  .tab.active {
+    background: var(--accent); border-color: var(--accent);
+    color: #fff; font-weight: 600;
+  }
+
+  /* ── Account header card ─────────────────────────────────── */
+  #acct-header {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px; margin-bottom: 16px;
+  }
+  .acct-name { font-size: 18px; font-weight: 700; }
+  .acct-strategy { font-size: 12px; color: var(--text2); margin-top: 3px; }
+  .acct-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .metric .m-val { font-size: 15px; font-weight: 600; }
+  .metric .m-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ── Section title ───────────────────────────────────────── */
+  .section-title {
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    text-transform: uppercase; letter-spacing: .8px;
+    margin-bottom: 10px; margin-top: 20px;
+  }
+
+  /* ── Position cards ──────────────────────────────────────── */
+  .pos-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 10px;
+    cursor: pointer; transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pos-card:active { background: var(--surface2); }
+  .pos-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .pos-name { font-size: 16px; font-weight: 600; }
+  .pos-code { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .pos-pnl { text-align: right; }
+  .pos-pnl .pnl-val { font-size: 16px; font-weight: 700; }
+  .pos-pnl .pnl-pct { font-size: 12px; margin-top: 2px; }
+  .pos-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+  .pos-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .pos-row .key { color: var(--text2); }
+  .pos-row .val { font-weight: 500; }
+  .pos-arrow { color: var(--text2); font-size: 11px; margin-top: 8px; text-align: right; }
+
+  /* ── Empty state ─────────────────────────────────────────── */
+  .empty {
+    text-align: center; color: var(--text2); padding: 40px 20px;
+    background: var(--surface); border-radius: var(--radius);
+  }
+  .empty .icon { font-size: 36px; margin-bottom: 10px; }
+
+  /* ── Nav curve mini chart ─────────────────────────────────── */
+  #nav-chart-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 10px;
+  }
+  #nav-chart { width: 100%; height: 120px; }
+
+  /* ── Trade history (bottom sheet) ───────────────────────── */
+  #trade-sheet {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+    width: var(--phone-w); background: #13131f;
+    border-top-left-radius: 24px; border-top-right-radius: 24px;
+    z-index: 200; transition: transform .35s cubic-bezier(.32,.72,0,1);
+    padding: 0 0 calc(var(--safe-bot) + 8px);
+    max-height: 85vh; display: flex; flex-direction: column;
+    border-top: 1px solid var(--border);
+  }
+  #trade-sheet.open { transform: translateX(-50%) translateY(0); }
+  .sheet-handle {
+    width: 36px; height: 4px; background: rgba(255,255,255,.25);
+    border-radius: 2px; margin: 12px auto 0;
+  }
+  .sheet-header { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+  .sheet-title { font-size: 16px; font-weight: 700; }
+  .sheet-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .sheet-close {
+    position: absolute; right: 16px; top: 14px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--surface2); border: none; cursor: pointer;
+    color: var(--text2); font-size: 15px; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .sheet-body { overflow-y: auto; flex: 1; padding: 12px 16px; }
+  .trade-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .trade-item:last-child { border-bottom: none; }
+  .trade-side {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    margin-bottom: 4px;
+  }
+  .trade-side.buy  { background: rgba(52,211,153,.15); color: var(--green); }
+  .trade-side.sell { background: rgba(248,113,113,.15); color: var(--red); }
+  .trade-qty { font-size: 13px; color: var(--text); }
+  .trade-reason { font-size: 11px; color: var(--text2); margin-top: 3px; max-width: 200px; }
+  .trade-right { text-align: right; }
+  .trade-price { font-size: 15px; font-weight: 600; }
+  .trade-pnl { font-size: 12px; margin-top: 3px; }
+  .trade-date { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* ── Overlay ─────────────────────────────────────────────── */
+  #overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5);
+    z-index: 190; opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  #overlay.show { opacity: 1; pointer-events: all; }
+
+  /* ── Color utilities ─────────────────────────────────────── */
+  .green { color: var(--green); }
+  .red   { color: var(--red); }
+  .gold  { color: var(--gold); }
+  .dim   { color: var(--text2); }
+
+  /* ── PC frame ────────────────────────────────────────────── */
+  @media (min-width: 600px) {
+    body { display: flex; justify-content: center;
+           background: #050508; align-items: flex-start; }
+    #shell {
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06),
+                  0 40px 80px rgba(0,0,0,.8);
+      border-radius: 44px;
+      margin: 24px auto;
+      min-height: auto;
+      overflow: hidden;
+    }
+    #topbar { border-radius: 44px 44px 0 0; }
+  }
+</style>
+</head>
+<body>
+<div id="shell">
+  <!-- Top bar -->
+  <div id="topbar">
+    <div>
+      <div id="topbar-title" style="font-size:17px;font-weight:600">📊 模拟持仓</div>
+      <div class="subtitle" id="topbar-sub">加载中…</div>
+    </div>
+    <button id="refresh-btn" onclick="refresh()" title="刷新">↻</button>
+  </div>
+
+  <!-- Main scroll -->
+  <div id="main">
+    <!-- Summary -->
+    <div id="summary-card">
+      <div class="summary-label">组合总净值</div>
+      <div class="summary-nav" id="s-nav">--</div>
+      <div id="s-pnl" style="font-size:14px"></div>
+      <div class="summary-row">
+        <div class="summary-item">
+          <div class="val" id="s-init">--</div>
+          <div class="lbl">初始资金</div>
+        </div>
+        <div class="summary-item">
+          <div class="val" id="s-cash">--</div>
+          <div class="lbl">总现金</div>
+        </div>
+        <div class="summary-item">
+          <div class="val" id="s-pos">--</div>
+          <div class="lbl">持仓市值</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account tabs -->
+    <div id="account-tabs"></div>
+
+    <!-- Account detail -->
+    <div id="acct-detail" style="display:none">
+      <div id="acct-header">
+        <div class="acct-name" id="ah-name"></div>
+        <div class="acct-strategy" id="ah-strategy"></div>
+        <div class="acct-metrics" id="ah-metrics"></div>
+      </div>
+
+      <!-- Nav curve -->
+      <div id="nav-chart-wrap" style="display:none">
+        <div class="section-title" style="margin-top:0">净值曲线</div>
+        <canvas id="nav-chart"></canvas>
+      </div>
+
+      <!-- Positions -->
+      <div class="section-title">持仓</div>
+      <div id="pos-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Trade history sheet -->
+<div id="overlay" onclick="closeSheet()"></div>
+<div id="trade-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header" style="position:relative">
+    <div class="sheet-title" id="sheet-title">操作记录</div>
+    <div class="sheet-sub" id="sheet-sub"></div>
+    <button class="sheet-close" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+let accounts = [];
+let activeAid = null;
+const BASE = '';
+
+// ── Formatters ────────────────────────────────────────────────────────────
+const fmt = (n, digits=0) =>
+  n == null ? '--' : Number(n).toLocaleString('zh-CN', {minimumFractionDigits:digits, maximumFractionDigits:digits});
+
+const fmtM = (n) => {
+  if (n == null) return '--';
+  const abs = Math.abs(n);
+  if (abs >= 1e8) return (n/1e8).toFixed(2) + '亿';
+  if (abs >= 1e4) return (n/1e4).toFixed(2) + '万';
+  return fmt(n, 2);
+};
+
+const pnlClass = (v) => v > 0 ? 'green' : v < 0 ? 'red' : 'dim';
+const pnlSign  = (v) => v > 0 ? '+' : '';
+
+const fmtDate = (s) => s ? s.slice(0,16).replace('T',' ') : '';
+
+// ── API ───────────────────────────────────────────────────────────────────
+const api = (path) => fetch(BASE + path).then(r => r.json());
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────
+async function refresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  try {
+    await loadAll();
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+async function loadAll() {
+  const [summary, accts] = await Promise.all([
+    api('/api/summary'),
+    api('/api/accounts'),
+  ]);
+  accounts = accts;
+  renderSummary(summary, accts);
+  renderTabs(accts);
+  if (!activeAid && accts.length) activeAid = accts[0].id;
+  if (activeAid) await loadAccount(activeAid);
+  document.getElementById('topbar-sub').textContent =
+    `更新于 ${new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})}`;
+}
+
+// ── Summary ───────────────────────────────────────────────────────────────
+function renderSummary(s, accts) {
+  document.getElementById('s-nav').textContent = fmtM(s.total_nav);
+  const p = s.total_pnl_pct;
+  const el = document.getElementById('s-pnl');
+  el.className = pnlClass(p);
+  el.textContent = `${pnlSign(p)}${p.toFixed(2)}%  (${pnlSign(s.total_nav - s.total_initial)}${fmtM(s.total_nav - s.total_initial)})`;
+  document.getElementById('s-init').textContent = fmtM(s.total_initial);
+  const totalCash = accts.reduce((a,b) => a + (b.cash||0), 0);
+  const totalPV   = accts.reduce((a,b) => a + (b.positions_value||0), 0);
+  document.getElementById('s-cash').textContent = fmtM(totalCash);
+  document.getElementById('s-pos').textContent  = fmtM(totalPV);
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────
+function renderTabs(accts) {
+  const el = document.getElementById('account-tabs');
+  el.innerHTML = accts.map(a =>
+    `<div class="tab ${a.id===activeAid?'active':''}" onclick="selectAccount(${a.id})">${a.name}</div>`
+  ).join('');
+}
+
+async function selectAccount(aid) {
+  activeAid = aid;
+  renderTabs(accounts);
+  await loadAccount(aid);
+}
+
+// ── Account detail ────────────────────────────────────────────────────────
+async function loadAccount(aid) {
+  const a = accounts.find(x => x.id === aid);
+  if (!a) return;
+  document.getElementById('acct-detail').style.display = '';
+  // header
+  document.getElementById('ah-name').textContent = a.name;
+  document.getElementById('ah-strategy').textContent = a.strategy;
+  // metrics
+  document.getElementById('ah-metrics').innerHTML = [
+    { v: fmtM(a.nav),              l: '净值' },
+    { v: `${pnlSign(a.pnl_pct)}${a.pnl_pct.toFixed(2)}%`, l: '累计收益', c: pnlClass(a.pnl_pct) },
+    { v: fmtM(a.cash),             l: '现金' },
+    { v: fmtM(a.positions_value),  l: '持仓市值' },
+  ].map(m => `<div class="metric"><div class="m-val ${m.c||''}">${m.v}</div><div class="m-lbl">${m.l}</div></div>`).join('');
+
+  // load positions + nav in parallel
+  const [positions, navData] = await Promise.all([
+    api(`/api/accounts/${aid}/positions`),
+    api(`/api/accounts/${aid}/nav`),
+  ]);
+  renderPositions(positions);
+  renderNavChart(navData);
+}
+
+// ── Positions ─────────────────────────────────────────────────────────────
+function renderPositions(positions) {
+  const el = document.getElementById('pos-list');
+  if (!positions.length) {
+    el.innerHTML = `<div class="empty"><div class="icon">📭</div>暂无持仓</div>`;
+    return;
+  }
+  el.innerHTML = positions.map(p => {
+    const pnl = p.unrealized_pnl;
+    const pct = p.pnl_pct;
+    const cls = pnlClass(pnl);
+    const curr = p.currency === 'HKD' ? 'HK$' : p.currency === 'USD' ? '$' : '¥';
+    return `
+    <div class="pos-card" onclick="openTrades(${p.id}, '${p.name||p.symbol}', '${p.symbol}')">
+      <div class="pos-top">
+        <div>
+          <div class="pos-name">${p.name || p.symbol}</div>
+          <div class="pos-code">${p.symbol} · ${p.market||''} · ${p.currency}</div>
+        </div>
+        <div class="pos-pnl">
+          <div class="pnl-val ${cls}">${pnlSign(pnl)}${fmtM(pnl)}</div>
+          <div class="pnl-pct ${cls}">${pnlSign(pct)}${pct.toFixed(2)}%</div>
+        </div>
+      </div>
+      <hr class="pos-divider">
+      <div class="pos-row">
+        <span class="key">持仓数量</span>
+        <span class="val">${fmt(p.quantity)} 股</span>
+      </div>
+      <div class="pos-row">
+        <span class="key">成本价</span>
+        <span class="val">${curr}${p.avg_cost}</span>
+      </div>
+      <div class="pos-row">
+        <span class="key">现价</span>
+        <span class="val">${curr}${p.last_price}</span>
+      </div>
+      <div class="pos-row">
+        <span class="key">市值(CNY)</span>
+        <span class="val">${fmtM(p.market_value)}</span>
+      </div>
+      ${p.fx_rate !== 1 ? `<div class="pos-row"><span class="key">汇率</span><span class="val dim">${p.currency}/CNY × ${p.fx_rate}</span></div>` : ''}
+      <div class="pos-arrow">查看操作记录 ›</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Nav chart (mini sparkline) ────────────────────────────────────────────
+function renderNavChart(data) {
+  const wrap = document.getElementById('nav-chart-wrap');
+  if (!data || data.length < 2) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  const canvas = document.getElementById('nav-chart');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.offsetWidth || 361;
+  const H = 120;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const vals = data.map(d => d.pnl_pct);
+  const dates = data.map(d => d.snapshot_date);
+  const mn = Math.min(...vals, 0);
+  const mx = Math.max(...vals, 0);
+  const range = mx - mn || 1;
+  const PAD = { l:8, r:8, t:10, b:24 };
+  const cw = W - PAD.l - PAD.r;
+  const ch = H - PAD.t - PAD.b;
+
+  const xOf = i => PAD.l + (i / (vals.length - 1)) * cw;
+  const yOf = v => PAD.t + (1 - (v - mn) / range) * ch;
+
+  // zero line
+  ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4,4]);
+  const y0 = yOf(0);
+  ctx.beginPath(); ctx.moveTo(PAD.l, y0); ctx.lineTo(W-PAD.r, y0); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // gradient fill
+  const lastVal = vals[vals.length-1];
+  const lineColor = lastVal >= 0 ? '#34d399' : '#f87171';
+  const grad = ctx.createLinearGradient(0, PAD.t, 0, H - PAD.b);
+  grad.addColorStop(0, lastVal >= 0 ? 'rgba(52,211,153,.3)' : 'rgba(248,113,113,.3)');
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yOf(vals[0]));
+  vals.forEach((v, i) => { if (i > 0) ctx.lineTo(xOf(i), yOf(v)); });
+  ctx.lineTo(xOf(vals.length-1), H - PAD.b);
+  ctx.lineTo(xOf(0), H - PAD.b);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // line
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yOf(vals[0]));
+  vals.forEach((v, i) => { if (i > 0) ctx.lineTo(xOf(i), yOf(v)); });
+  ctx.strokeStyle = lineColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // last dot
+  const lx = xOf(vals.length-1), ly = yOf(lastVal);
+  ctx.beginPath(); ctx.arc(lx, ly, 3, 0, Math.PI*2);
+  ctx.fillStyle = lineColor; ctx.fill();
+
+  // x-axis labels
+  ctx.fillStyle = 'rgba(136,136,170,0.8)';
+  ctx.font = '10px -apple-system';
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(dates.length / 4));
+  dates.forEach((d, i) => {
+    if (i % step === 0 || i === dates.length-1)
+      ctx.fillText(d.slice(5), xOf(i), H - 4);
+  });
+
+  // current pnl label
+  ctx.fillStyle = lineColor;
+  ctx.font = 'bold 11px -apple-system';
+  ctx.textAlign = 'right';
+  ctx.fillText(`${pnlSign(lastVal)}${lastVal.toFixed(2)}%`, W-PAD.r, ly - 6);
+}
+
+// ── Trade sheet ───────────────────────────────────────────────────────────
+async function openTrades(pid, name, symbol) {
+  document.getElementById('sheet-title').textContent = name || symbol;
+  document.getElementById('sheet-sub').textContent = `${symbol} · 操作记录`;
+  document.getElementById('sheet-body').innerHTML =
+    `<div style="text-align:center;padding:30px;color:var(--text2)">加载中…</div>`;
+  document.getElementById('trade-sheet').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+
+  const trades = await api(`/api/positions/${pid}/trades`);
+  renderTrades(trades);
+}
+
+function closeSheet() {
+  document.getElementById('trade-sheet').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function renderTrades(trades) {
+  const el = document.getElementById('sheet-body');
+  if (!trades.length) {
+    el.innerHTML = `<div class="empty"><div class="icon">📋</div>暂无操作记录</div>`;
+    return;
+  }
+  el.innerHTML = trades.map(t => {
+    const isBuy = t.side === 'buy';
+    const curr = t.currency === 'HKD' ? 'HK$' : t.currency === 'USD' ? '$' : '¥';
+    const pnlHtml = !isBuy && t.realized_pnl != null
+      ? `<div class="trade-pnl ${pnlClass(t.realized_pnl)}">实现盈亏 ${pnlSign(t.realized_pnl)}${fmtM(t.realized_pnl)}</div>`
+      : '';
+    return `
+    <div class="trade-item">
+      <div>
+        <span class="trade-side ${t.side}">${isBuy ? '买入' : '卖出'}</span>
+        <div class="trade-qty">${fmt(t.quantity)} 股</div>
+        <div class="trade-reason">${t.reason || ''}</div>
+      </div>
+      <div class="trade-right">
+        <div class="trade-price">${curr}${t.price}</div>
+        ${pnlHtml}
+        <div class="trade-date">${fmtDate(t.traded_at)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>

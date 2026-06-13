@@ -1,0 +1,1052 @@
+{
+  "0xfdc73f10edf0266756686f35b5712cffa828b0940fc015e0426c76c934c2105d": {
+    "price": 0.175,
+    "question": "US recession by end of 2026?",
+    "volume": 1555171.1021409982,
+    "keyword": "recession",
+    "updated": "2026-06-13T16:00:39.167730+00:00"
+  },
+  "0xd4e77ba6f29fc093509d24f508631abd445ecf506bbdc9c4c80e60256a318527": {
+    "price": 0.7685,
+    "question": "Will no Fed rate cuts happen in 2026?",
+    "volume": 4998605.353380048,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174252+00:00"
+  },
+  "0x5e082f0b57f47a29044aa35b4c5658393122e659d5feae521c06b57cdd7f905c": {
+    "price": 0.155,
+    "question": "Will 1 Fed rate cut happen in 2026?",
+    "volume": 1488578.8828499925,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174351+00:00"
+  },
+  "0xe0d9f508a249e0070db06eb7d1e1fb17eb23c963f6fb722c4c3f81e23240c1cd": {
+    "price": 0.0305,
+    "question": "Will 2 Fed rate cuts happen in 2026?",
+    "volume": 1464522.7625079877,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174401+00:00"
+  },
+  "0x8d4966e84ae80f24b2e14643fdd45364e354229e11e2c17903b4b1763cfbe67c": {
+    "price": 0.0195,
+    "question": "Will 3 Fed rate cuts happen in 2026?",
+    "volume": 1291828.6858929875,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174448+00:00"
+  },
+  "0xaece8d6062d3e3eb9845b32441a4ab06eb2ef332c0228bc6a36add450647c7c4": {
+    "price": 0.0065,
+    "question": "Will 4 Fed rate cuts happen in 2026?",
+    "volume": 1450178.5014769908,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174492+00:00"
+  },
+  "0x7ee722a07e0f84405f1267bc1c84eb95bd6348454453abf445618e778af8fd18": {
+    "price": 0.006,
+    "question": "Will 5 Fed rate cuts happen in 2026?",
+    "volume": 1668626.1109389907,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174532+00:00"
+  },
+  "0x4914bfdd892a48c341b5e0f41ec10475a815f2277273110b16f95e21084bfe75": {
+    "price": 0.0045,
+    "question": "Will 6 Fed rate cuts happen in 2026?",
+    "volume": 2936208.5790009433,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174572+00:00"
+  },
+  "0x2368d2604c9c2b95bc98c51bd50c66e5351caebf05b9fe79d3398c387fe29a89": {
+    "price": 0.0035,
+    "question": "Will 7 Fed rate cuts happen in 2026?",
+    "volume": 2345345.101126949,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174612+00:00"
+  },
+  "0xfe28cb84a714b1a964290d7fd2587e71d57e905678c8ab64488449b24be78e52": {
+    "price": 0.0035,
+    "question": "Will 8 Fed rate cuts happen in 2026?",
+    "volume": 2307898.507684006,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174652+00:00"
+  },
+  "0x4ec6fcb43fe1a32163c7da09d54a99ab9bf6abdc6fd49939d7ad67d696a3248b": {
+    "price": 0.0025,
+    "question": "Will 9 Fed rate cuts happen in 2026?",
+    "volume": 3355527.9625679497,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174693+00:00"
+  },
+  "0x757c144993b3cb831e04c42bfcff8c18864c7da4f4688a5939d2f62e031cbc87": {
+    "price": 0.0025,
+    "question": "Will 10 Fed rate cuts happen in 2026?",
+    "volume": 4031669.456184008,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174734+00:00"
+  },
+  "0x1adf074e048fa613f4ddbc0766088748a48d120a3a713b0183e219032a411ae3": {
+    "price": 0.0025,
+    "question": "Will 11 Fed rate cuts happen in 2026?",
+    "volume": 4035922.8079070235,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174774+00:00"
+  },
+  "0xffa0accb74987c0dc33a70eb3780c1da160206bcfb3ef5d16c1667bc5c459c78": {
+    "price": 0.0035,
+    "question": "Will 12 or more Fed rate cuts happen in 2026?",
+    "volume": 2947519.322121955,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174812+00:00"
+  },
+  "0x80b3af88cb991980e8da1ce86b9794a0957f96ec98c29319dd7ba65e9744d82b": {
+    "price": 0.44,
+    "question": "Fed rate hike in 2026?",
+    "volume": 1806329.1816539944,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174853+00:00"
+  },
+  "0x4d162a40c3e3f458b0e0017485d7f9e6ead0cdd0573e38b26e0d5420525ccfa4": {
+    "price": 0.003,
+    "question": "Fed rate cut by June 2026 meeting?",
+    "volume": 597006.3092310011,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174896+00:00"
+  },
+  "0xb4022c0b2718eca7ad27195f2d48f06527fa000269d188e1d3001ff8bbc16956": {
+    "price": 0.0955,
+    "question": "Fed rate cut by September 2026 meeting?",
+    "volume": 108904.3874659999,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174939+00:00"
+  },
+  "0x02507350fc2b81c3af36c659a805adbda9b0a81e63a27b29cb273cdd7dbc072e": {
+    "price": 0.0265,
+    "question": "Fed rate cut by July 2026 meeting?",
+    "volume": 119812.66147099998,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.174979+00:00"
+  },
+  "0x4092815fea8f91e60586882d45fa2f61bfca8a36d595f47fdea9eec5d2893025": {
+    "price": 0.1635,
+    "question": "Fed rate cut by October 2026 meeting?",
+    "volume": 54317.63244500006,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175018+00:00"
+  },
+  "0xc60022fe066abd6f96c375adb09f38d92c4931f09c10b805354581b4e5465e93": {
+    "price": 0.205,
+    "question": "Fed rate cut by December 2026 meeting?",
+    "volume": 162996.0164300003,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175057+00:00"
+  },
+  "0x16dd5e4c4bfa3f3095c3ff0def4bed556eba411e3cdbf7b463b3b9a74c1d93a4": {
+    "price": 0.1665,
+    "question": "Will the upper bound of the target federal funds rate be 4.25% at the end of 2026?",
+    "volume": 417826.2454569998,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175096+00:00"
+  },
+  "0xcefba5a5ca20b0fee51103c05388828b138cc2199a36fe5a7702049dbc9e5222": {
+    "price": 0.008,
+    "question": "Will the upper bound of the target federal funds rate be 2.25% at the end of 2026?",
+    "volume": 76705.22918499986,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175135+00:00"
+  },
+  "0xaf3a3a07512f3123098b5901a8c4ed2a8320cc7c8e011c831ce4af3c17324260": {
+    "price": 0.029,
+    "question": "Will the upper bound of the target federal funds rate be 3.25% at the end of 2026?",
+    "volume": 55067.20162800001,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175174+00:00"
+  },
+  "0xf88da08f18b2026d986d67508141ec7c13614d87a6ff0f5315edfce4df643165": {
+    "price": 0.319,
+    "question": "Will the upper bound of the target federal funds rate be 3.75% at the end of 2026?",
+    "volume": 521705.7207300006,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175213+00:00"
+  },
+  "0xf9ca1f6608ee282342a6c8d108dda15b91fc9cc1cf9e90a548c3ae5f825b425f": {
+    "price": 0.033,
+    "question": "Will the upper bound of the target federal funds rate be 3.0% at the end of 2026?",
+    "volume": 463377.21113699995,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175251+00:00"
+  },
+  "0xed67f6f9c7c20366b5e608062ada2b8bcb2f667f96d9acdbfc945bd1e5dfdaea": {
+    "price": 0.012,
+    "question": "Will the upper bound of the target federal funds rate be 2.5% at the end of 2026?",
+    "volume": 166300.17203399987,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175289+00:00"
+  },
+  "0xfdf784c55879c70a90eab563dde386b6c5965e41be15fa74424f1db623282312": {
+    "price": 0.0815,
+    "question": "Will the upper bound of the target federal funds rate be 3.5% at the end of 2026?",
+    "volume": 196239.7609940001,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175370+00:00"
+  },
+  "0xb6abfbc465b88c6085503b3280872545c99c43fc979674bb47b9df1f7c170fd3": {
+    "price": 0.329,
+    "question": "Will the upper bound of the target federal funds rate be 4.0% at the end of 2026?",
+    "volume": 1361217.7954359998,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175408+00:00"
+  },
+  "0x3d20f26deb9b9cc7e24e5e06c10234a722d93bac095ce1105c59b44b503078d7": {
+    "price": 0.0315,
+    "question": "Will the upper bound of the target federal funds rate be ≥ 4.5% at the end of 2026?",
+    "volume": 2401118.804299003,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175446+00:00"
+  },
+  "0x857a2ae8088bc256184d6684adfdc7832d072e526c1e8f0d218c1160770c20e9": {
+    "price": 0.0055,
+    "question": "Will the upper bound of the target federal funds rate be ≤1.0% at the end of 2026?",
+    "volume": 219134.1699509998,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175482+00:00"
+  },
+  "0x7a4ddd066c01025c1f97739238a872546c73ac4a32f75f8045f526a8eb27d1a0": {
+    "price": 0.008,
+    "question": "Will the upper bound of the target federal funds rate be 1.25% at the end of 2026?",
+    "volume": 136235.436126,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175520+00:00"
+  },
+  "0xb81fde30f892e09596d26670fd93da5a113451e197d059b434c2b27bb5c27b09": {
+    "price": 0.0085,
+    "question": "Will the upper bound of the target federal funds rate be 1.5% at the end of 2026?",
+    "volume": 140516.90730500018,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175559+00:00"
+  },
+  "0x98283dd207781ce8b3e2bf9890b6e9f7d36fc3eb1a24ac0080833f04fb06f2d6": {
+    "price": 0.007,
+    "question": "Will the upper bound of the target federal funds rate be 1.75% at the end of 2026?",
+    "volume": 137539.488182,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175596+00:00"
+  },
+  "0x75ad781e57ad5ef7d8e279c838da39ab60351fdc056492375af4e35247d5af25": {
+    "price": 0.0055,
+    "question": "Will the upper bound of the target federal funds rate be 2.0% at the end of 2026?",
+    "volume": 253448.1978879999,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175635+00:00"
+  },
+  "0x7209592f294c2b3a7230ea66a4483ecfe1a57ae79144e5e735654829e00cfc68": {
+    "price": 0.935,
+    "question": "Will Apple release a foldable iPhone before 2027?",
+    "volume": 180815.43924000012,
+    "keyword": "apple",
+    "updated": "2026-06-13T15:03:17.542127+00:00"
+  },
+  "0x0a84cdeb03a25ae441697191edbcc31ad6803c3f4d48af2e0429952336c04fc1": {
+    "price": 0.39,
+    "question": "Will Apple release a new product line before 2027?",
+    "volume": 290849.0411490006,
+    "keyword": "apple",
+    "updated": "2026-06-12T23:00:58.740097+00:00"
+  },
+  "0x4b6a275d727e79b2bec8d5bfc8422c2ab6b30e39c480d21bb1750dca9cc3f4b9": {
+    "price": 0.135,
+    "question": "Will Meta Platforms, Inc. (META) hit (LOW) $500 in June?",
+    "volume": 135431.24680300002,
+    "keyword": "meta",
+    "updated": "2026-06-13T16:01:39.108901+00:00"
+  },
+  "0xa0b56d7e621c7cbcfa47fe1a9c24f3409e189180fd6bda55b7a8113129839afc": {
+    "price": 0.0055,
+    "question": "Will China invade Taiwan by June 30, 2026?",
+    "volume": 10898436.148892798,
+    "keyword": "china",
+    "updated": "2026-06-13T16:01:39.966081+00:00"
+  },
+  "0xd9fb1184af0064e5e34b129f5b79afa5a17b7e32f2953ab05efed82315fee6d4": {
+    "price": 0.065,
+    "question": "Will China invade Taiwan by end of 2026?",
+    "volume": 34578469.13222625,
+    "keyword": "china",
+    "updated": "2026-06-13T16:01:39.966066+00:00"
+  },
+  "0xb215decbedd846168842f6e207f09bd5f50ce51d2191f238887d976ec21b6f66": {
+    "price": 0.0045,
+    "question": "Will China blockade Taiwan by June 30?",
+    "volume": 1761411.286695015,
+    "keyword": "china",
+    "updated": "2026-06-13T16:01:39.966089+00:00"
+  },
+  "0x4c80df6f557bb0b9de08c0301ebdce500dd9bdc58400d9269fb8fab1709ed584": {
+    "price": 0.09,
+    "question": "China x Taiwan military clash before 2027?",
+    "volume": 1892831.7996449983,
+    "keyword": "taiwan",
+    "updated": "2026-06-13T16:01:40.933692+00:00"
+  },
+  "0x5ca616aaa0e1e5df6c38439f8bee4b96bacfe32f8f39cb2f1604c0196548662f": {
+    "price": 0.029,
+    "question": "Will China invade Taiwan by September 30, 2026?",
+    "volume": 860696.0628590038,
+    "keyword": "china",
+    "updated": "2026-06-12T03:00:34.158332+00:00"
+  },
+  "0x057da165b096d1f3a59d87bcad68649aecd18dc25c89a6d083530d1aaac18146": {
+    "price": 0.125,
+    "question": "Will China invade Taiwan by June 30, 2027?",
+    "volume": 227269.83074899987,
+    "keyword": "taiwan",
+    "updated": "2026-06-13T16:01:40.933705+00:00"
+  },
+  "0x0bd1b836a2494f80aaee62927cf01e5f6fceb19114e96fc517c6440aea4576e4": {
+    "price": 0.085,
+    "question": "Will Google have the best AI model at the end of June 2026?",
+    "volume": 1164551.5998210039,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326203+00:00"
+  },
+  "0x734c6c32a62f8a27035a222e45fc388d59eeffe89bb31ab26054bc29bcc3eee7": {
+    "price": 0.036,
+    "question": "Will OpenAI have the best AI model at the end of June 2026?",
+    "volume": 1039997.9311519937,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326223+00:00"
+  },
+  "0x9812b1740a7dc0ec0318f66577bd40305576ad43cfcd732399dc02a328035ef2": {
+    "price": 0.0005,
+    "question": "Will Z.ai have the best AI model at the end of June 2026?",
+    "volume": 803556.421757014,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326232+00:00"
+  },
+  "0x241ac01c5cdac5f72014a8039b6678faa26f2f93577e6aaf629600f0b5770a1d": {
+    "price": 0.0005,
+    "question": "Will DeepSeek have the best AI model at the end of June 2026?",
+    "volume": 992049.3435090051,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326240+00:00"
+  },
+  "0xb5bc0c62cc121183fab3645197b346b474396f52cd67622ca1010a541b955411": {
+    "price": 0.0005,
+    "question": "Will Mistral have the best AI model at the end of June 2026?",
+    "volume": 820171.622831006,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326247+00:00"
+  },
+  "0xce4213079b24e02ee44c724e7042ab66fc77f01fce82bfb1b20c2524250d12ef": {
+    "price": 0.0005,
+    "question": "Will Microsoft have the best AI model at the end of June 2026?",
+    "volume": 567637.9395560072,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326254+00:00"
+  },
+  "0x04f08e68b89ee5f76aeec75b403bf9687ca6d2c4040e737516b9debb7cbb486b": {
+    "price": 0.0005,
+    "question": "Will Amazon have the best AI model at the end of June 2026?",
+    "volume": 515500.2066490082,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326260+00:00"
+  },
+  "0x0dc7faa4b5ee79d083532267b6bebe2e701c1801506e299193a667d710490580": {
+    "price": 0.0005,
+    "question": "Will ByteDance have the best AI model at the end of June 2026?",
+    "volume": 678089.9430000079,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326267+00:00"
+  },
+  "0xa4d72632ac0ddadcac5247ffc586a193f1bc3bc839cf9ce993c2471e0d599cca": {
+    "price": 0.8865,
+    "question": "Will Anthropic have the best AI model at the end of June 2026?",
+    "volume": 1666381.735806998,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326274+00:00"
+  },
+  "0x89102f28df8a119d84259cfdd0f2f7f9a758cfdf749554e153c6bf154afbe717": {
+    "price": 0.0005,
+    "question": "Will Alibaba have the best AI model at the end of June 2026?",
+    "volume": 888935.2331520084,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326280+00:00"
+  },
+  "0x8aed35d66a2094c1221c040489e5507065f7c38381d8874e436a0ce9ff029315": {
+    "price": 0.0025,
+    "question": "Will xAI have the best AI model at the end of June 2026?",
+    "volume": 1705761.5322719363,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326286+00:00"
+  },
+  "0x32b8fa5904645a7d096a559783121eb6c0db71487c47db0bcab99a92d5abb0dd": {
+    "price": 0.0005,
+    "question": "Will Moonshot have the best AI model at the end of June 2026?",
+    "volume": 766496.7080800097,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326292+00:00"
+  },
+  "0x0a650c635145e570bfcebccf7cd63f1074d49a13d2e7a384717afeea90cf5d74": {
+    "price": 0.0005,
+    "question": "Will Meituan have the best AI model at the end of June 2026?",
+    "volume": 752969.5103610102,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326298+00:00"
+  },
+  "0xf243f49f25aa69cc55bfa09789c1f85645061625a84c6de14e8f9b2915c12893": {
+    "price": 0.0015,
+    "question": "Will Meta have the best AI model at the end of June 2026?",
+    "volume": 810970.3779260049,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326304+00:00"
+  },
+  "0x94d08baa1c18020cd133bb5eb7486001ad4336bb6a488f8ad34b679af1b58a88": {
+    "price": 0.0005,
+    "question": "Will Baidu have the best AI model at the end of June 2026?",
+    "volume": 528223.8183240076,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326311+00:00"
+  },
+  "0xfbfe428c1cc89bc0cc87f0f95b3ded63f7a517276f99a14512a641c35959d051": {
+    "price": 0.16,
+    "question": "Will any other model be the best AI model on June 13, 2026?",
+    "volume": 56777.082842000054,
+    "keyword": "AI",
+    "updated": "2026-06-11T17:01:15.739355+00:00"
+  },
+  "0x2bdf398464f6ab3c974eaf70a1f1f0dbd63d96507a2605f7e7cf9bbbbd78bbc8": {
+    "price": 0.0395,
+    "question": "Will OpenAI have the top AI model at the end of June 2026?",
+    "volume": 69994.68775799997,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326321+00:00"
+  },
+  "0x62d3940c2c5881f4f380a416f329bfd654b4d8045a74e1cdbcc2a232eb113a83": {
+    "price": 0.0015,
+    "question": "Will Z.ai have the top AI model at the end of June 2026?",
+    "volume": 432737.80930499977,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326329+00:00"
+  },
+  "0x406636e7a09039520dd75f69339f88422e8218bcd1065af6967df8b791124e9b": {
+    "price": 0.0025,
+    "question": "Will DeepSeek have the top AI model at the end of June 2026?",
+    "volume": 215472.9967789997,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326337+00:00"
+  },
+  "0x6007378c9ef6278d9e2a974da50b623a61285ae77f600cb31adbe4dad52dd4a9": {
+    "price": 0.0015,
+    "question": "Will Mistral have the top AI model at the end of June 2026?",
+    "volume": 85958.95128599998,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326344+00:00"
+  },
+  "0x0811ed7f71c2466d04f9ba801c0e21c9cfb016385cdff97b5c9984df0fa5801e": {
+    "price": 0.895,
+    "question": "Will Anthropic have the top AI model at the end of June 2026?",
+    "volume": 56010.44676099996,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326354+00:00"
+  },
+  "0x0ddfaf4e5c6f5e89f0d0ef22f0f57dfc71fde634f0778ced695e70e181f20b4e": {
+    "price": 0.0015,
+    "question": "Will Alibaba have the top AI model at the end of June 2026?",
+    "volume": 156702.0861520001,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326361+00:00"
+  },
+  "0xf3acb657b2330b6bb889fa473653a06c67e8e40ae1807adce83ee075ab91d161": {
+    "price": 0.0015,
+    "question": "Will Moonshot have the top AI model at the end of June 2026?",
+    "volume": 226500.97140800007,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326368+00:00"
+  },
+  "0x62790784a29c4738bc05f605b78cc9f4ce79dc1a3754bb0a503e446b15a903a5": {
+    "price": 0.0015,
+    "question": "Will Meituan have the top AI model at the end of June 2026?",
+    "volume": 297061.87263699993,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326374+00:00"
+  },
+  "0x1ea03c4c7961402d2e494e7382aa127ed94745f08e11f21829f0e622fc1874a4": {
+    "price": 0.036,
+    "question": "Will OpenAI have a #1 AI model by June 30?",
+    "volume": 437826.40973299986,
+    "keyword": "AI",
+    "updated": "2026-06-12T04:00:56.422773+00:00"
+  },
+  "0x968f57ef03b279de33218a60ccaafac50588466751dc5407a75b50bbce5b2e77": {
+    "price": 0.009,
+    "question": "Will DeepSeek have a #1 AI model by June 30?",
+    "volume": 281875.0250880004,
+    "keyword": "AI",
+    "updated": "2026-06-12T04:00:56.422816+00:00"
+  },
+  "0x20923dc0347ba0d72fef151d71911780b54eb15efc8499692f494e1e36a279ce": {
+    "price": 0.009,
+    "question": "Will xAI have a #1 AI model by June 30?",
+    "volume": 573990.3953309995,
+    "keyword": "AI",
+    "updated": "2026-06-12T04:00:56.422856+00:00"
+  },
+  "0xd2aea784fec0395820e7b26faeb1b494cdd48da2ec23f4c6c1e4fb0b733dd687": {
+    "price": 0.009,
+    "question": "Nasdaq round-the-clock trading by June 30?",
+    "volume": 97141.22709700002,
+    "keyword": "nasdaq",
+    "updated": "2026-06-13T16:01:50.425908+00:00"
+  },
+  "0xf7db1353b5f157ab648dd1634be5c3873339a699cdba0641b01e537b0a8334e4": {
+    "price": 0.9995,
+    "question": "Will the price of Bitcoin be above $54,000 on June 11?",
+    "volume": 266147.37164900015,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972251+00:00"
+  },
+  "0xac4b755d7284be2ec0b6848fc4016a4802acb1477342f236102e44ad6550cdf1": {
+    "price": 0.9995,
+    "question": "Will the price of Bitcoin be above $56,000 on June 11?",
+    "volume": 283675.1050830001,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972304+00:00"
+  },
+  "0xa0f6bec464865b3889bf7c6fd2750c404b2378a0783e535a5049d6d3e42576f3": {
+    "price": 0.9995,
+    "question": "Will the price of Bitcoin be above $58,000 on June 11?",
+    "volume": 380226.34797299985,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972327+00:00"
+  },
+  "0xd31d5b99413260baa94497e19c9b87114dbdb9a0f8a86e1e3a0ff872e2855797": {
+    "price": 0.9995,
+    "question": "Will the price of Bitcoin be above $62,000 on June 11?",
+    "volume": 229086.6703219999,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972350+00:00"
+  },
+  "0xbec2d8af08dadd5fc7292c6cfe2b2c7ca8017233654ba4040b725bf0dcc4dcee": {
+    "price": 0.9995,
+    "question": "Will the price of Bitcoin be above $60,000 on June 11?",
+    "volume": 361358.9828959994,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972368+00:00"
+  },
+  "0xfa9b0820f7f621c438a124b3a489761c8a0f38100398f87bfeb7f4a1d10052bf": {
+    "price": 0.0005,
+    "question": "Will the price of Bitcoin be above $64,000 on June 11?",
+    "volume": 343125.6598689997,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972386+00:00"
+  },
+  "0x5405b3bc7cc0e3bbfdd078ad0772270ed37809cdc6b6c3ea9a1139d06002b3aa": {
+    "price": 0.0005,
+    "question": "Will the price of Bitcoin be above $66,000 on June 11?",
+    "volume": 394207.02637300006,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972407+00:00"
+  },
+  "0x6fff4bae964e09bc3337a57f59cc1750d372ee3bf7afe1cdd55f24abe38fb597": {
+    "price": 0.0005,
+    "question": "Will the price of Bitcoin be above $68,000 on June 11?",
+    "volume": 149472.91149999993,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972425+00:00"
+  },
+  "0x1e0227d51ddee06e195bc67d9e2320d9270d64b1f3ef7cc6d40f31810e798ff2": {
+    "price": 0.0005,
+    "question": "Will the price of Bitcoin be above $70,000 on June 11?",
+    "volume": 63919.074005999966,
+    "keyword": "bitcoin",
+    "updated": "2026-06-11T17:01:18.972443+00:00"
+  },
+  "0xccc51cccefaae9546754ac4785db8fa14e617573d86da599c0ac8f36850eae9f": {
+    "price": 0.0045,
+    "question": "Will Bitcoin reach $90,000 in June?",
+    "volume": 308862.1726150009,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482344+00:00"
+  },
+  "0xc3c410d20641575d5e87f5cf03d83e6ea6d681d0ca9b4c409653d50eb7127dc2": {
+    "price": 0.0115,
+    "question": "Will Bitcoin reach $82,500 in June?",
+    "volume": 327101.17223399924,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482390+00:00"
+  },
+  "0x2e539df5355cdb2ea8340beb000a0c6689957e1bb58f748abd18b4c7485a363a": {
+    "price": 0.0285,
+    "question": "Will Bitcoin reach $77,500 in June?",
+    "volume": 415691.3664759997,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482414+00:00"
+  },
+  "0x6992fdf39435fb8aa0b765e24f98cb621fd1f7b6458865387c0ea303da2f0003": {
+    "price": 0.2115,
+    "question": "Will Bitcoin dip to $57,500 in June?",
+    "volume": 1292149.0715440002,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482440+00:00"
+  },
+  "0xadebd6bbf401c9509dd2e78b65a16b567f1f386dccd8cac86cd389bb53ec3a58": {
+    "price": 0.1145,
+    "question": "Will Bitcoin dip to $55,000 in June?",
+    "volume": 1323904.465278001,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482465+00:00"
+  },
+  "0xce6f2c7437b15b808a6be3ea61fc125077e35ce7cc55b66fdbf15f7ce22493ea": {
+    "price": 0.225,
+    "question": "Will Bitcoin reach $70,000 in June?",
+    "volume": 557776.8721780019,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482489+00:00"
+  },
+  "0x32f5e88162b712d8a1706451b4b52832193b2e961fe49095f873bbf44e492229": {
+    "price": 0.0025,
+    "question": "Will Bitcoin reach $100,000 in June?",
+    "volume": 1843021.240482025,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482513+00:00"
+  },
+  "0x6f8263712dd5d445a99f3cc161be8b605d71c6f90e0e3be46889a5cab255aee6": {
+    "price": 0.0045,
+    "question": "Will Bitcoin reach $92,500 in June?",
+    "volume": 267634.43323900003,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482535+00:00"
+  },
+  "0xc6d651e1f7f9fc47f0079c1fba2fc18290cd8a45644f76f73ef7a1ae35f8d65f": {
+    "price": 0.0695,
+    "question": "Will Bitcoin dip to $52,500 in June?",
+    "volume": 603039.6217659998,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482560+00:00"
+  },
+  "0xd61673fdbb2e2ceeeeb7ec4fbaba10859e59cbb4abc311779c114e18dbadfb1b": {
+    "price": 0.0425,
+    "question": "Will Bitcoin dip to $50,000 in June?",
+    "volume": 892236.3039650014,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482583+00:00"
+  },
+  "0xe8c4faf45974a68fa5b72d7bb52012a249357454f17235f14e310dc4bb526a99": {
+    "price": 0.0225,
+    "question": "Will Bitcoin dip to $47,500 in June?",
+    "volume": 743934.3259789994,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482607+00:00"
+  },
+  "0x28799fda784f6b7f9e838c80d03389973167f102fd1db3f4efb5af6ea19b32ad": {
+    "price": 0.0165,
+    "question": "Will Bitcoin reach $80,000 in June?",
+    "volume": 410498.43443900003,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482629+00:00"
+  },
+  "0x6122f0e541331c3324121a6377d6dbd898d4b472b1840ddaab570ed607477744": {
+    "price": 0.0055,
+    "question": "Will Bitcoin reach $87,500 in June?",
+    "volume": 279289.58828400046,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482652+00:00"
+  },
+  "0x9bfe6966da5da12dc39dec67b22375fd5bf21f3c6e9cbaae28d926708eac222f": {
+    "price": 0.0085,
+    "question": "Will Bitcoin reach $85,000 in June?",
+    "volume": 296836.3090220002,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482673+00:00"
+  },
+  "0x99e5c683143a52e9f129ba97bd9d05a44435008296ac5f148735109a215e5c92": {
+    "price": 0.055,
+    "question": "Will Bitcoin reach $75,000 in June?",
+    "volume": 555449.4138560726,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482696+00:00"
+  },
+  "0x04fe95ce83c8fbb73697063c6339a2a1b65d27a5d8b495898a84d5ba67627aed": {
+    "price": 0.115,
+    "question": "Will Bitcoin reach $72,500 in June?",
+    "volume": 439282.5765580004,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482719+00:00"
+  },
+  "0x75a50ed92507226816900d6da63984b4db752ad3a3f73e691514416cc5ccd980": {
+    "price": 0.515,
+    "question": "Will Bitcoin reach $67,500 in June?",
+    "volume": 333610.06387400045,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482740+00:00"
+  },
+  "0x8adf44c2a9ad49ff2fac27a9bca60ec01936dea6caf319001bfde339c74ba5f7": {
+    "price": 0.885,
+    "question": "Will Bitcoin reach $65,000 in June?",
+    "volume": 530568.2842509999,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T15:03:30.482762+00:00"
+  },
+  "0xbb57ccf5853a85487bc3d83d04d669310d28c6c810758953b9d9b91d1aee89d2": {
+    "price": 0.4925,
+    "question": "Will bitcoin hit $1m before GTA VI?",
+    "volume": 4469214.0193565115,
+    "keyword": "bitcoin",
+    "updated": "2026-06-13T16:02:10.082850+00:00"
+  },
+  "0x59dff378c3598705f78efca002e933d8136ca975dc2ac0bb1aef43a7dc706525": {
+    "price": 0.0015,
+    "question": "Will Meituan have the second best AI model at the end of June 2026?",
+    "volume": 51524.88209399998,
+    "keyword": "AI",
+    "updated": "2026-06-12T12:01:11.959257+00:00"
+  },
+  "0x06a7a20c1c36f9f894d759237644e2dd4b446c048f2bfda6d8bc2b99313002c6": {
+    "price": 0.021,
+    "question": "Will OpenAI have the second best AI model at the end of June 2026?",
+    "volume": 50944.89826,
+    "keyword": "AI",
+    "updated": "2026-06-12T12:01:11.959301+00:00"
+  },
+  "0xb3d3ae2905daa2947e1f453da4cda4e7285d6c93fd8cbbb867d0e3f262bb59fe": {
+    "price": 0.005,
+    "question": "Will DeepSeek have the second best AI model at the end of June 2026?",
+    "volume": 262101.62660100005,
+    "keyword": "AI",
+    "updated": "2026-06-12T12:01:11.959335+00:00"
+  },
+  "0xa466e17524bcc473279c4ca86f4f1fb01932946a8204e68f6ca96628f8bf2b5e": {
+    "price": 0.095,
+    "question": "China x Japan military clash before 2027?",
+    "volume": 740067.2022919996,
+    "keyword": "china",
+    "updated": "2026-06-13T11:00:59.902431+00:00"
+  },
+  "0x7b49b9bacb5f435bc10f3b100ff59e2fdd346f7f92a9001881bc9825a0af0f11": {
+    "price": 0.505,
+    "question": "Will China invades Taiwan before GTA VI?",
+    "volume": 1863043.6639760653,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608670+00:00"
+  },
+  "0x68e47e45601b8e7fff925490f419191126c0f87cdf978717881fd2efa18cfb5b": {
+    "price": 0.07,
+    "question": "Lai Ching-te out as President of Taiwan by December 31, 2026?",
+    "volume": 50259.89297999999,
+    "keyword": "taiwan",
+    "updated": "2026-06-13T16:01:40.933714+00:00"
+  },
+  "0x8993fe75e5079e37bd765ec45548184645d3fdc6efef9f7302a95ba8113efa8a": {
+    "price": 0.9655,
+    "question": "Will Apple release iPhone 18 in 2026?",
+    "volume": 116274.63217799987,
+    "keyword": "apple",
+    "updated": "2026-06-13T15:03:17.542051+00:00"
+  },
+  "0x1fad72fae204143ff1c3035e99e7c0f65ea8d5cd9bd1070987bd1a3316f772be": {
+    "price": 0.51,
+    "question": "New Rihanna Album before GTA VI?",
+    "volume": 825788.3857090052,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608445+00:00"
+  },
+  "0x50ddb9cd80d5c271664a2ebb7fcaed1d0a148d82c8e8d314d830f75a944c3dcc": {
+    "price": 0.525,
+    "question": "New Playboi Carti Album before GTA VI?",
+    "volume": 739685.8926069464,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608527+00:00"
+  },
+  "0x32b09f6390252b37d674501527e709016d55581b2c1e544bd4b8167f5f732f4c": {
+    "price": 0.495,
+    "question": "Will Jesus Christ return before GTA VI?",
+    "volume": 11567973.921844736,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608587+00:00"
+  },
+  "0x84f8b70331323c2fba97d7ceaa9a35fb645a0770d0dbff169d07f24f376766e9": {
+    "price": 0.505,
+    "question": "Trump out as President before GTA VI?",
+    "volume": 664921.8844820074,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608629+00:00"
+  },
+  "0xf7b5491e70b477d451afe7d9c1fde4bf1a927e69ff289d294b96df164f6c10f0": {
+    "price": 0.795,
+    "question": "Will the Carolina Hurricanes win the 2026 NHL Stanley Cup?",
+    "volume": 2007990.6080450153,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608872+00:00"
+  },
+  "0x89389a6b1439856a8d366234c795d72865c927a1aa3cf9d4cc04a3a400defde1": {
+    "price": 0.1995,
+    "question": "Will the Vegas Golden Knights win the 2026 NHL Stanley Cup?",
+    "volume": 3355561.760590989,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608909+00:00"
+  },
+  "0x713641f745d71f6ec61f906237ffca3c8583f251e49384429a63ceb0ccdb2d37": {
+    "price": 0.8085,
+    "question": "Will the New York Knicks win the 2026 NBA Finals?",
+    "volume": 28063270.32177707,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608946+00:00"
+  },
+  "0xb6b3d7a2037b3faa7e1306d741840d453432902d73cc9a146a035e40271eae73": {
+    "price": 0.194,
+    "question": "Will the San Antonio Spurs win the 2026 NBA Finals?",
+    "volume": 41031139.58124881,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.608983+00:00"
+  },
+  "0xe459d1b598da754c9fd5fc155b6efe3a144aa80abbc7d041fce7d35d903d3c8e": {
+    "price": 0.1525,
+    "question": "Will MegaETH perform an airdrop by June 30? ",
+    "volume": 1576296.5789169937,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609021+00:00"
+  },
+  "0x7976b8dbacf9077eb1453a62bcefd6ab2df199acd28aad276ff0d920d6992892": {
+    "price": 0.1685,
+    "question": "Will Spain win the 2026 FIFA World Cup?",
+    "volume": 41736011.32148014,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609058+00:00"
+  },
+  "0x375409bc5eeeff961e82b479caeccc20f33d15738e5bce1186d628aa3d9dfb1f": {
+    "price": 0.0965,
+    "question": "Will England win the 2026 FIFA World Cup?",
+    "volume": 35683188.42688761,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609107+00:00"
+  },
+  "0x9b6fef249040fd17e9c107955b37ac2c3e923509b6b0ff01cc463a331ddeb894": {
+    "price": 0.1605,
+    "question": "Will France win the 2026 FIFA World Cup?",
+    "volume": 47597336.60593524,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609143+00:00"
+  },
+  "0x30d55d8124ee1e12dabe89201badc45669b81dff69e4ce44d961f32878ec178a": {
+    "price": 0.0835,
+    "question": "Will Brazil win the 2026 FIFA World Cup?",
+    "volume": 37388158.00448574,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609179+00:00"
+  },
+  "0x0c4cd2055d6ea89354ffddc55d6dbcef9355748112ea952fc925f3db6a5c457f": {
+    "price": 0.0785,
+    "question": "Will Argentina win the 2026 FIFA World Cup?",
+    "volume": 38763454.22511777,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609215+00:00"
+  },
+  "0x1595b4818eeb1ea1e0bec5de6f057218e557feee9b405a0e930d290384fa1d16": {
+    "price": 0.0515,
+    "question": "Will Germany win the 2026 FIFA World Cup?",
+    "volume": 40143105.90888011,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609252+00:00"
+  },
+  "0x4f3421fb2daf5cca7430ed8d8132463963081572d75434393a1808fdb8829fe8": {
+    "price": 0.1055,
+    "question": "Will Portugal win the 2026 FIFA World Cup?",
+    "volume": 43416296.625525415,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609289+00:00"
+  },
+  "0x9be56371f6a29d12769b2f196847ee825b9585ebb8bfa042136be031b081eba1": {
+    "price": 0.0475,
+    "question": "Will Netherlands win the 2026 FIFA World Cup?",
+    "volume": 43452954.30727496,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609326+00:00"
+  },
+  "0xcdb1f0400949238a63d3e88243d2ada08cd9c2a71985ced9f0cfd5e66354cf90": {
+    "price": 0.0115,
+    "question": "Will USA win the 2026 FIFA World Cup?",
+    "volume": 60354978.54927535,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609363+00:00"
+  },
+  "0x7876851632c295043c66536150a304cb785abdf712ba8489d298c6e6926be106": {
+    "price": 0.0095,
+    "question": "Will Uruguay win the 2026 FIFA World Cup?",
+    "volume": 45643102.48976298,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609401+00:00"
+  },
+  "0x5ccfe1b69a582d2985db08a8481a0d74c314b1fce9b4711ae2efb2c6467fe6aa": {
+    "price": 0.0135,
+    "question": "Will Mexico win the 2026 FIFA World Cup?",
+    "volume": 50346222.499714464,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609436+00:00"
+  },
+  "0x32cfa52198e85e070d1b17d1b53c5c3a6aaae7736cdc33fa6aa04d353f0c2811": {
+    "price": 0.0205,
+    "question": "Will Belgium win the 2026 FIFA World Cup?",
+    "volume": 45485226.87408567,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609472+00:00"
+  },
+  "0xe99cc59f32b10d23acf196d1a0e8264ea30fca198428acadd3464b06ff60e771": {
+    "price": 0.0175,
+    "question": "Will Colombia win the 2026 FIFA World Cup?",
+    "volume": 45603566.19939737,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609508+00:00"
+  },
+  "0x0189df05ed7bf84d799213b01a79571e305c03b2ac5359cfbb3a323448ba20fa": {
+    "price": 0.0205,
+    "question": "Will Japan win the 2026 FIFA World Cup?",
+    "volume": 46190892.25113987,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609544+00:00"
+  },
+  "0x7b52405ad0e0d31bfe970940b67d77f24ecedeab8a2361c11148c02a006e325c": {
+    "price": 0.0245,
+    "question": "Will Norway win the 2026 FIFA World Cup?",
+    "volume": 43664396.53268789,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609580+00:00"
+  },
+  "0x67443cb1ffb2bf180f7df5b6ca7adff63f7e8e933c7e41405ba118f3e9f8befb": {
+    "price": 0.0025,
+    "question": "Will Canada win the 2026 FIFA World Cup?",
+    "volume": 49355310.0874851,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609615+00:00"
+  },
+  "0xff0cfa9506cfa95759e4c7591654195bd26e3011f9882b51439135e04f2b69f1": {
+    "price": 0.0005,
+    "question": "Will Tunisia win the 2026 FIFA World Cup?",
+    "volume": 35911342.263686016,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609651+00:00"
+  },
+  "0xbaf7780f9059e34b84301fd411f8dc573b4d56adfe6e0cda33daf304b1438da4": {
+    "price": 0.0085,
+    "question": "Will Ecuador win the 2026 FIFA World Cup?",
+    "volume": 50405849.69336369,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609687+00:00"
+  },
+  "0x675bba4df50fd123f7fbfbafa67e9b75f4092d85ce0f9148ce78fc945964c856": {
+    "price": 0.0025,
+    "question": "Will Paraguay win the 2026 FIFA World Cup?",
+    "volume": 51254953.774493575,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609723+00:00"
+  },
+  "0x9e5f9d8c384f8fe368b195fa9a780be58643dff7360588a4e577012df8af00a7": {
+    "price": 0.0005,
+    "question": "Will New Zealand win the 2026 FIFA World Cup?",
+    "volume": 45864724.73264519,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609758+00:00"
+  },
+  "0x098e2be3df8ab529940c567819f8ef007cf007820e9d627642a5bbfaa42af372": {
+    "price": 0.0015,
+    "question": "Will Australia win the 2026 FIFA World Cup?",
+    "volume": 50131158.040567786,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609794+00:00"
+  },
+  "0x84edef36bded182da6a395ac6c785dba8f3e09b6c5ad041385b2042536cbef25": {
+    "price": 0.0015,
+    "question": "Will Iran win the 2026 FIFA World Cup?",
+    "volume": 49578821.69578997,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609830+00:00"
+  },
+  "0x965ebc5d79eb1ec02cad67245a44b9e45b33359018f013fb6cf81d5bbf7bcc8d": {
+    "price": 0.0005,
+    "question": "Will Uzbekistan win the 2026 FIFA World Cup?",
+    "volume": 60263272.13841757,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609867+00:00"
+  },
+  "0x65307f30dce84ac35e41813035d3c04933da830dc4efbbb2fcdc4b282700ef3b": {
+    "price": 0.0045,
+    "question": "Will South Korea win the 2026 FIFA World Cup?",
+    "volume": 61677656.90623275,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609902+00:00"
+  },
+  "0x33a87d02fa01e958929385c74b8627d32cc4474e9ebd312d268865c5207147fa": {
+    "price": 0.0005,
+    "question": "Will Jordan win the 2026 FIFA World Cup?",
+    "volume": 31974403.821882773,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609940+00:00"
+  },
+  "0x37a6de1b21803e5f3fb1965116218215d79963af4f7e51659696366267a63a03": {
+    "price": 0.0155,
+    "question": "Will Morocco win the 2026 FIFA World Cup?",
+    "volume": 48104288.09911177,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.609976+00:00"
+  },
+  "0x233ce0c3969a5cd5079287f16fcd283be7c1db82263e08697f85dbe1b4d2113c": {
+    "price": 0.0005,
+    "question": "Will South Africa win the 2026 FIFA World Cup?",
+    "volume": 38723174.00789427,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610011+00:00"
+  },
+  "0x6972edb1b3f8cd8192651a665fc424dff846efe1c4a2376f628d4b20c704144c": {
+    "price": 0.0065,
+    "question": "Will Senegal win the 2026 FIFA World Cup?",
+    "volume": 41710536.245017484,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610047+00:00"
+  },
+  "0x289568d555ec620ed6fa33c936c5f42649d3a2e30748a1daf7079f42453fbea4": {
+    "price": 0.0035,
+    "question": "Will Ivory Coast win the 2026 FIFA World Cup?",
+    "volume": 57079847.41878132,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610082+00:00"
+  },
+  "0x881a3ffa618b6ae0ab95a5637e310afb1afc2d99c921bfe3235b15eccfce0344": {
+    "price": 0.0015,
+    "question": "Will Ghana win the 2026 FIFA World Cup?",
+    "volume": 40959931.399441965,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610118+00:00"
+  },
+  "0x7412d284c8f63791fec807f9b1f61c6fe61163621775a3dc8686cd2575272abe": {
+    "price": 0.0015,
+    "question": "Will Egypt win the 2026 FIFA World Cup?",
+    "volume": 54965191.083359696,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610155+00:00"
+  },
+  "0x5a59d269c2b5108cd2f64c624e46ee2c8b5cfd88b882582565f927918315b6aa": {
+    "price": 0.0015,
+    "question": "Will Algeria win the 2026 FIFA World Cup?",
+    "volume": 47888898.49321553,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610191+00:00"
+  },
+  "0x3bc69cb672591e4fcd2ef856b64b219a906e15d4601b50066ac81a446574dfaf": {
+    "price": 0.0005,
+    "question": "Will Cape Verde win the 2026 FIFA World Cup?",
+    "volume": 40522944.697164044,
+    "keyword": "AI",
+    "updated": "2026-06-12T23:01:42.610226+00:00"
+  },
+  "0x0fe6bc20ffff1a1f3c0b076f2c512fc582fb82be1cf5836b59bbafa17151fb32": {
+    "price": 0.0095,
+    "question": "Will the upper bound of the target federal funds rate be 2.75% at the end of 2026?",
+    "volume": 51436.40369,
+    "keyword": "fed rate",
+    "updated": "2026-06-13T16:00:40.175332+00:00"
+  },
+  "0xfd7c6c1c35e1187be33845fd35f369ce67c73af516c64b2a63584d3b28e2466e": {
+    "price": 0.145,
+    "question": "Will Anthropic have the best Math AI model at the end of June 2026?",
+    "volume": 62564.86690699995,
+    "keyword": "AI",
+    "updated": "2026-06-13T16:01:43.326401+00:00"
+  }
+}

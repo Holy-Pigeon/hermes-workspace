@@ -1,0 +1,291 @@
+{
+  "taught_topics": [
+    {
+      "topic": "奇异值分解（SVD）——线性代数的万能拆解器",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-04-25T14:07:00+08:00"
+    },
+    {
+      "topic": "偏导数（Partial Derivative）——微积分的多变量变化率探测器",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-04-25T14:14:00+08:00"
+    },
+    {
+      "topic": "Layer Normalization（层归一化）——Transformer的稳定性守护者",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-04-26T08:05:00+08:00"
+    },
+    {
+      "topic": "Sparse Attention（稀疏注意力）——高效注意力的基础思想",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-04-26T14:10:00+08:00"
+    },
+    {
+      "topic": "GRU（门控循环单元）——序列建模的精简记忆大师",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-04-26T14:21:00+08:00"
+    },
+    {
+      "topic": "Bahdanau Attention（巴丹努注意力）——注意力机制的鼻祖",
+      "category": "类目 11：注意力机制起源",
+      "taught_at": "2026-04-26T14:24:00+08:00"
+    },
+    {
+      "topic": "贝叶斯定理（Bayes' Theorem）——用新证据修正旧信念的概率推理法则",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-04-26T20:05:00+08:00"
+    },
+    {
+      "topic": "熵（Entropy）——信息论的不确定性度量尺",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-05-21T08:57:00+08:00"
+    },
+    {
+      "topic": "矩阵（Matrix）——把一组向量组织成可计算的变换机器",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-05-21T17:29:44+08:00"
+    },
+    {
+      "topic": "矩阵乘法（Matrix Multiplication）——Transformer 计算的引擎",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-05-21T08:03:00+08:00"
+    },
+    {
+      "topic": "矩阵转置（Matrix Transpose）——换个视角看同一组关系",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-05-21T18:26:03+08:00"
+    },
+    {
+      "topic": "逆矩阵（Inverse Matrix）——把线性变换尽可能倒回去",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-05-21T20:05:07+08:00"
+    },
+    {
+      "topic": "特征值与特征向量（Eigenvalue & Eigenvector）——在线性变换中保持方向的特殊向量",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-05-24T08:07:00+08:00"
+    },
+    {
+      "topic": "导数（Derivative）——把变化快慢变成可计算信号",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-05-24T09:00:00+08:00"
+    },
+    {
+      "topic": "梯度（Gradient）——把多变量变化方向压缩成一个可行动信号",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-05-24T20:06:12+08:00"
+    },
+    {
+      "topic": "链式法则（Chain Rule）——把层层依赖的变化率接起来",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-05-25T08:05:26+08:00"
+    },
+    {
+      "topic": "泰勒展开（Taylor Expansion）——用局部信息近似复杂函数",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-05-25T14:03:00+08:00"
+    },
+    {
+      "topic": "概率分布（Probability Distribution）——描述不确定性的地图",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-05-25T20:03:00+08:00"
+    },
+    {
+      "topic": "期望（Expectation）——把不确定结果压缩成长期平均值",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-05-28T08:03:00+08:00"
+    },
+    {
+      "topic": "方差（Variance）——衡量随机结果围着平均值晃动得有多厉害",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-05-28T14:03:00+08:00"
+    },
+    {
+      "topic": "最大似然估计（Maximum Likelihood Estimation）——让数据自己投票选模型参数",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-05-28T20:03:00+08:00"
+    },
+    {
+      "topic": "交叉熵（Cross Entropy）——衡量模型预测和真实答案差多远",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-05-29T08:03:00+08:00"
+    },
+    {
+      "topic": "KL 散度（Kullback-Leibler Divergence）——衡量两个概率分布差异的信息尺",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-05-29T14:03:00+08:00"
+    },
+    {
+      "topic": "信息增益（Information Gain）——用“不确定性减少了多少”来选择好问题",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-05-29T20:03:00+08:00"
+    },
+    {
+      "topic": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象",
+      "category": "类目 5：Python 与 PyTorch",
+      "taught_at": "2026-05-31T08:03:00+08:00"
+    },
+    {
+      "topic": "自动求导（Autograd）——让计算图自己记住梯度怎么走",
+      "category": "类目 5：Python 与 PyTorch",
+      "taught_at": "2026-05-31T14:03:00+08:00"
+    },
+    {
+      "topic": "神经网络模块（torch.nn.Module）——把参数和计算组织成可训练的积木",
+      "category": "类目 5：Python 与 PyTorch",
+      "taught_at": "2026-05-31T20:03:00+08:00"
+    },
+    {
+      "topic": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
+      "category": "类目 6：感知机与多层感知机",
+      "taught_at": "2026-06-01T08:03:00+08:00"
+    },
+    {
+      "topic": "激活函数（Activation Function）——给神经网络加入“弯曲能力”",
+      "category": "类目 6：感知机与多层感知机",
+      "taught_at": "2026-06-01T14:03:00+08:00"
+    },
+    {
+      "topic": "前向传播（Forward Propagation）——让输入一步步变成预测结果",
+      "category": "类目 6：感知机与多层感知机",
+      "taught_at": "2026-06-01T20:03:00+08:00"
+    }
+    ,{
+      "topic": "损失函数（Loss Function）——把'模型猜得准不准'变成一个可优化的数字",
+      "category": "类目 7：反向传播算法",
+      "taught_at": "2026-06-05T08:03:00+08:00"
+    },
+    {
+      "topic": "梯度下降（Gradient Descent）——沿着最陡的下坡路找到最低点",
+      "category": "类目 7：反向传播算法",
+      "taught_at": "2026-06-05T14:03:00+08:00"
+    },
+    {
+      "topic": "反向传播推导（Backpropagation）——让误差沿着计算图反着流回每个参数",
+      "category": "类目 7：反向传播算法",
+      "taught_at": "2026-06-06T08:03:00+08:00"
+    },
+    {
+      "topic": "随机梯度下降（SGD）——用一小撮数据估计方向，换来更快的脚步",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-06-06T14:03:00+08:00"
+    },
+    {
+      "topic": "Momentum（动量法）——给梯度下降装上惯性，少走冤枉路",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-06-06T20:03:00+08:00"
+    },
+    {
+      "topic": "Adam 优化器——把动量和自适应步长合二为一的默认选择",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-06-07T08:03:00+08:00"
+    },
+    {
+      "topic": "学习率调度（Learning Rate Scheduling）——让步长随训练节奏动态变化",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-06-07T14:03:00+08:00"
+    },
+    {
+      "topic": "Dropout（随机失活）——靠随机让神经元罢工逼出更鲁棒的网络",
+      "category": "类目 9：正则化技术",
+      "taught_at": "2026-06-07T20:03:00+08:00"
+    },
+    {
+      "topic": "L1/L2 正则化（权重正则化）——给模型的贪心加一道紧箍咒",
+      "category": "类目 9：正则化技术",
+      "taught_at": "2026-06-08T08:03:00+08:00"
+    },
+    {
+      "topic": "Batch Normalization（批归一化）——让每一层的输入分布稳下来再学习",
+      "category": "类目 9：正则化技术",
+      "taught_at": "2026-06-08T14:03:00+08:00"
+    },
+    {
+      "topic": "RNN（循环神经网络）——给神经网络装上一份会被不断改写的记忆",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-06-08T20:03:00+08:00"
+    },
+    {
+      "topic": "LSTM（长短期记忆网络）——给循环网络装上可控的记忆开关",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-06-09T08:03:00+08:00"
+    },
+    {
+      "topic": "序列到序列模型（Seq2Seq）——把一串输入压成思想，再展开成一串输出",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-06-09T14:03:00+08:00"
+    },
+    {
+      "topic": "软注意力与硬注意力（Soft vs Hard Attention）——“全都看一点”还是“只盯一处”",
+      "category": "类目 11：注意力机制起源",
+      "taught_at": "2026-06-09T19:03:00+08:00"
+    },
+    {
+      "topic": "Luong Attention（Luong 注意力）——把对齐打分简化成一次点积",
+      "category": "类目 11：注意力机制起源",
+      "taught_at": "2026-06-09T20:03:00+08:00"
+    },
+    {
+      "topic": "Query / Key / Value 矩阵（QKV）——把'我想找什么、我能被什么找到、我携带什么'拆成三件事",
+      "category": "类目 12：Self-Attention 详解",
+      "taught_at": "2026-06-10T08:03:00+08:00"
+    },
+    {
+      "topic": "缩放点积注意力（Scaled Dot-Product Attention）——为什么要除以 √d 这个看似多余的小数",
+      "category": "类目 12：Self-Attention 详解",
+      "taught_at": "2026-06-10T20:03:00+08:00"
+    },
+    {
+      "topic": "多头注意力（Multi-Head Attention）——让模型同时从多个角度看同一句话",
+      "category": "类目 12：Self-Attention 详解",
+      "taught_at": "2026-06-10T21:30:00+08:00"
+    },
+    {
+      "topic": "Encoder-Decoder 架构——把“理解”和“生成”拆成两套分工",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-06-11T08:03:00+08:00"
+    },
+    {
+      "topic": "残差连接（Residual Connection）——让深层网络只学增量",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-06-11T14:03:00+08:00"
+    },
+    {
+      "topic": "向量（Vector）——高维空间里同时携带方向与大小的数学箭头",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-11T20:03:00+08:00"
+    },
+    {
+      "topic": "正弦位置编码（Sinusoidal Positional Encoding）——给没有顺序感的注意力装上时间刻度",
+      "category": "类目 14：位置编码",
+      "taught_at": "2026-06-12T08:03:00+08:00"
+    },
+    {
+      "topic": "学习位置编码（Learned Positional Encoding）——让模型自己学出第几个位置长什么样",
+      "category": "类目 14：位置编码",
+      "taught_at": "2026-06-12T14:03:00+08:00"
+    },
+    {
+      "topic": "RoPE（旋转位置编码）——把位置信息转进注意力的相对角度里",
+      "category": "类目 14：位置编码",
+      "taught_at": "2026-06-12T20:03:00+08:00"
+    },
+    {
+      "topic": "ALiBi（带线性偏置的注意力）——不加位置向量，只给远处打个折扣",
+      "category": "类目 14：位置编码",
+      "taught_at": "2026-06-13T08:03:00+08:00"
+    },
+    {
+      "topic": "多子空间表示（Multi-Subspace Representation）——一个大房间，还是几个分工明确的小房间？",
+      "category": "类目 15：多头注意力机制",
+      "taught_at": "2026-06-13T14:03:00+08:00"
+    },
+    {
+      "topic": "注意力头数选择（Number of Attention Heads）——多几个视角，还是每个视角看得更清楚？",
+      "category": "类目 15：多头注意力机制",
+      "taught_at": "2026-06-13T20:03:00+08:00"
+    }
+  ],
+  "total_count": 57,
+  "last_updated": "2026-06-13T20:03:00+08:00"
+}

@@ -1,0 +1,76 @@
+{
+  "_doc": "持仓论点 & 失效条件追踪器 (Thesis & Invalidation Ledger). 每个持仓登记: 核心论点(why we own it) + 关键监测指标 + 失效条件(what would prove us wrong, with explicit thresholds) + 纪律性止损位. 由 thesis_check.py 每次 review 时读取, 用真实价格交叉检查价格类失效条件, 并列出需人工核实的基本面失效条件. 设计目的: 对抗确认偏误/锚定/沉没成本 — 买入时就写死'什么会让我们认错', 而不是事后找理由继续持有. 字段 thesis/invalidation 为合伙人判断(非外部数据), 阈值为纪律约定; price/drawdown 为客观计算. ",
+  "_schema": {
+    "thesis": "一句话核心论点(为什么持有)",
+    "thesis_basis": "论点的可证伪定量支柱(我们押注的具体数字/里程碑)",
+    "key_metrics": "需持续监测的硬指标列表",
+    "invalidation": "失效条件列表, 每条={cond:描述, type:price/fundamental, trigger:可量化触发阈值}",
+    "stop_discipline": "纪律性回撤参考(非硬止损指令, 是触发复审的红线)",
+    "review_note": "最近一次复审备注"
+  },
+  "positions": {
+    "09926": {
+      "name": "康方生物",
+      "market": "HKEX",
+      "buy_reason": "StockChoose入选2026-05-30, 加权期望收益55.2%(池内最高), PD-1/VEGF双抗AK112",
+      "thesis": "AK112(依沃西)作为PD-1/VEGF双抗, 在NSCLC头对头击败K药的数据是核心资产, 全球授权(Summit)+国内放量构成双轮; 押注其成为肺癌一线标准疗法之一",
+      "thesis_basis": "AK112 III期OS数据读出为正; Summit里程碑付款与海外III期推进; 国内医保放量后年销售额爬坡曲线",
+      "key_metrics": ["AK112关键临床读出(OS/PFS)", "Summit合作里程碑进展", "季度产品收入同比", "现金储备vs研发烧钱速度"],
+      "invalidation": [
+        {"cond": "AK112关键OS数据读出未达统计学显著或安全性事件", "type": "fundamental", "trigger": "任一注册性III期主要终点失败"},
+        {"cond": "Summit合作生变(里程碑违约/退回授权)", "type": "fundamental", "trigger": "公告合作终止或重大缩水"},
+        {"cond": "自销产品有机放量减速(剔除里程碑后)", "type": "fundamental", "trigger": "2026中报产品收入(剔除任何一次性里程碑)同比增速<25%"},
+        {"cond": "股价深度回撤触发逻辑复审(非自动卖出)", "type": "price", "trigger": "drawdown_pct <= -25"}
+      ],
+      "stop_discipline": -25,
+      "review_note": "2026-06-12 建仓基准价87.8, 当前持平, 论点未触发任何失效条件"
+    },
+    "601138": {
+      "name": "工业富联",
+      "market": "A股/上交所",
+      "buy_reason": "StockChoose入选2026-06-02, 加权期望48.7%, AI服务器代工",
+      "thesis": "AI服务器/云计算资本开支周期的卖铲人, 受益北美CSP与国产算力扩张; 押注AI server营收占比与毛利结构持续改善",
+      "thesis_basis": "AI服务器营收同比增速维持高位; 云计算业务占比提升带动整体毛利率; 北美大客户资本开支指引不下修",
+      "key_metrics": ["AI服务器/云计算营收同比", "整体毛利率环比", "北美CSP capex指引", "存货周转与预收款"],
+      "invalidation": [
+        {"cond": "AI服务器营收增速大幅放缓", "type": "fundamental", "trigger": "AI server营收同比增速连续两季<20%"},
+        {"cond": "毛利率结构性恶化(代工议价权丧失)", "type": "fundamental", "trigger": "整体毛利率连续两季同比下滑"},
+        {"cond": "主要CSP客户大幅下修capex", "type": "fundamental", "trigger": "核心大客户年度capex指引下修>15%"},
+        {"cond": "股价深度回撤触发逻辑复审", "type": "price", "trigger": "drawdown_pct <= -20"}
+      ],
+      "stop_discipline": -20,
+      "review_note": "2026-06-12 建仓73.75 当前69.52 (-5.7%), 属正常波动, 失效条件均未触发; 关注下一季AI server增速二阶导"
+    },
+    "600415": {
+      "name": "小商品城",
+      "market": "A股/上交所",
+      "buy_reason": "StockChoose入选2026-06-09, 加权期望35%, 义乌平台+Chinagoods数字化",
+      "thesis": "义乌国际商贸城线下平台垄断+Chinagoods数字化+支付(义支付/快捷通)货币化, 押注市场租金提价能力与数字化take rate提升的可选权价值",
+      "thesis_basis": "市场经营户出租率与租金提价; Chinagoods GMV与变现率; 支付业务交易额增长; 六区新市场招商进度",
+      "key_metrics": ["市场出租率/租金水平", "Chinagoods GMV与take rate", "支付业务流水", "出口贸易景气(义乌指数)"],
+      "invalidation": [
+        {"cond": "出口贸易景气持续走弱拖累市场客流", "type": "fundamental", "trigger": "义乌出口/客流指标连续走弱且租金提价受阻"},
+        {"cond": "数字化变现不及预期(可选权证伪)", "type": "fundamental", "trigger": "Chinagoods/支付变现率连续两季停滞或下滑"},
+        {"cond": "股价深度回撤触发逻辑复审", "type": "price", "trigger": "drawdown_pct <= -20"}
+      ],
+      "stop_discipline": -20,
+      "review_note": "2026-06-12 建仓11.31 当前11.02 (-2.6%), 噪音区间, 失效条件未触发"
+    },
+    "601899": {
+      "name": "紫金矿业",
+      "market": "A股/上交所",
+      "buy_reason": "StockChoose入选2026-06-10, 加权期望31.1%, 铜金量增+成本控制",
+      "thesis": "全球铜金量增龙头, 押注铜长期供需缺口(电气化需求)+黄金避险/去美元化+自身产量扩张与成本控制三重驱动",
+      "thesis_basis": "铜/金产量逐年增长兑现; 单位生产成本控制; 铜价中枢与金价中枢; 海外矿山地缘风险可控",
+      "key_metrics": ["铜/金产量同比", "C1现金成本", "铜价/金价中枢", "海外矿山运营/地缘事件"],
+      "invalidation": [
+        {"cond": "铜价中枢大幅下行击穿成本逻辑", "type": "fundamental", "trigger": "铜价持续跌破其增量项目成本支撑且无量增对冲"},
+        {"cond": "重大海外矿山地缘/运营中断", "type": "fundamental", "trigger": "核心矿山被征用/停产/重大事故"},
+        {"cond": "产量扩张证伪(增长引擎失速)", "type": "fundamental", "trigger": "铜或金年度产量指引下修"},
+        {"cond": "股价深度回撤触发逻辑复审", "type": "price", "trigger": "drawdown_pct <= -20"}
+      ],
+      "stop_discipline": -20,
+      "review_note": "2026-06-12 建仓28.47 当前27.33 (-4.0%), 噪音区间, 失效条件未触发"
+    }
+  }
+}

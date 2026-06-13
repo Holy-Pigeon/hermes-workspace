@@ -1,0 +1,59 @@
+{
+  "_doc": "持仓催化剂日历 (Catalyst Calendar). 登记每只持仓未来已知的硬催化剂窗口 — 主要是财报/业绩披露窗口 + thesis 里写明的关键里程碑类型. 由 catalyst_check.py 计算距今天数并分级预警, 临近时把对应的【基本面失效条件】推到人工核查台前. 设计目的: thesis_check.py 只能自动盯【价格类】失效条件, 而【基本面类】失效条件(临床读出/财报增速二阶导/产量指引)没有自动时点触发器, 极易被确认偏误无限拖延. 本日历把它们锚定到日历窗口, 临近即提醒'去拉确切披露日+核实基本面失效条件'. ",
+  "_data_honesty": "deadline 字段是【制度/法定窗口】(A股半年报披露法定截止8/31; 港股中期业绩制度上限=中期结算月末+3个月). exact_date_confirmed=false 表示这不是公司公告的确切披露日 — 确切日期必须临近时去交易所(上交所预约披露/港交所披露易)拉. 绝不用看似合理的确切日期填空.",
+  "_schema": {
+    "event": "催化剂事件名",
+    "window_type": "窗口性质(法定/制度/预估)",
+    "deadline": "该窗口的制度截止日(YYYY-MM-DD)",
+    "exact_date_confirmed": "确切披露日是否已被公司公告核实(false=仅制度窗口)",
+    "source_to_confirm": "临近时去哪拉确切日期",
+    "linked_invalidation": "该催化剂应触发核查的基本面失效条件(来自thesis.json)",
+    "note": "备注"
+  },
+  "catalysts": {
+    "09926": [
+      {
+        "event": "2026 中期业绩公告",
+        "window_type": "港股中期业绩(制度上限=中期结算月末6/30+3个月)",
+        "deadline": "2026-09-30",
+        "exact_date_confirmed": false,
+        "source_to_confirm": "港交所披露易 HKEXnews 公司公告",
+        "linked_invalidation": ["AK112关键临床读出(OS/PFS)", "季度产品收入同比", "现金储备vs研发烧钱速度"],
+        "note": "康方真正的核心催化剂是 AK112 注册性III期 OS 数据读出 — 非定期, 需单独盯 ClinicalTrials/公司公告; 中报只看现金与收入爬坡"
+      }
+    ],
+    "601138": [
+      {
+        "event": "2026 半年度报告",
+        "window_type": "A股半年报法定披露窗口(7/1-8/31)",
+        "deadline": "2026-08-31",
+        "exact_date_confirmed": false,
+        "source_to_confirm": "上交所半年报预约披露时间表 / 公司公告",
+        "linked_invalidation": ["AI server营收同比增速连续两季<20%", "整体毛利率连续两季同比下滑"],
+        "note": "工业富联中报是验证'AI服务器增速二阶导'与毛利结构的关键节点; 同时关注北美CSP capex最新指引"
+      }
+    ],
+    "600415": [
+      {
+        "event": "2026 半年度报告",
+        "window_type": "A股半年报法定披露窗口(7/1-8/31)",
+        "deadline": "2026-08-31",
+        "exact_date_confirmed": false,
+        "source_to_confirm": "上交所半年报预约披露时间表 / 公司公告",
+        "linked_invalidation": ["Chinagoods/支付变现率连续两季停滞或下滑", "义乌出口/客流指标连续走弱且租金提价受阻"],
+        "note": "重点看 Chinagoods GMV/take rate 与支付业务流水 — 可选权价值是否兑现"
+      }
+    ],
+    "601899": [
+      {
+        "event": "2026 半年度报告",
+        "window_type": "A股半年报法定披露窗口(7/1-8/31)",
+        "deadline": "2026-08-31",
+        "exact_date_confirmed": false,
+        "source_to_confirm": "上交所半年报预约披露时间表 / 公司公告",
+        "linked_invalidation": ["铜或金年度产量指引下修", "铜价持续跌破其增量项目成本支撑且无量增对冲"],
+        "note": "看铜/金产量同比兑现与C1现金成本; 铜价/金价中枢是高频另盯"
+      }
+    ]
+  }
+}
