@@ -12,11 +12,39 @@ marketdata.core — 多源取数核心实现
 import time
 import sys
 import io
+import threading
 from contextlib import redirect_stderr
 
 # akshare 的进度条/警告会污染 stdout，统一在此抑制
 import warnings
 warnings.filterwarnings("ignore")
+
+# 单次取数最长等待秒数。akshare 底层 HTTP 可能 hang（不抛异常），
+# 若无此上限，单源挂起会拖死整条降级链——多源容错只对"异常"生效、对"hang"无效，
+# 这正是 daily_mark cron 被 120s 墙杀的根因。此值给每个源一个硬墙，
+# 超时即放弃该源、降级到下一源，让"自动降级"对 hang 也真正生效。
+CALL_TIMEOUT_S = 12
+
+
+def _call_with_timeout(fn, timeout=CALL_TIMEOUT_S):
+    """在 daemon 线程跑 fn；超时则放弃（线程留给进程退出时回收，不阻塞主流程）。
+    返回 (result, timed_out)；fn 内部异常原样抛出由调用方捕获。"""
+    box = {}
+
+    def worker():
+        try:
+            box["val"] = fn()
+        except BaseException as e:  # noqa: BLE001 透传给主线程重抛
+            box["err"] = e
+
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+    t.join(timeout)
+    if t.is_alive():
+        return None, True
+    if "err" in box:
+        raise box["err"]
+    return box.get("val"), False
 
 
 class MarketDataError(Exception):
@@ -53,10 +81,13 @@ def _retry(fn, attempts=3, base_delay=1.5, label=""):
         try:
             buf = io.StringIO()
             with redirect_stderr(buf):
-                result = fn()
-            if result is not None and len(result) > 0:
+                result, timed_out = _call_with_timeout(fn)
+            if timed_out:
+                last_err = f"超时>{CALL_TIMEOUT_S}s(hang)"
+            elif result is not None and len(result) > 0:
                 return result, None
-            last_err = "返回空数据"
+            else:
+                last_err = "返回空数据"
         except Exception as e:
             last_err = f"{type(e).__name__}: {str(e)[:60]}"
         if i < attempts - 1:
