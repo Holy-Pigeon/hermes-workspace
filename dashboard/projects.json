@@ -5,7 +5,10 @@
       "name": "模拟持仓",
       "icon": "💰",
       "desc": "1亿组合模拟盘:建仓/盯市/绩效/护城河-相关性-集中度风控",
-      "ports": null,
+      "ports": {
+        "local": 5050,
+        "remote": 6010
+      },
       "tags": [
         "实盘镜像",
         "盯市",
@@ -14,23 +17,15 @@
       "heartbeat_file": "~/hermes-workspace/paper-trading/paper_trading.db"
     },
     {
-      "id": "polymarket",
-      "name": "Polymarket 异动监控",
-      "icon": "🔔",
-      "desc": "cron扫描器(monitor.py) · 17关键词239市场 · Discord异动告警 · 无web端口",
-      "ports": null,
-      "tags": [
-        "预测市场",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log"
-    },
-    {
       "id": "stockchoose",
       "name": "StockChoose 选股池",
       "icon": "📈",
-      "desc": "A 股 / 港股价值选股 · 暂无控制台",
-      "ports": null,
+      "desc": "A 股 / 港股价值选股 · 概率加权期望收益排序 · 三道入库门",
+      "ports": {
+        "local": 5051,
+        "remote": 6011
+      },
+      "path": "/stockchoose",
       "heartbeat_file": "~/hermes-workspace/StockChoose/logs",
       "tags": [
         "脚本"
@@ -147,7 +142,7 @@
       "id": "polymarket-dashboard",
       "name": "Polymarket 全景看板",
       "icon": "📊",
-      "desc": "launchd常驻Web(:5052→frpc6012) · 每30min拉全量市场分类macro/sector算1h异动",
+      "desc": "launchd常驻Web(:5052→frpc6012) · 全量市场macro/sector分类+1h异动 · 含后台告警器monitor.py(17关键词>5%推Discord)",
       "ports": {
         "local": 5052,
         "remote": 6012
