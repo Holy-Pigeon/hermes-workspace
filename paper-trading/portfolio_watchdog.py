@@ -76,10 +76,10 @@ def check_thesis():
     return (len(flags) > 0), flags
 
 
-def check_quiet(label, script, extra=None):
+def check_quiet(label, script, extra=None, timeout=120):
     """跑 --quiet 类脚本, stdout 非空即红旗。返回 (有无红旗, 摘要行list)。"""
     cmd = [PY, script, "--quiet"] + (extra or [])
-    code, out, err = run(cmd)
+    code, out, err = run(cmd, timeout=timeout)
     out = (out or "").strip()
     if out:
         # 取前若干非空行作为摘要, 完整内容由人工跑脚本看
@@ -136,6 +136,12 @@ def main():
             ("估值历史分位", lambda: check_quiet("估值分位", "valuation_percentile.py"), None),
             ("相关性/集中度", lambda: check_quiet("相关性", "correlation_check.py",
                                               ["--days", str(args.days)]), None),
+            # 慢漂移信号工具(季更): 此前各自建成但无任何 cron 调用=孤儿能力,
+            # 收口进 --full 周度复审, 与急性 --quiet 高频巡检分层。
+            # 注: moat_scorecard 全 universe 取数 >600s 且为年更频率, 不进周度编排,
+            #     另列优化/单独季度 cadence 待办, 避免拖垮 --full。
+            ("筹码集中度", lambda: check_quiet("筹码集中度", "holder_concentration.py", timeout=180), None),
+            ("南向资金流", lambda: check_quiet("南向资金", "southbound_flow.py", timeout=180), None),
         ]
 
     any_flag = False
