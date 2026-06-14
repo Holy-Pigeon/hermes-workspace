@@ -58,9 +58,11 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7",
     "371d8689-fc19-812b-ace5-d4005fc4f91d",
     "37fd8689-fc19-8179-bf60-c918136b9dfb",
-    "37fd8689-fc19-8140-9f0a-c053723ccb76"
+    "37fd8689-fc19-8140-9f0a-c053723ccb76",
+    "37fd8689-fc19-81fa-bc4b-d37e9d3c65e1"
   ],
   "page_titles": {
+    "37fd8689-fc19-81fa-bc4b-d37e9d3c65e1": "FFN 激活函数选择（ReLU → GELU → SwiGLU）——决定那台\"小工厂\"用什么样的开关",
     "37fd8689-fc19-8140-9f0a-c053723ccb76": "前馈网络 FFN 结构（Position-wise Feed-Forward Network）——注意力之后那台逐位置加工的两层小工厂",
     "37fd8689-fc19-8179-bf60-c918136b9dfb": "注意力的计算复杂度（Computational Complexity）——为什么序列一长，Transformer 就开始喘不过气",
     "37ed8689-fc19-81fc-b3ef-fa3bc0b8aca3": "注意力头数选择（Number of Attention Heads）——多几个视角，还是每个视角看得更清楚？",
@@ -121,7 +123,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 47,
+  "cursor": 48,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -130,6 +132,6 @@
       "resolved_at": "2026-06-14T00:49:30+0800"
     }
   },
-  "last_review": "2026-06-14T19:31:59+0800",
-  "last_order_refresh": "2026-06-14T14:09:35+0800"
+  "last_review": "2026-06-14T20:01:44+0800",
+  "last_order_refresh": "2026-06-14T20:02:24+0800"
 }

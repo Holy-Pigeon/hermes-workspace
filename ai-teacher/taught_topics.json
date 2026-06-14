@@ -294,8 +294,13 @@
       "topic": "前馈网络 FFN 结构（Position-wise Feed-Forward Network）——注意力之后那台逐位置加工的两层小工厂",
       "category": "类目 16：前馈神经网络",
       "taught_at": "2026-06-14T14:03:00+08:00"
+    },
+    {
+      "topic": "FFN 激活函数选择（ReLU → GELU → SwiGLU）——决定那台\"小工厂\"用什么样的开关",
+      "category": "类目 16：前馈神经网络",
+      "taught_at": "2026-06-14T20:03:00+08:00"
     }
   ],
-  "total_count": 59,
-  "last_updated": "2026-06-14T14:03:00+08:00"
+  "total_count": 60,
+  "last_updated": "2026-06-14T20:03:00+08:00"
 }
