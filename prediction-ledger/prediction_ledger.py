@@ -167,6 +167,17 @@ def main():
         return cmd_resolve(data, args[1], args[2], val)
     elif args[0] == "score":
         return cmd_score(preds)
+    elif args[0] == "calib":
+        # watchdog 专用: 只跑 ex-ante 校准健康诊断(信心压缩/到期挤堆)。
+        # 有红旗→打印+exit1(cron 推送); 无红旗→静默 exit0。
+        flags = calibration_health(preds)
+        if not flags:
+            if not quiet:
+                print("校准健康: 无红旗(信心已分散+到期已错峰)。")
+            return 0
+        for f in flags:
+            print(f)
+        return 1
     else:
         print(__doc__)
         return 1
