@@ -21,5 +21,6 @@
   "alert_thresh": 5.0,
   "min_volume": 50000,
   "min_days_to_resolution": 2.0,
-  "discord_target": "discord:1466490258634969341"
+  "discord_target": "discord:1466490258634969341",
+  "wall_budget_sec": 80.0
 }

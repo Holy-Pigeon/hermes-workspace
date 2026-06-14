@@ -61,7 +61,10 @@ DEFAULT_CONFIG = {
     "alert_thresh": 5.0,
     "min_volume": 50000,
     "min_days_to_resolution": 2.0,
-    "discord_target": "discord:1466490258634969341"
+    "discord_target": "discord:1466490258634969341",
+    # 全局墙钟预算(秒)：cron 硬上限 120s，留安全裕度在 95s 前停止扫描并保存已得状态，
+    # 避免超时被 kill 导致 save_state 不执行→快照变陈旧→下一轮 delta 基于过期价格(复利盲区)。
+    "wall_budget_sec": 80.0
 }
 
 def load_config() -> dict:
@@ -107,7 +110,7 @@ def _get(url: str, retries: int = 2) -> dict | list | None:
     for attempt in range(retries):
         req = urllib.request.Request(url, headers={"User-Agent": "hermes-polymarket-monitor/1.0"})
         try:
-            with _opener.open(req, timeout=8) as resp:
+            with _opener.open(req, timeout=6) as resp:
                 return json.loads(resp.read().decode())
         except Exception as e:
             if attempt < retries - 1:
@@ -243,13 +246,23 @@ def scan(config: dict, state: dict, dry_run: bool = False) -> dict:
     min_days_res = config.get("min_days_to_resolution", 2.0)
     keywords     = config.get("keywords", [])
     discord_tgt  = config.get("discord_target", "discord:1466490258634969341")
+    wall_budget  = float(config.get("wall_budget_sec", 95.0))
+    t_start      = time.monotonic()
 
     new_state = dict(state)
     alerts = []
     seen_ids = set()
+    kw_done = 0
+    truncated = False
 
     for kw in keywords:
+        # 墙钟预算守门：超预算则停止扫描，保存已得状态(避免被 cron 120s 硬 kill 致 save_state 不执行)
+        if time.monotonic() - t_start > wall_budget:
+            truncated = True
+            log(f"[BUDGET] wall budget {wall_budget}s exceeded after {kw_done}/{len(keywords)} keywords, stopping scan early (partial state saved).")
+            break
         markets = search_markets(kw)
+        kw_done += 1
         time.sleep(0.3)  # rate limit courtesy
 
         for m in markets:
@@ -324,7 +337,8 @@ def scan(config: dict, state: dict, dry_run: bool = False) -> dict:
         log(f"Alert pushed: {len(alerts)} alerts.")
     else:
         print("[SILENT]")   # Hermes cron no_agent 模式：[SILENT] = 静默不推送
-        log(f"No alerts. Scanned {len(seen_ids)} markets across {len(keywords)} keywords.")
+        cov = f"{kw_done}/{len(keywords)}" + ("(部分,预算截断)" if truncated else "")
+        log(f"No alerts. Scanned {len(seen_ids)} markets across {cov} keywords.")
 
     return new_state
 
