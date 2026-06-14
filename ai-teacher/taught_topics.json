@@ -284,8 +284,13 @@
       "topic": "注意力头数选择（Number of Attention Heads）——多几个视角，还是每个视角看得更清楚？",
       "category": "类目 15：多头注意力机制",
       "taught_at": "2026-06-13T20:03:00+08:00"
+    },
+    {
+      "topic": "注意力的计算复杂度（Computational Complexity）——为什么序列一长，Transformer 就开始喘不过气",
+      "category": "类目 15：多头注意力机制",
+      "taught_at": "2026-06-14T08:03:00+08:00"
     }
   ],
-  "total_count": 57,
-  "last_updated": "2026-06-13T20:03:00+08:00"
+  "total_count": 58,
+  "last_updated": "2026-06-14T08:03:00+08:00"
 }
