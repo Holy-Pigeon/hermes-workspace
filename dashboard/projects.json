@@ -3,16 +3,15 @@
     {
       "id": "paper-trading",
       "name": "模拟持仓",
-      "icon": "💼",
-      "desc": "纸面账户回测基石 · SQLite · 6 账户",
-      "ports": {
-        "local": 5050,
-        "remote": 6010
-      },
-      "health_path": "/api/accounts",
+      "icon": "💰",
+      "desc": "1亿组合模拟盘:建仓/盯市/绩效/护城河-相关性-集中度风控",
+      "ports": null,
       "tags": [
-        "运行中"
-      ]
+        "实盘镜像",
+        "盯市",
+        "风控"
+      ],
+      "heartbeat_file": "~/hermes-workspace/paper-trading/paper_trading.db"
     },
     {
       "id": "polymarket",
