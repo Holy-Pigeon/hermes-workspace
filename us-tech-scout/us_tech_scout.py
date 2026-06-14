@@ -36,6 +36,9 @@ import statistics
 import sys
 import warnings
 from datetime import datetime, timezone, timedelta
+# 收口: 护城河判定走 moat-durability/moat_core 单一事实源 (防与 moat_scorecard 漂移)
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "moat-durability"))
+from moat_core import classify_moat, compute_metrics
 
 warnings.filterwarnings("ignore")
 CN_TZ = timezone(timedelta(hours=8))
@@ -97,18 +100,25 @@ def analyze(symbol, name):
     rows, err = fetch_annual(symbol)
     if rows is None:
         return {"symbol": symbol, "name": name, "ok": False, "err": err}
-    recent = rows[:8]  # 近 8 年
-    roes = [r["roe"] for r in recent if r["roe"] is not None]
-    npms = [r["npm"] for r in recent if r["npm"] is not None]
+    recent = rows[:8]  # 近 8 年 (降序)
+    # 收口: 用 moat_core 单一事实源算耐久度 (含定价权护栏+侵蚀红旗+低谷穿越升级),
+    # 须按时间【升序】对齐 ROE/净利率序列喂给 compute_metrics.
+    asc = list(reversed(recent))  # 升序
+    roe_asc = [r["roe"] for r in asc if r["roe"] is not None and r["npm"] is not None]
+    npm_asc = [r["npm"] for r in asc if r["roe"] is not None and r["npm"] is not None]
     gpms = [r["gpm"] for r in recent if r["gpm"] is not None]
-    if not roes or not npms:
+    if not roe_asc or not npm_asc:
         return {"symbol": symbol, "name": name, "ok": False, "err": "ROE/净利率序列为空"}
 
-    roe_persist = sum(1 for x in roes if x >= 15) / len(roes)
-    roe_median = statistics.median(roes)
-    npm_mean = statistics.mean(npms)
-    npm_cv = (statistics.pstdev(npms) / npm_mean) if npm_mean else None
+    m = compute_metrics(roe_asc, npm_asc, recent_window=5)
     gpm_mean = statistics.mean(gpms) if gpms else None
+    # 护城河耐久度判定 (单一事实源, 与 moat_scorecard 完全同源, 防漂移)
+    moat_verdict, moat_rank, moat_flags = classify_moat(m, gross_margin=gpm_mean)
+
+    roe_persist = m["roe_persistence"]
+    roe_median = m["roe_median"]
+    npm_mean = m["npm_mean"]
+    npm_cv = m["npm_cv"]
     latest = rows[0]
     np_yoy = latest.get("np_yoy")
     rev_yoy = latest.get("rev_yoy")
@@ -116,33 +126,36 @@ def analyze(symbol, name):
     # ROE 失真护栏: 回购大户负权益致 ROE 畸高(AAPL ROE_AVG ~170%)
     roe_distorted = roe_median is not None and roe_median > 100
 
-    # 判定
-    quality_ok = (roe_persist >= 0.80 and npm_mean >= 15 and
-                  (gpm_mean is None or gpm_mean >= 40) and
-                  (npm_cv is not None and npm_cv <= 0.35))
+    # 发现漏斗判定: 在耐久度核心(moat_rank)之上叠加成长维度.
+    # 关键改进: 护城河被侵蚀(moat_rank==3)或定价权不足(护栏降级)的名字, 不再可能拿🏰.
     growing = (np_yoy is not None and np_yoy > 15) or (rev_yoy is not None and rev_yoy > 15)
+    eroding = moat_rank == 3  # 净利率收缩或ROE持久性不足, 护城河存疑
 
-    if quality_ok and growing:
+    if eroding:
+        flag, verdict = "·", "护城河存疑(净利率收缩/ROE不持久), 不入候选"
+    elif moat_rank == 0 and growing:
         flag, verdict = "🏰", "宽护城河候选: 高持久ROE+厚稳净利率+在成长"
-    elif quality_ok:
-        flag, verdict = "🔍", "质量达标但成长停滞(净利YoY≤15%), 价值陷阱风险须人工判"
-    elif (roe_persist >= 0.60 and npm_mean >= 10) and growing:
+    elif moat_rank == 0:
+        flag, verdict = "🔍", "宽护城河但成长停滞(YoY≤15%), 价值陷阱风险须人工判"
+    elif (roe_persist >= 0.60 and npm_mean is not None and npm_mean >= 10) and growing:
         flag, verdict = "⭐", "优质成长候选(质量近门槛+在成长, 须补估值+护城河尽调)"
     else:
         flag, verdict = "·", "未达耐久质量门槛"
 
-    notes = []
+    notes = list(moat_flags)  # 把 moat_core 的护栏/侵蚀/升级说明带出来, 透明化
     if roe_distorted:
         notes.append("ROE>100%疑回购致权益缩水失真, 以净利率/毛利为准")
 
     return {
         "symbol": symbol, "name": name, "ok": True, "flag": flag, "verdict": verdict,
+        "moat_verdict": moat_verdict,
         "roe_persist": round(roe_persist, 2), "roe_median": round(roe_median, 1) if roe_median is not None else None,
-        "npm_mean": round(npm_mean, 1), "npm_cv": round(npm_cv, 3) if npm_cv is not None else None,
+        "npm_mean": round(npm_mean, 1) if npm_mean is not None else None,
+        "npm_cv": round(npm_cv, 3) if npm_cv is not None else None,
         "gpm_mean": round(gpm_mean, 1) if gpm_mean is not None else None,
         "np_yoy": round(np_yoy, 1) if np_yoy is not None else None,
         "rev_yoy": round(rev_yoy, 1) if rev_yoy is not None else None,
-        "latest_date": latest.get("date"), "n_years": len(recent), "notes": notes,
+        "latest_date": latest.get("date"), "n_years": len(roe_asc), "notes": notes,
     }
 
 

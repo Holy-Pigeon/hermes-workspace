@@ -29,6 +29,9 @@ moat_scorecard.py — 护城河耐久度计分卡 (纯只读, 一手 akshare)
 """
 import sys, argparse, json
 import statistics as st
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from moat_core import classify_moat
 
 try:
     import akshare as ak
@@ -144,55 +147,16 @@ def analyze(code, name):
         ys = sorted(gm.keys())
         gm_recent = gm[ys[-1]]
 
-    # 判定
-    flags = []
-    if roe_pers >= 0.70 and npm_cv is not None and npm_cv <= 0.20:
-        verdict = "🏰宽护城河"
-        rank = 0
-    elif (roe_pers >= 0.40) or (npm_cv is not None and npm_cv <= 0.30):
-        verdict = "🧱窄护城河"
-        rank = 1
-    else:
-        verdict = "·普通"
-        rank = 2
-    # 定价权护栏: 真护城河需要定价权=利润率. 净利率<8% 的高ROE多来自杠杆/周转(薄利代工),
-    # 不是定价权护城河 → 🏰 强制降级为 🧱, 并标注成因, 防止把 commodity EMS 误判为宽护城河.
-    if rank == 0 and npm_mean < 8:
-        verdict = "🧱窄护城河"
-        rank = 1
-        flags.append(f"高ROE靠杠杆/周转(净利率仅{npm_mean:.1f}%<8%), 非定价权护城河")
-    # 侵蚀红旗覆盖
-    if npm_trend < -3:
-        flags.append(f"利润率收缩{npm_trend:.1f}pp(护城河被侵蚀?)")
-        verdict = "⚠️护城河存疑"; rank = 3
-    if roe_pers < 0.40:
-        flags.append(f"ROE≥15%仅{roe_pers*100:.0f}%年份(资本回报不持久)")
-        if rank < 3:
-            verdict = "⚠️护城河存疑"; rank = 3
-
-    # 低谷穿越型升级 (修复全样本假阴性): 当全样本判定保守(🧱/⚠️) 但近5年窗口
-    # 同时满足 [ROE持久性≥80% + margin斜率为正(逐年扩张)] 时, 说明在现行规模化/制度下
-    # 护城河本体已稳固, 全样本的低分是被上市初虚高基期/全行业结构性低谷污染 → 升级一级,
-    # 并明确标注是窗口口径分歧 (须警惕近年margin修复含成本端顺风, 见note待证).
-    trough_crossed = (
-        rank in (1, 3)
-        and roe_pers_recent is not None
-        and roe_pers_recent >= 0.80
-        and npm_slope_recent is not None
-        and npm_slope_recent > 0.3   # 近5年净利率年均扩张>0.3pp
-        and npm_trend >= -3          # 排除真侵蚀(被上面打⚠️的不强行救)
-        and npm_cv is not None and npm_cv <= 0.30  # 排除商品周期股(高CV): 其margin扩张是价格红利非定价权
-        and npm_mean >= 8            # 升级需基本定价权(净利率), 与定价权护栏一致
-    )
-    if trough_crossed:
-        if rank == 3:
-            verdict = "🧱窄护城河"; rank = 1
-        elif rank == 1:
-            verdict = "🏰宽护城河"; rank = 0
-        flags.append(
-            f"低谷穿越升级: 近5年ROE≥15%持久{roe_pers_recent*100:.0f}%+净利率斜率"
-            f"{npm_slope_recent:+.1f}pp/年(全样本被上市初虚高/行业低谷污染, 须核margin修复是否含成本端顺风)"
-        )
+    # 判定: 收口到 moat_core 单一事实源 (护栏/门槛/低谷穿越升级全在那里, 防与 us_tech_scout 漂移)
+    verdict, rank, flags = classify_moat({
+        "roe_persistence": roe_pers,
+        "roe_median": roe_med,
+        "npm_mean": npm_mean,
+        "npm_cv": npm_cv,
+        "npm_trend": npm_trend,
+        "roe_persistence_recent": roe_pers_recent,
+        "npm_slope_recent": npm_slope_recent,
+    })
 
     return {
         "code": code, "name": name, "verdict": verdict, "rank": rank,
