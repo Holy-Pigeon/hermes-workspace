@@ -22,6 +22,19 @@ CONFIG_PATH = ROOT / ".openclaw" / "notion_ai_teacher.json"
 OPENCLAW_CONFIG = Path.home() / ".openclaw" / "openclaw.json"
 DEFAULT_PARENT_PAGE_ID = "2f6d8689-fc19-8110-9ab8-df82d320e860"
 NOTION_VERSION = "2022-06-28"
+
+# Notion API 境外站，方案B精细化分流下命令行/cron 默认不走代理 → 偶发 SSL EOF。
+# 优先读环境变量代理，否则 fallback 本机 Clash 混合端口 7897；NOTION_NO_PROXY=1 可强制直连。
+_PROXY = (
+    os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY")
+    or os.environ.get("http_proxy") or os.environ.get("HTTP_PROXY")
+    or ("" if os.environ.get("NOTION_NO_PROXY") else "http://127.0.0.1:7897")
+)
+_opener = urllib.request.build_opener(
+    urllib.request.ProxyHandler({"http": _PROXY, "https": _PROXY}) if _PROXY
+    else urllib.request.ProxyHandler({})
+)
+
 LANGUAGE_ALIASES = {
     "": "plain text",
     "text": "plain text",
@@ -70,7 +83,7 @@ def notion_request(method: str, path: str, token: str, payload: dict[str, Any] |
     last_error: Exception | None = None
     for attempt in range(5):
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with _opener.open(req, timeout=30) as resp:
                 raw = resp.read().decode("utf-8")
                 return json.loads(raw) if raw else {}
         except urllib.error.HTTPError as exc:

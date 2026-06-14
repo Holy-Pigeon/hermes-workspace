@@ -37,6 +37,18 @@ GAMMA_API = "https://gamma-api.polymarket.com"
 POLYMARKET_SCRIPT = os.path.expanduser("~/.hermes/skills/research/polymarket/scripts/polymarket.py")
 PYTHON = "/opt/homebrew/bin/python3"
 
+# Polymarket 境外站，方案B精细化分流下命令行/cron 默认不走代理 → 直连 SSL EOF。
+# 优先读环境变量代理，否则 fallback 本机 Clash 混合端口 7897；POLYMARKET_NO_PROXY=1 可强制直连。
+_PROXY = (
+    os.environ.get("https_proxy") or os.environ.get("HTTPS_PROXY")
+    or os.environ.get("http_proxy") or os.environ.get("HTTP_PROXY")
+    or ("" if os.environ.get("POLYMARKET_NO_PROXY") else "http://127.0.0.1:7897")
+)
+_opener = urllib.request.build_opener(
+    urllib.request.ProxyHandler({"http": _PROXY, "https": _PROXY}) if _PROXY
+    else urllib.request.ProxyHandler({})
+)
+
 # ─── Config ──────────────────────────────────────────────────────────────────
 
 DEFAULT_CONFIG = {
@@ -95,7 +107,7 @@ def _get(url: str, retries: int = 2) -> dict | list | None:
     for attempt in range(retries):
         req = urllib.request.Request(url, headers={"User-Agent": "hermes-polymarket-monitor/1.0"})
         try:
-            with urllib.request.urlopen(req, timeout=8) as resp:
+            with _opener.open(req, timeout=8) as resp:
                 return json.loads(resp.read().decode())
         except Exception as e:
             if attempt < retries - 1:
