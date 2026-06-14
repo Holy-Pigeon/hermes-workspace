@@ -20,12 +20,42 @@ import sqlite3
 import os
 import sys
 import datetime
+import threading
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "paper_trading.db")
+
+# 全表兜底的墙钟时间预算(秒)。东财间歇 RemoteDisconnected 时港股全表分46页爬~52s,
+# A+HK+US 叠加破 120s cron 墙 → 进程被杀在 commit 前 → NAV 快照丢失(风控backbone失效)。
+# 给兜底设硬预算: 超时即放弃该源, 保留上次价 + 告警, 让脚本永远跑得到 commit+snapshot。
+# 单只主路(<1s)不受此限, 仅护栏慢兜底。
+FALLBACK_WALL_BUDGET_SEC = float(os.environ.get("DAILY_MARK_FALLBACK_BUDGET", "45"))
 
 
 def log(msg):
     print(f"[{datetime.datetime.now().strftime('%H:%M:%S')}] {msg}")
+
+
+def _call_with_timeout(fn, timeout_sec, label):
+    """在 daemon 线程跑 fn(), join 超时即放弃(返回 None)。
+    akshare 底层 HTTP 可能 hang 不抛异常, 普通 try/except 救不了, 必须线程级硬墙。
+    返回 (result, timed_out)。"""
+    box = {}
+
+    def _run():
+        try:
+            box["r"] = fn()
+        except Exception as e:  # noqa
+            box["e"] = e
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    t.join(timeout_sec)
+    if t.is_alive():
+        log(f"  ⏱ {label} 超时 >{timeout_sec:.0f}s(hang), 放弃兜底, 保留上次价")
+        return None, True
+    if "e" in box:
+        raise box["e"]
+    return box.get("r"), False
 
 
 def is_a_share_trading_day():
@@ -108,35 +138,47 @@ def fetch_prices(symbols_by_market):
 
 
 def _fallback_spot(ak, missing, prices):
-    """全表批量兜底。仅在逐只接口失败时调用，慢但全。"""
+    """全表批量兜底。仅在逐只接口失败时调用，慢但全。
+    每个源套墙钟预算(FALLBACK_WALL_BUDGET_SEC), 总预算在源间共享递减——
+    防止东财 hang 累加破 120s cron 墙杀掉脚本(NAV快照丢失的历史病根)。
+    超时即放弃该源, 保留上次价 + 告警, 让脚本永远跑得到 commit+snapshot。"""
+    import time
+    deadline = time.monotonic() + FALLBACK_WALL_BUDGET_SEC
+
+    def _remaining():
+        return max(1.0, deadline - time.monotonic())
+
     if missing.get("A"):
         try:
-            df = ak.stock_zh_a_spot_em()
-            m = dict(zip(df["代码"].astype(str), df["最新价"]))
-            for s in missing["A"]:
-                if s in m and m[s] == m[s]:
-                    prices[s] = float(m[s])
+            df, to = _call_with_timeout(ak.stock_zh_a_spot_em, _remaining(), "A股全表兜底")
+            if not to and df is not None:
+                m = dict(zip(df["代码"].astype(str), df["最新价"]))
+                for s in missing["A"]:
+                    if s in m and m[s] == m[s]:
+                        prices[s] = float(m[s])
         except Exception as e:
             log(f"  A股全表兜底失败: {repr(e)[:60]}")
     if missing.get("HK"):
         try:
-            df = ak.stock_hk_spot_em()
-            m = dict(zip(df["代码"].astype(str), df["最新价"]))
-            for s in missing["HK"]:
-                key = s.zfill(5)
-                if key in m and m[key] == m[key]:
-                    prices[s] = float(m[key])
-                elif s in m and m[s] == m[s]:
-                    prices[s] = float(m[s])
+            df, to = _call_with_timeout(ak.stock_hk_spot_em, _remaining(), "港股全表兜底")
+            if not to and df is not None:
+                m = dict(zip(df["代码"].astype(str), df["最新价"]))
+                for s in missing["HK"]:
+                    key = s.zfill(5)
+                    if key in m and m[key] == m[key]:
+                        prices[s] = float(m[key])
+                    elif s in m and m[s] == m[s]:
+                        prices[s] = float(m[s])
         except Exception as e:
             log(f"  港股全表兜底失败: {repr(e)[:60]}")
     if missing.get("US"):
         try:
-            df = ak.stock_us_spot_em()
-            m = dict(zip(df["代码"].astype(str), df["最新价"]))
-            for s in missing["US"]:
-                if s in m and m[s] == m[s]:
-                    prices[s] = float(m[s])
+            df, to = _call_with_timeout(ak.stock_us_spot_em, _remaining(), "美股全表兜底")
+            if not to and df is not None:
+                m = dict(zip(df["代码"].astype(str), df["最新价"]))
+                for s in missing["US"]:
+                    if s in m and m[s] == m[s]:
+                        prices[s] = float(m[s])
         except Exception as e:
             log(f"  美股全表兜底失败: {repr(e)[:60]}")
 
