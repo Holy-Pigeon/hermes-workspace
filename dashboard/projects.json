@@ -180,6 +180,20 @@
         "美股"
       ],
       "heartbeat_file": "~/hermes-workspace/us-tech-scout"
+    },
+    {
+      "id": "allocation-discipline",
+      "name": "资本配置纪律",
+      "icon": "🧮",
+      "desc": "信号到目标权重+行为护栏(封顶/反等权/信号-权重对齐),价投第二支柱",
+      "ports": null,
+      "tags": [
+        "配置层",
+        "风控",
+        "只读",
+        "纪律"
+      ],
+      "heartbeat_file": "~/hermes-workspace/allocation-discipline"
     }
   ]
 }
