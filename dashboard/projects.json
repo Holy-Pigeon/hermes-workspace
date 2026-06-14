@@ -154,6 +154,19 @@
       ],
       "health_path": "/api/status",
       "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
+    },
+    {
+      "id": "cron-health",
+      "name": "Cron交付健康看门狗",
+      "icon": "🩺",
+      "desc": "盯cron基础设施自身:RUN_ERROR/DELIVERY_FAIL(产出但没送达)/STALE 三类失效的元监控",
+      "ports": null,
+      "tags": [
+        "基础设施",
+        "脚本",
+        "元监控"
+      ],
+      "heartbeat_file": "~/hermes-workspace/cron-health"
     }
   ]
 }
