@@ -69,5 +69,21 @@
     "stage": "initial",
     "ts": "2026-06-14 00:30:59",
     "processed": true
+  },
+  {
+    "idea_id": "2026-06-14 08:16::驾驶舱治理修复+安全发现: paper-trading心跳缺失已补全, web服",
+    "action": "refine",
+    "comment": "所有网页服务需要穿透到外网的，你改了以后会影响穿透访问不",
+    "stage": "initial",
+    "ts": "2026-06-14 09:14:09",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-14 05:59::给预测台账挂'到期提醒'轻量cron(prediction-ledger是唯一漏",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-14 09:14:42",
+    "processed": true
   }
 ]

@@ -38,6 +38,8 @@ StockChoose/tmp/
 *.backup
 *.bak_*
 *~
+# ie.py 引擎自动生成的备份目录（git 已是回退机制，无需入库）
+innovation-engine/engine/.backups/
 
 # ── 日志 ──
 *.log
