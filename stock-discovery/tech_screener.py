@@ -329,9 +329,15 @@ def main():
         rows.append({"w": w, "val": val, "grw": grw, "flag": flag, "reason": reason})
 
     stars = [r for r in rows if r["flag"] == "⭐"]
+    # 🧱 条件候选(便宜+高增长但净利率<8%, 高ROE疑为杠杆/周转非定价权)其escalation
+    # 路径是"先过 moat_scorecard 核护城河本体再升格"——但旧 --quiet 只在有⭐时输出,
+    # 导致 🧱 在 cron 路径完全不可见=便宜薄利高增长股被静默丢弃, 升格链断裂。
+    # 修复: 🧱 与 ⭐ 同属"须人工跟进的actionable信号", quiet 模式下一并surface,
+    # 并对每个 🧱 打出明确的 moat_scorecard 升格判定命令钩子, 把死掉的升格链接活。
+    bricks = [r for r in rows if r["flag"] == "🧱"]
 
-    if args.quiet and not stars:
-        return  # 静默: 无候选不输出
+    if args.quiet and not stars and not bricks:
+        return  # 静默: 无⭐候选且无🧱条件候选才不输出
 
     print("=" * 78)
     print(f"科技股价值-成长发现管线  |  {datetime.now():%Y-%m-%d %H:%M}  |  纯只读 akshare 一手")
@@ -365,6 +371,11 @@ def main():
                        if cc_ttm is not None else f'单季 {fmt(cc_q,"%")}')
             print(f'   质量: 净利率 {fmt(grw.get("net_margin"),"%")} | 现金含量(OCF/归母) {cc_disp}')
         print(f'   判定: {r["reason"]}')
+        if r["flag"] == "🧱":
+            # 死链接活: 给条件候选打出明确的升格判定命令, 让"先过 moat_scorecard"可执行
+            print(f'   ↳升格: 价格信号便宜但护城河本体存疑, 须人工核护城河再决定是否升⭐ → '
+                  f'`/opt/homebrew/bin/python3 ~/hermes-workspace/moat-durability/moat_scorecard.py '
+                  f'{w["symbol"]} --name {w.get("name","")}` (宽护城河+定价权达标方可升格, 否则弃)')
         if val:
             ps_warn, ps_reason = ps_divergence_warn(val, grw)
             if ps_warn:
