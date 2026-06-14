@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-合伙人驾驶舱 Web 服务
+价值雷达 Web 服务
 =====================
 port 5051 | frpc → 6011
 两大模块：
-1. Cron 驾驶舱：所有定时任务状态、最近输出、项目评估记录（从 ideas_log.md 读）
+1. Cron 雷达：所有定时任务状态、最近输出、项目评估记录（从 ideas_log.md 读）
 2. 系统监控：CPU / 内存 / 磁盘 / 网络 / 进程等实时指标
 """
 import os, json, glob, re, datetime, subprocess, urllib.request, urllib.error
@@ -513,11 +513,156 @@ def api_system():
         "now":     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     })
 
+# ── StockChoose 选股池 ────────────────────────────────────────────────────────
+
+def _sc_conn():
+    """连本地 PostgreSQL stockchoose 库（只读用途）。"""
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+    conn = psycopg2.connect(dbname="stockchoose", user="postgres", host="localhost",
+                            connect_timeout=3)
+    return conn, RealDictCursor
+
+def _num(v):
+    """numeric/Decimal → float，None 原样。"""
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except Exception:
+        return v
+
+@app.route("/api/stockchoose/picks")
+def sc_picks():
+    """股票池列表。?status=active|all（默认 active）。带论点数/复核数/最近复核动作。"""
+    status = request.args.get("status", "active")
+    try:
+        conn, RDC = _sc_conn()
+    except Exception as e:
+        return jsonify({"error": f"DB 连接失败: {e}", "picks": []}), 503
+    try:
+        with conn.cursor(cursor_factory=RDC) as cur:
+            where = "" if status == "all" else "WHERE p.status = %s"
+            params = () if status == "all" else (status,)
+            cur.execute(f"""
+                SELECT p.id, p.stock_code, p.stock_name, p.market, p.sector,
+                       p.selected_date, p.selected_price, p.currency,
+                       p.expected_upside_pct, p.target_price, p.conviction_rating,
+                       p.score, p.status, p.updated_at,
+                       (SELECT count(*) FROM stock_theses t WHERE t.stock_pick_id = p.id) AS n_thesis,
+                       (SELECT count(*) FROM stock_theses t WHERE t.stock_pick_id = p.id AND t.still_valid) AS n_thesis_valid,
+                       (SELECT count(*) FROM stock_pick_reviews r WHERE r.stock_pick_id = p.id) AS n_review,
+                       (SELECT r.review_date FROM stock_pick_reviews r WHERE r.stock_pick_id = p.id ORDER BY r.review_date DESC LIMIT 1) AS last_review_date,
+                       (SELECT r.action FROM stock_pick_reviews r WHERE r.stock_pick_id = p.id ORDER BY r.review_date DESC LIMIT 1) AS last_action,
+                       (SELECT r.current_price FROM stock_pick_reviews r WHERE r.stock_pick_id = p.id ORDER BY r.review_date DESC LIMIT 1) AS last_price
+                FROM stock_picks p
+                {where}
+                ORDER BY p.status='active' DESC, p.expected_upside_pct DESC
+            """, params)
+            rows = cur.fetchall()
+        out = []
+        for r in rows:
+            d = dict(r)
+            for k in ("selected_price", "expected_upside_pct", "target_price", "score", "last_price"):
+                d[k] = _num(d.get(k))
+            for k in ("selected_date", "last_review_date"):
+                if d.get(k):
+                    d[k] = str(d[k])
+            d["updated_at"] = str(d["updated_at"])[:16] if d.get("updated_at") else None
+            # 较选入价的当前涨跌幅（用最近复核价）
+            if d.get("last_price") and d.get("selected_price"):
+                d["price_change_since_pick"] = round((d["last_price"] / d["selected_price"] - 1) * 100, 2)
+            else:
+                d["price_change_since_pick"] = None
+            out.append(d)
+        # 汇总
+        active = [x for x in out if x["status"] == "active"]
+        summary = {
+            "total": len(out),
+            "active": len(active),
+            "avg_expected_upside": round(sum(x["expected_upside_pct"] for x in active) / len(active), 2) if active else None,
+        }
+        return jsonify({"picks": out, "summary": summary})
+    finally:
+        conn.close()
+
+@app.route("/api/stockchoose/pick/<int:pick_id>")
+def sc_pick_detail(pick_id):
+    """单只票全论据 + 复核历史。"""
+    try:
+        conn, RDC = _sc_conn()
+    except Exception as e:
+        return jsonify({"error": f"DB 连接失败: {e}"}), 503
+    try:
+        with conn.cursor(cursor_factory=RDC) as cur:
+            cur.execute("SELECT * FROM stock_picks WHERE id = %s", (pick_id,))
+            pick = cur.fetchone()
+            if not pick:
+                return jsonify({"error": "未找到该标的"}), 404
+            pick = dict(pick)
+            for k in ("selected_price", "expected_upside_pct", "target_price", "target_market_cap", "score"):
+                pick[k] = _num(pick.get(k))
+            for k in ("selected_date",):
+                if pick.get(k):
+                    pick[k] = str(pick[k])
+            for k in ("created_at", "updated_at"):
+                pick[k] = str(pick[k])[:16] if pick.get(k) else None
+
+            cur.execute("""
+                SELECT id, thesis_title, thesis_detail, still_valid, status,
+                       key_supporting_data, invalidation_condition, last_checked_date,
+                       validity_check_count, last_validation_summary, next_check_due_at
+                FROM stock_theses WHERE stock_pick_id = %s ORDER BY id
+            """, (pick_id,))
+            theses = []
+            for t in cur.fetchall():
+                t = dict(t)
+                for k in ("last_checked_date",):
+                    if t.get(k):
+                        t[k] = str(t[k])
+                t["next_check_due_at"] = str(t["next_check_due_at"])[:16] if t.get("next_check_due_at") else None
+                theses.append(t)
+
+            cur.execute("""
+                SELECT id, review_date, current_price, price_change_pct, review_summary, action, created_at
+                FROM stock_pick_reviews WHERE stock_pick_id = %s ORDER BY review_date DESC, id DESC
+            """, (pick_id,))
+            reviews = []
+            for rv in cur.fetchall():
+                rv = dict(rv)
+                rv["current_price"] = _num(rv.get("current_price"))
+                rv["price_change_pct"] = _num(rv.get("price_change_pct"))
+                rv["review_date"] = str(rv["review_date"]) if rv.get("review_date") else None
+                rv["created_at"] = str(rv["created_at"])[:16] if rv.get("created_at") else None
+                reviews.append(rv)
+        return jsonify({"pick": pick, "theses": theses, "reviews": reviews})
+    finally:
+        conn.close()
+
+@app.route("/api/stockchoose/rules")
+def sc_rules():
+    """当前规则版本。"""
+    try:
+        conn, RDC = _sc_conn()
+    except Exception as e:
+        return jsonify({"error": f"DB 连接失败: {e}", "versions": []}), 503
+    try:
+        with conn.cursor(cursor_factory=RDC) as cur:
+            cur.execute("SELECT version, effective_date, change_summary FROM rule_versions ORDER BY effective_date DESC, id DESC LIMIT 10")
+            vs = [{"version": r["version"], "effective_date": str(r["effective_date"]), "change_summary": r["change_summary"]} for r in cur.fetchall()]
+        return jsonify({"versions": vs})
+    finally:
+        conn.close()
+
 # ── Static ───────────────────────────────────────────────────────────────────
 
 @app.route("/")
 def index():
     return send_from_directory(str(STATIC), "index.html")
+
+@app.route("/stockchoose")
+def stockchoose_page():
+    return send_from_directory(str(STATIC), "stockchoose.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5051, debug=False)

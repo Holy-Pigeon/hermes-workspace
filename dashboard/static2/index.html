@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=393, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>合伙人驾驶舱</title>
+<title>价值雷达</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -431,7 +431,7 @@ html, body {
 <body>
 <div id="shell">
   <div id="topbar">
-    <h1>🛸 合伙人驾驶舱</h1>
+    <h1>📡 价值雷达</h1>
     <div class="tb-right">
       <span id="last-update"></span>
       <button id="refresh-btn" onclick="refreshAll()">↻</button>
@@ -622,7 +622,7 @@ function renderProjects(projects) {
       entryRow = `<div class="row"><span class="key">入口</span><span class="val blue" style="font-size:12px">:${port} ↗</span></div>`;
       cardAttrs = `onclick="openProject('${url}')" style="cursor:pointer"`;
     } else if (p.internal_tab) {
-      entryRow = `<div class="row"><span class="key">入口</span><span class="val" style="font-size:12px;color:var(--accent)">本驾驶舱 →</span></div>`;
+      entryRow = `<div class="row"><span class="key">入口</span><span class="val" style="font-size:12px;color:var(--accent)">本雷达 →</span></div>`;
       cardAttrs = `onclick="switchTabByName('${p.internal_tab}')" style="cursor:pointer"`;
     } else {
       entryRow = `<div class="row"><span class="key">入口</span><span class="val dim" style="font-size:12px">无控制台</span></div>`;
