@@ -289,8 +289,13 @@
       "topic": "注意力的计算复杂度（Computational Complexity）——为什么序列一长，Transformer 就开始喘不过气",
       "category": "类目 15：多头注意力机制",
       "taught_at": "2026-06-14T08:03:00+08:00"
+    },
+    {
+      "topic": "前馈网络 FFN 结构（Position-wise Feed-Forward Network）——注意力之后那台逐位置加工的两层小工厂",
+      "category": "类目 16：前馈神经网络",
+      "taught_at": "2026-06-14T14:03:00+08:00"
     }
   ],
-  "total_count": 58,
-  "last_updated": "2026-06-14T08:03:00+08:00"
+  "total_count": 59,
+  "last_updated": "2026-06-14T14:03:00+08:00"
 }
