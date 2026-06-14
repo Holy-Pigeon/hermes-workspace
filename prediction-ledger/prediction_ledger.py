@@ -89,11 +89,46 @@ def cmd_resolve(data, pid, outcome, value=None):
     return 1
 
 
+def calibration_health(preds):
+    """ex-ante 校准健康诊断(无需任何已结算): 在结果出来前就暴露
+    '信心压缩'(所有预测都贴0.5=没真表态, Brier事后无法区分技巧与运气)
+    与'到期日挤堆'(一次性集中结算=校准反馈无法分批)两类自毁问题。
+    纯统计读数, 不臆造。"""
+    live = [p for p in preds if p["outcome"] == "pending"]
+    if not live:
+        return []
+    confs = [p["confidence"] for p in live]
+    n = len(confs)
+    mean = sum(confs) / n
+    var = sum((c - mean) ** 2 for c in confs) / n
+    std = var ** 0.5
+    avg_info = sum(abs(c - 0.5) for c in confs) / n  # 平均离0.5的"表态强度"
+    rng = max(confs) - min(confs)
+    from collections import Counter
+    dl = Counter(p.get("verify_by") for p in live)
+    top_date, top_n = dl.most_common(1)[0]
+    flags = []
+    if avg_info < 0.10:
+        flags.append(
+            f"⚠️ 信心压缩: {n}条未决预测平均仅离0.5 {avg_info:.3f}(区间{min(confs):.2f}~{max(confs):.2f}/σ={std:.3f})"
+            f" → 全在'勉强好于抛硬币'区, 没真表态, 8/31结算时Brier无法区分技巧vs运气。"
+            f"建议: 真有把握的拉到0.70+, 真没把握的下到0.35-, 敢分散才可被证伪。")
+    if top_n / n >= 0.6:
+        flags.append(
+            f"⚠️ 到期挤堆: {top_n}/{n}条({top_n/n:.0%})都在 {top_date} 结算 → 校准反馈一次性引爆无法分批,"
+            f"且全绑同一窗口=系统性同向暴露。建议: 拆出可早于中报证伪的子论点(批价/月度数据/渠道)错峰结算。")
+    return flags
+
+
 def cmd_score(preds):
+    # ex-ante 校准健康: 结果没出来也要先暴露信心压缩/到期挤堆
+    for f in calibration_health(preds):
+        print(f)
     resolved = [p for p in preds if p["outcome"] in ("correct", "wrong", "partial")]
     if not resolved:
-        print("还没有已结算的预测可计分。等中报(8/31)/中期(9/30)窗口录入结果后再跑。")
+        print("\n还没有已结算的预测可计分(事后Brier待8/31等窗口录入)。但上方 ex-ante 校准诊断现在就该看。")
         return 0
+    print()
     # hit: correct=1, partial=0.5, wrong=0
     hitmap = {"correct": 1.0, "partial": 0.5, "wrong": 0.0}
     hits = [hitmap[p["outcome"]] for p in resolved]
