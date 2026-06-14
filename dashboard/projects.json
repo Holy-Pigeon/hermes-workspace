@@ -167,6 +167,19 @@
         "元监控"
       ],
       "heartbeat_file": "~/hermes-workspace/cron-health"
+    },
+    {
+      "id": "us-tech-scout",
+      "name": "美股科技发现雷达",
+      "icon": "🦅",
+      "desc": "美股科技耐久质量发现扫描器·点亮未部署的us-tech-value(25M)暗区sleeve·Buffett硬标准筛护城河",
+      "ports": null,
+      "tags": [
+        "研究",
+        "脚本",
+        "美股"
+      ],
+      "heartbeat_file": "~/hermes-workspace/us-tech-scout"
     }
   ]
 }
