@@ -124,6 +124,23 @@ def calibration_health(preds):
         flags.append(
             f"⚠️ 到期挤堆: {top_n}/{n}条({top_n/n:.0%})都在 {top_date} 结算 → 校准反馈一次性引爆无法分批,"
             f"且全绑同一窗口=系统性同向暴露。建议: 拆出可早于中报证伪的子论点(批价/月度数据/渠道)错峰结算。")
+    # ⚠️ 结果相关性: 同一标的+同一结算窗口的多条预测, 由同一份财报驱动 → 结果不独立。
+    # Brier 把它们当 n 条独立观测会高估统计力(伪多重印证在'计分'层的复发,
+    # 对应 signal-orthogonality 在'信号'层抓的同一种确认偏误)。有效独立样本 < n。
+    import re as _re
+    def _subj(p):
+        m = _re.search(r"\((\d{4,6})\)", p["subject"])
+        return m.group(1) if m else p["subject"]
+    clusters = Counter((_subj(p), p.get("verify_by")) for p in live)
+    correlated = {k: c for k, c in clusters.items() if c > 1}
+    if correlated:
+        eff_n = len(clusters)  # 同(标的,窗口)折叠为1个独立单元
+        detail = "; ".join(f"{subj}@{vb}×{c}条" for (subj, vb), c in
+                           sorted(correlated.items(), key=lambda x: -x[1]))
+        flags.append(
+            f"⚠️ 结果相关: {len(correlated)}组同标的+同窗口预测由同一份财报驱动({detail})"
+            f" → 名义n={n}但有效独立样本≈{eff_n}, Brier按n计会高估统计力(伪多重印证)。"
+            f"建议: 同标的多论点要么合并计1分, 要么错开结算窗口让结果真正独立。")
     return flags
 
 
