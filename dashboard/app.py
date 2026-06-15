@@ -7,7 +7,7 @@ port 5051 | frpc → 6011
 1. Cron 雷达：所有定时任务状态、最近输出、项目评估记录（从 ideas_log.md 读）
 2. 系统监控：CPU / 内存 / 磁盘 / 网络 / 进程等实时指标
 """
-import os, json, glob, re, datetime, subprocess, urllib.request, urllib.error
+import os, json, glob, re, datetime, subprocess, urllib.request, urllib.error, hashlib
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory, request
 import psutil
@@ -138,8 +138,14 @@ def parse_ideas():
                 short_title, title_full = _split_title_desc(raw_title)
                 # 完整描述：备注列(parts[6])非空优先用它；否则用标题列完整原文
                 full_desc = desc_col.strip() if desc_col.strip() else title_full
+                # 唯一键：用「日期+标题全文」的稳定短哈希，纯十六进制字符。
+                # 不再用标题前40字明文当id——文本里的逗号/空格/引号/emoji 会在
+                # onclick内联、URL编码、JSON传输中被改写,导致前后端id对不上
+                # (曾致某条idea点详情空白/点通过无反应)。哈希对这些字符完全透明。
+                _key = f"{parts[0]}::{raw_title}"
+                _hash = hashlib.sha1(_key.encode("utf-8")).hexdigest()[:12]
                 items.append({
-                    "id":       f"{parts[0]}::{raw_title[:40].strip()}",   # date::title前40字(去尾随空格,否则URL传递丢空格致匹配失败)
+                    "id":       f"{parts[0]}::{_hash}",   # date::短哈希(免疫所有特殊字符)
                     "date":     parts[0],
                     "status":   status,
                     "status_raw": status_raw,
