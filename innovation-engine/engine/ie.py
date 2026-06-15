@@ -259,7 +259,8 @@ def cmd_lint(args):
     lines = _read_lines()
     records = parse_records(lines)
     errors, warns = [], []
-    KW = ["待你拍板", "待用户拍板", "需你拍板", "需用户拍板", "留给用户拍板", "留用户拍板", "留拍板"]
+    KW = ["待你拍板", "待用户拍板", "需你拍板", "需用户拍板", "留给用户拍板", "留用户拍板", "留拍板", "需拍板"]
+    OPEN = ("proposed", "done", "rejected", "parked")  # 已结案或已正确待拍板，不再告警
     for ln_no, r in records:
         ncol = len(r["raw"].split("|"))
         if ncol < 7:
@@ -267,8 +268,13 @@ def cmd_lint(args):
         if r["status"] == "unknown":
             errors.append(f"L{ln_no+1}: 状态无法识别 «{r['status_raw']}» «{r['title'][:30]}»")
         body = r["title"]
-        if any(k in body for k in KW) and r["status"] not in ("proposed", "done", "rejected", "parked"):
+        if any(k in body for k in KW) and r["status"] not in OPEN:
             warns.append(f"L{ln_no+1}: 正文含拍板词但状态={r['status']} «{r['title'][:40]}»")
+        # 结构性信号：可逆性列明确标“需拍板/待拍板”却仍是 building = 与正文勾稽矛盾的错配
+        # （此前只查正文 prose，漏掉这个最确定的列级信号 → 3 条 building 漏网）
+        rev = r.get("reversibility", "")
+        if any(k in rev for k in ("拍板",)) and r["status"] == "building":
+            warns.append(f"L{ln_no+1}: 可逆性列=「{rev}」却状态=building（应为 proposed） «{r['title'][:40]}»")
     print(json.dumps({
         "records": len(records),
         "errors": errors,
