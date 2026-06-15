@@ -33,6 +33,9 @@ SCREENER = os.path.join(WS, "stock-discovery", "tech_screener.py")
 RDCF = os.path.join(WS, "research", "reverse_dcf.py")
 MOAT = os.path.join(WS, "moat-durability", "moat_scorecard.py")
 LEDGER = os.path.join(WS, "prediction-ledger", "prediction_ledger.py")
+ORTHO = os.path.join(WS, "signal-orthogonality", "signal_orthogonality.py")
+# 本流水线消费的三件套信号 id (须与 signal_registry.json 登记一致)
+PIPELINE_SIGNALS = "tech_screener,reverse_dcf,moat_scorecard"
 OUT_DIR = os.path.join(WS, "research-pipeline", "dossiers")
 
 # 校准闭环窗口: 每次周度跑surface掉在N天内到期/已逾期的站立预测,
@@ -95,12 +98,36 @@ def moat_for(code, name):
         return None
 
 
+def ortho_disclosure():
+    """跑 signal-orthogonality 审计本流水线三件套, 把『印证力折扣』如实写进简报头。
+    这是反确认偏误的工程化: 流水线把 tech_screener+reverse_dcf+moat 拼成『三层尽调』,
+    但前两者共享 price+income_statement (🔴高度共线), 名义3层独立证据实际打折。
+    子脚本拉不到就返回温和占位, 绝不编造正交结论。"""
+    out, _, _ = run([PY, ORTHO, "--signals", PIPELINE_SIGNALS])
+    out = (out or "").strip()
+    header = "### ⚠️ 信号正交性披露 (反『伪多重印证』)"
+    if not out:
+        return header + "\n> (正交性审计器无输出, 跳过; 引用本简报时仍须自行判断证据独立性)"
+    # 抽取关键裁定行, 避免把整段审计塞进每份简报
+    key = []
+    for ln in out.splitlines():
+        s = ln.strip()
+        if s.startswith("并集根输入") or s.startswith("🔴") or s.startswith("❌") or "income_statement" in s and "被" in s:
+            key.append("> " + s)
+    body = "\n".join(key) if key else "> " + out.replace("\n", "\n> ")
+    return (header + "\n> 本简报的『发现/估值/护城河』三层并非完全独立证据——"
+            "tech_screener 与 reverse_dcf 共享 price+利润表(🔴高度共线), "
+            "三者都消费利润表。**按独立根输入计权而非按层数计权**, 避免虚假信心。\n" + body)
+
+
 def build_dossier(cands):
     now = datetime.now(CN_TZ).strftime("%Y-%m-%d %H:%M")
     lines = [f"# 候选研究简报 (研究编排流水线自动生成)  {now} CST", ""]
     lines.append("> 本简报是【尽调起点 stub】非终稿, ⭐=tech_screener 价值成长候选, 已自动拼接")
     lines.append("> 反向DCF隐含增速 + 护城河 verdict。**候选≠买入**, 须人工补 thesis/催化剂/")
     lines.append("> 一手财报核验后才进 StockChoose 复审通道。数据全转发子脚本一手结论。")
+    lines.append("")
+    lines.append(ortho_disclosure())
     lines.append("")
     for c in cands:
         lines.append(f"## ⭐ {c['name']}({c['code']})")
