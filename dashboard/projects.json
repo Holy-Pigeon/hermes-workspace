@@ -144,17 +144,17 @@
       "icon": "📊",
       "desc": "launchd常驻Web(:5052→frpc6012):全量市场macro/sector分类+30min刷新+1h异动快照(changes_1h.json)。告警器是独立项目polymarket-monitor非本项目",
       "ports": {
-       "local": 5052,
-       "remote": 6012
+        "local": 5052,
+        "remote": 6012
       },
       "tags": [
-       "预测市场",
-       "Web服务",
-       "基础设施"
+        "预测市场",
+        "Web服务",
+        "基础设施"
       ],
       "health_path": "/api/status",
       "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
-      },
+    },
     {
       "id": "cron-health",
       "name": "Cron交付健康看门狗",
@@ -207,6 +207,19 @@
         "脚本"
       ],
       "heartbeat_file": "~/hermes-workspace/polymarket-monitor/state.json"
+    },
+    {
+      "id": "signal-orthogonality",
+      "name": "信号正交性审计",
+      "icon": "🔀",
+      "desc": "审计『N重独立印证』是否真输入正交·堵伪多重印证的确认偏误·7/9信号实为price派生",
+      "ports": null,
+      "tags": [
+        "元层",
+        "准则诊断",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
     }
   ]
 }
