@@ -24,6 +24,10 @@ BACKUP_DIR = os.path.join(ROOT, "engine", ".backups")
 WORKSPACE = os.path.dirname(ROOT)
 PROJECTS_JSON = os.path.join(WORKSPACE, "dashboard", "projects.json")
 
+# idea 唯一键的单一权威实现（与 dashboard/app.py 共用同一模块，根除口径分裂）
+sys.path.insert(0, os.path.join(WORKSPACE, "shared"))
+from idea_hash import compute_idea_id
+
 # ── 状态字典：emoji ↔ 名称（与 dashboard/app.py parse_ideas 解析口径一致）──
 EMOJI = {
     "proposed": "💡proposed",
@@ -66,12 +70,10 @@ def _write_lines(lines):
 
 
 def idea_id(ts, title):
-    """与 dashboard/app.py 完全一致：日期::sha1(日期+标题全文)[:12]。
-    必须与 app.py 的 id 生成口径逐字节相同，否则面板审批写入 reviews.json 的 id
-    与本脚本 review 匹配的 id 对不上，导致 approve 的 idea 匹配 NOT_FOUND、状态不推进。
-    (2026-06-15 回归 bug 根因:上次只改了 app.py 的哈希,漏改这里仍用标题前40字明文。)"""
-    key = f"{ts}::{title}"
-    return f"{ts}::{hashlib.sha1(key.encode('utf-8')).hexdigest()[:12]}"
+    """idea 唯一键 = 日期::sha1(日期::标题)[:12]。
+    实现已收口到 shared/idea_hash.py(与 dashboard/app.py 共用),本函数仅转调,
+    保留同名薄包装以兼容本文件所有既有调用点。改算法只改共享模块一处。"""
+    return compute_idea_id(ts, title)
 
 
 def parse_records(lines):
