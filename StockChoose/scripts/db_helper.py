@@ -243,7 +243,7 @@ def main():
     s = sub.add_parser("set-pick-status")
     s.add_argument("--stock-pick-id", type=int, required=True)
     s.add_argument("--status", required=True,
-                   choices=["active", "watching", "closed", "invalidated"])
+                   choices=["active", "watching", "closed", "invalidated", "research"])
 
     s = sub.add_parser("run-sql")
     s.add_argument("--file", required=True)

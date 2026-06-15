@@ -13,12 +13,13 @@ CREATE TABLE IF NOT EXISTS stock_picks (
     selected_price NUMERIC(18, 4) NOT NULL,
     currency VARCHAR(16) DEFAULT 'CNY',
     sector VARCHAR(128) NOT NULL,
-    expected_upside_pct NUMERIC(8, 2) NOT NULL CHECK (expected_upside_pct >= 0),
+    expected_upside_pct NUMERIC(8, 2) CHECK (expected_upside_pct IS NULL OR (expected_upside_pct >= 0 AND expected_upside_pct <= 150)),
     target_price NUMERIC(18, 4),
     target_market_cap NUMERIC(24, 4),
     conviction_rating VARCHAR(32) CHECK (conviction_rating IN ('high', 'medium_high', 'medium', 'watch')),
     score NUMERIC(5, 2) CHECK (score IS NULL OR (score >= 0 AND score <= 100)),
-    status VARCHAR(32) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'watching', 'closed', 'invalidated')),
+    status VARCHAR(32) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'watching', 'closed', 'invalidated', 'research')),
+    pick_type VARCHAR(32) NOT NULL DEFAULT 'investable' CHECK (pick_type IN ('investable', 'research_only')),
     notes TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -100,6 +101,7 @@ SELECT
     sp.sector,
     sp.expected_upside_pct,
     sp.status AS stock_status,
+    sp.pick_type,
     COUNT(st.id) AS thesis_count,
     MIN(st.validity_last_checked_at) AS oldest_thesis_validity_checked_at,
     MAX(st.validity_last_checked_at) AS newest_thesis_validity_checked_at,
@@ -109,7 +111,7 @@ SELECT
     ) AS stale_thesis_count
 FROM stock_picks sp
 JOIN stock_theses st ON st.stock_pick_id = sp.id
-WHERE sp.status IN ('active', 'watching')
+WHERE sp.status IN ('active', 'watching', 'research')
 GROUP BY sp.id
 HAVING COUNT(*) FILTER (
         WHERE st.validity_last_checked_at IS NULL

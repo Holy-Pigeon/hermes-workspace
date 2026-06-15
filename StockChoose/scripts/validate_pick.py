@@ -43,7 +43,7 @@ def _fetch_new_picks(cur, pick_ids):
     cur.execute(
         """
         SELECT id, stock_code, stock_name, status, expected_upside_pct,
-               conviction_rating, score
+               conviction_rating, score, pick_type
         FROM stock_picks WHERE id = ANY(%s)
         """,
         (pick_ids,),
@@ -70,41 +70,59 @@ def validate_picks(picks, theses_by_pick):
         pid = p["id"]
         name = f"{p.get('stock_code')}/{p.get('stock_name')}(id={pid})"
         status = (p.get("status") or "").strip()
+        pick_type = (p.get("pick_type") or "investable").strip()
+        is_research = pick_type == "research_only"
         upside = p.get("expected_upside_pct")
         upside = float(upside) if upside is not None else None
         ths = theses_by_pick.get(pid, [])
 
-        # ── 硬错误 ──
-        # 1. 论点数量
+        # ── 硬错误（investable / research_only 共同要求：研究深度不掺水）──
+        # 1. 论点数量 —— 两类都要求 ≥4 条量化论据（research_only 也不放水，否则成垃圾场）
         if len(ths) < MIN_THESES:
-            errors.append(f"{name}: 论点仅 {len(ths)} 条 < {MIN_THESES}（规则 v0.7 要求每股≥4条量化论点）")
-        # 2. 必须有情景收益/概率加权证据（查论点全文 title+detail）
+            errors.append(f"{name}: 论点仅 {len(ths)} 条 < {MIN_THESES}（规则 v0.7 要求每股≥4条量化论据，research_only 同样不放水）")
+        # 2. 必须有情景收益/估值分析证据（查论点全文 title+detail）
         has_scenario = any(
             any(k in (t["title"] + t["detail"]) for k in SCENARIO_KEYWORDS)
             for t in ths
         )
         if not has_scenario:
-            errors.append(f"{name}: 论点全文无任何情景/估值测算证据词，无法证明做了概率加权情景分析")
-        # 3. expected_upside_pct 数值合理性
-        if upside is None:
-            errors.append(f"{name}: expected_upside_pct 为空，必须填概率加权期望收益")
+            errors.append(f"{name}: 论点全文无任何情景/估值测算证据词，无法证明做了量化分析")
+
+        # 3. expected_upside_pct 数值校验 —— 分类型
+        if is_research:
+            # research_only：本质「不值得买但值得研究」，没有买入期望收益。
+            # 允许 NULL；若填了值仍做合理性上限检查（防误填牛市空间），但不卡 >0/≥25 门槛。
+            if upside is not None and upside > UPSIDE_SANITY_MAX:
+                errors.append(
+                    f"{name}: research_only 但 expected_upside_pct={upside}% > {UPSIDE_SANITY_MAX}% 几乎不可能为真，疑似误填"
+                )
         else:
-            if upside <= 0:
-                errors.append(f"{name}: expected_upside_pct={upside} ≤0 非法")
-            elif upside > UPSIDE_SANITY_MAX:
-                errors.append(
-                    f"{name}: expected_upside_pct={upside}% > {UPSIDE_SANITY_MAX}% 几乎不可能为真，"
-                    f"强烈疑似把『牛市/基准潜在上涨空间』误填进了『概率加权期望收益』字段——这正是要根除的口径错配"
-                )
-            # 4. active 必须达 25% 门槛
-            if status == "active" and upside < ACTIVE_WEIGHTED_MIN:
-                errors.append(
-                    f"{name}: status=active 但加权收益={upside}% < {ACTIVE_WEIGHTED_MIN}% 门槛，"
-                    f"应降为 watching（规则 v0.7）"
-                )
+            # investable：必须填、>0、合理上限、active 须达门槛（原逻辑不变）
+            if upside is None:
+                errors.append(f"{name}: investable 类型 expected_upside_pct 为空，必须填概率加权期望收益")
+            else:
+                if upside <= 0:
+                    errors.append(f"{name}: expected_upside_pct={upside} ≤0 非法")
+                elif upside > UPSIDE_SANITY_MAX:
+                    errors.append(
+                        f"{name}: expected_upside_pct={upside}% > {UPSIDE_SANITY_MAX}% 几乎不可能为真，"
+                        f"强烈疑似把『牛市/基准潜在上涨空间』误填进了『概率加权期望收益』字段——这正是要根除的口径错配"
+                    )
+                # active 必须达 25% 门槛
+                if status == "active" and upside < ACTIVE_WEIGHTED_MIN:
+                    errors.append(
+                        f"{name}: status=active 但加权收益={upside}% < {ACTIVE_WEIGHTED_MIN}% 门槛，"
+                        f"应降为 watching（规则 v0.7）"
+                    )
+
+        # 4. 类型与状态一致性 —— research_only 应处于 research 状态，反之亦然
+        if is_research and status != "research":
+            errors.append(f"{name}: pick_type=research_only 但 status={status}，纯研究类型状态应为 research")
+        if status == "research" and not is_research:
+            errors.append(f"{name}: status=research 但 pick_type={pick_type}，research 状态须配 research_only 类型")
 
         # ── 警告 ──
-        if status == "watching" and upside is not None and upside >= WATCHING_SUGGEST:
+        if not is_research and status == "watching" and upside is not None and upside >= WATCHING_SUGGEST:
             warnings.append(f"{name}: watching 但加权收益={upside}%≥{WATCHING_SUGGEST}%，确认是否该升 active")
         short_theses = [t["title"][:20] for t in ths if len(t["detail"]) < THESIS_DETAIL_MIN_LEN]
         if short_theses:
@@ -147,7 +165,7 @@ def _audit_pool():
     )
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM stock_picks WHERE status IN ('active','watching') ORDER BY id")
+            cur.execute("SELECT id FROM stock_picks WHERE status IN ('active','watching','research') ORDER BY id")
             ids = [r[0] for r in cur.fetchall()]
             if not ids:
                 print(json.dumps({"ok": True, "note": "池为空"}, ensure_ascii=False))
