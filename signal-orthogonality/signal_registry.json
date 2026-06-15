@@ -21,6 +21,7 @@
     {"id": "holder_concentration","project": "paper-trading",         "claim": "筹码吸筹/派发",           "root_inputs": ["price", "shares_holders"]},
     {"id": "southbound_flow",      "project": "paper-trading",         "claim": "南向聪明钱吸筹/派发",     "root_inputs": ["price", "southbound_flow"]},
     {"id": "moat_scorecard",       "project": "moat-durability",       "claim": "护城河耐久度/定价权",     "root_inputs": ["income_statement", "balance_sheet"]},
-    {"id": "earnings_quality",     "project": "stock-discovery",       "claim": "盈利质量/一次性收益剔除", "root_inputs": ["income_statement", "cash_flow"]}
+    {"id": "earnings_quality",     "project": "stock-discovery",       "claim": "盈利质量/一次性收益剔除", "root_inputs": ["income_statement", "cash_flow"]},
+    {"id": "us_tech_scout",        "project": "us-tech-scout",        "claim": "美股科技耐久质量(共享moat_core)", "root_inputs": ["income_statement", "balance_sheet"]}
   ]
 }
