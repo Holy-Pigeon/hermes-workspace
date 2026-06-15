@@ -894,7 +894,7 @@ function ideaCardHtml(idea) {
       ${idea.author ? `<span class="badge badge-dis">${escHtml(idea.author)}</span>` : ''}
     </div>
     <div class="idea-meta">${escHtml(idea.date)}</div>
-    ${idea.note ? `<div class="idea-note">${escHtml(idea.note)}</div>` : ''}
+    ${(idea.desc || idea.note) ? `<div class="idea-note">${escHtml(idea.desc || idea.note)}</div>` : ''}
     ${reviewBadge}
     ${buildingHint}
   </div>`;
@@ -920,11 +920,12 @@ async function openIdeaSheet(ideaId) {
 
   // 完整内容块（列表精简，详情看全文）
   let fullHtml = '';
-  if (idea.title) {
+  const fullContent = idea.desc || idea.title;
+  if (fullContent) {
     fullHtml = `
       <div class="idea-full">
         <div class="idea-full-label">📄 完整内容</div>
-        <div class="idea-full-text">${escHtml(idea.title)}</div>
+        <div class="idea-full-text">${escHtml(fullContent)}</div>
       </div>`;
   }
 
@@ -1090,7 +1091,25 @@ function closeSheet() {
 function escHtml(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-function escQ(s) { return String(s||'').replace(/'/g,"\\'"); }
+function escQ(s) { return String(s||'').replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n").replace(/\r/g,""); }
+
+// 轻量 toast：点通过/评论后给即时可见反馈（此前点了无反馈，让人误以为无效）
+function showToast(msg, color) {
+  let t = document.getElementById('app-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'app-toast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:9999;'
+      + 'padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;color:#fff;'
+      + 'box-shadow:0 4px 16px rgba(0,0,0,.3);opacity:0;transition:opacity .2s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = color || '#34d399';
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2200);
+}
 
 // ── Idea Review ───────────────────────────────────────────────────────────
 function toggleRefineBox(eid) {
@@ -1109,6 +1128,10 @@ async function reviewIdea(ideaId, action, comment, btn, stage='initial') {
     });
     const data = await resp.json();
     if (data.ok) {
+      const fb = action === 'approve' ? '✓ 已通过，等待执行'
+               : action === 'reject'  ? '✕ 已驳回'
+               : '↻ 优化意见已提交';
+      showToast(fb, action === 'reject' ? '#f87171' : '#34d399');
       await loadIdeas();
       // 如果是从 sheet 里提交的，刷新 sheet 内容
       if (document.getElementById('sheet').classList.contains('open')) {

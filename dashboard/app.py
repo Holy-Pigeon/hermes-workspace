@@ -52,6 +52,39 @@ def last_output(job_id: str, n_chars=600):
     except Exception:
         return None, None
 
+def _split_title_desc(raw_title: str):
+    """idea 录入格式不统一：有的把完整描述塞在标题列（含 **问题**/**根因** 等正文），
+    有的标题列只放简短标题、描述在 note 列。本函数把标题列拆成
+    (短标题, 完整描述)，让面板对两种格式都鲁棒，不必回改 80+ 条历史数据。
+
+    拆分策略：
+    - 找第一个正文标记（**xxx**、句号、冒号 等）作为短标题与正文的边界；
+    - 找不到就用前 N 字当短标题；
+    - 完整描述 = 整个标题列原文（保真，不丢信息）。
+    """
+    t = (raw_title or "").strip()
+    if not t:
+        return "", ""
+    import re as _re
+    # 候选边界：① 第一个 markdown 粗体标记 **xxx**  ② 首个强分隔(句号/冒号)在 ≤60 字处
+    # 取更靠前的那个作为短标题的截断点，避免短标题里塞进大段正文
+    bounds = []
+    m = _re.search(r"\*\*", t)
+    if m and m.start() > 0:
+        bounds.append(m.start())
+    for sep in ("。", "：", ":", "；"):
+        idx = t.find(sep)
+        if 0 < idx <= 60:
+            bounds.append(idx)
+    if bounds:
+        short = t[:min(bounds)].strip(" ：:，,。.；-—")
+    else:
+        short = t[:50].strip()
+    if not short:
+        short = t[:50]
+    return short, t
+
+
 def _shorten(text: str, limit: int = 80) -> str:
     """列表展示用：截断到 limit 字（含省略号），超出加省略号。原文保真，仅展示层截断。"""
     text = (text or "").strip()
@@ -99,17 +132,24 @@ def parse_ideas():
                          "done"      if "✅" in status_raw else \
                          "parked"    if "❄️" in status_raw else \
                          "rejected"  if "❌" in status_raw else "unknown"
+                raw_title = parts[2] if len(parts) > 2 else ""
+                note_col  = parts[5] if len(parts) > 5 else ""   # 可逆性列
+                desc_col  = parts[6] if len(parts) > 6 else ""   # 备注/完整描述列
+                short_title, title_full = _split_title_desc(raw_title)
+                # 完整描述：备注列(parts[6])非空优先用它；否则用标题列完整原文
+                full_desc = desc_col.strip() if desc_col.strip() else title_full
                 items.append({
-                    "id":       f"{parts[0]}::{parts[2][:40]}",   # date::title前40字 作唯一键
+                    "id":       f"{parts[0]}::{raw_title[:40]}",   # date::title前40字 作唯一键
                     "date":     parts[0],
                     "status":   status,
                     "status_raw": status_raw,
-                    "title":    parts[2] if len(parts) > 2 else "",
-                    "title_short": _shorten(parts[2] if len(parts) > 2 else "", 100),
+                    "title":    title_full,                        # 完整标题列原文(保真)
+                    "title_short": _shorten(short_title, 100),     # 短标题(智能拆分,不再硬截长正文)
+                    "desc":     full_desc,                          # 完整描述(卡片正文+详情共用)
                     "category": parts[3] if len(parts) > 3 else "",
                     "bucket":   _idea_bucket(parts[3] if len(parts) > 3 else ""),
                     "author":   parts[4] if len(parts) > 4 else "",
-                    "note":     parts[5] if len(parts) > 5 else "",
+                    "note":     note_col,
                 })
     return items
 
