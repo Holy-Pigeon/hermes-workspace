@@ -142,19 +142,19 @@
       "id": "polymarket-dashboard",
       "name": "Polymarket 全景看板",
       "icon": "📊",
-      "desc": "launchd常驻Web(:5052→frpc6012) · 全量市场macro/sector分类+1h异动 · 含后台告警器monitor.py(17关键词>5%推Discord)",
+      "desc": "launchd常驻Web(:5052→frpc6012):全量市场macro/sector分类+30min刷新+1h异动快照(changes_1h.json)。告警器是独立项目polymarket-monitor非本项目",
       "ports": {
-        "local": 5052,
-        "remote": 6012
+       "local": 5052,
+       "remote": 6012
       },
       "tags": [
-        "预测市场",
-        "Web服务",
-        "基础设施"
+       "预测市场",
+       "Web服务",
+       "基础设施"
       ],
       "health_path": "/api/status",
       "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
-    },
+      },
     {
       "id": "cron-health",
       "name": "Cron交付健康看门狗",
@@ -194,6 +194,19 @@
         "纪律"
       ],
       "heartbeat_file": "~/hermes-workspace/allocation-discipline"
+    },
+    {
+      "id": "polymarket-monitor",
+      "name": "Polymarket 异动告警器",
+      "icon": "🚨",
+      "desc": "独立cron(每1h):关键词扫宏观/行业/个股押注,价格异动>阈值推Discord告警(实际告警器在此,非dashboard)",
+      "ports": null,
+      "tags": [
+        "预测市场",
+        "告警",
+        "脚本"
+      ],
+      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/state.json"
     }
   ]
 }
