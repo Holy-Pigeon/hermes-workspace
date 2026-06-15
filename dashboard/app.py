@@ -139,7 +139,7 @@ def parse_ideas():
                 # 完整描述：备注列(parts[6])非空优先用它；否则用标题列完整原文
                 full_desc = desc_col.strip() if desc_col.strip() else title_full
                 items.append({
-                    "id":       f"{parts[0]}::{raw_title[:40]}",   # date::title前40字 作唯一键
+                    "id":       f"{parts[0]}::{raw_title[:40].strip()}",   # date::title前40字(去尾随空格,否则URL传递丢空格致匹配失败)
                     "date":     parts[0],
                     "status":   status,
                     "status_raw": status_raw,
