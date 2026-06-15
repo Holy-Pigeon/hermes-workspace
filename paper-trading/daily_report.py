@@ -16,11 +16,48 @@ import datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "paper_trading.db")
 
+# 报告层新鲜度闸门：last_price 的 updated_at 距今超过这个天数 → 视为陈旧，
+# 绝不当"现价"静默报出（2026-06-15 事故病根：mark 取不到价保留了上周五旧价，
+# 报告层不查新鲜度，把陈旧价当今日收盘报，工业富联/康方方向全反）。
+STALE_DAYS_LIMIT = int(os.environ.get("DAILY_REPORT_STALE_DAYS", "1"))
+
 
 def conn():
     c = sqlite3.connect(DB_PATH)
     c.row_factory = sqlite3.Row
     return c
+
+
+def _is_trading_day():
+    return datetime.date.today().weekday() < 5
+
+
+def _stale_days(updated_at):
+    """last_price 距今天数。无法解析 → 返回 None（不阻断，但也不背书新鲜）。"""
+    if not updated_at:
+        return None
+    try:
+        ds = str(updated_at)[:10]
+        d = datetime.datetime.strptime(ds, "%Y-%m-%d").date()
+        return (datetime.date.today() - d).days
+    except Exception:
+        return None
+
+
+def check_freshness(c):
+    """扫所有股票持仓的 last_price 新鲜度。交易日里任何一只价格陈旧
+    （updated_at 距今 > STALE_DAYS_LIMIT）就返回告警明细，让报告层显式标红，
+    绝不把陈旧价当现价静默报出。返回 (有陈旧:bool, 明细list)。"""
+    rows = c.execute(
+        "SELECT symbol, name, last_price, updated_at FROM positions WHERE asset_type='stock'"
+    ).fetchall()
+    stale = []
+    for r in rows:
+        sd = _stale_days(r["updated_at"])
+        if sd is not None and sd > STALE_DAYS_LIMIT:
+            stale.append({"symbol": r["symbol"], "name": r["name"] or r["symbol"],
+                          "updated_at": str(r["updated_at"])[:16], "stale_days": sd})
+    return (len(stale) > 0), stale
 
 
 def pos_value(c, account_id):
@@ -56,6 +93,7 @@ def pos_pnl_details(c, account_id):
             "pnl_pct": pnl_pct,
             "last_price": px,
             "avg_cost": cost,
+            "stale_days": _stale_days(p["updated_at"]),
         })
     results.sort(key=lambda x: x["pnl"], reverse=True)
     return results
@@ -92,6 +130,15 @@ def main():
     lines = []
     lines.append(f"**📊 模拟持仓 · 每日收盘报告 {today}**")
     lines.append("")
+
+    # ── 新鲜度闸门：交易日里有陈旧价就顶部标红告警，绝不把陈旧价当现价静默报出 ──
+    has_stale, stale_list = check_freshness(db)
+    if has_stale and _is_trading_day():
+        lines.append("🚨 **数据新鲜度告警：以下持仓价格未刷新到今日收盘，下方盈亏/现价不可信！**")
+        for s in stale_list:
+            lines.append(f"   ⚠️ {s['name']}({s['symbol']})  最后更新 {s['updated_at']}（距今{s['stale_days']}天）")
+        lines.append("   → 盯市取价失败（数据源全挂），请人工核实后再决策，勿据此报告操作。")
+        lines.append("")
 
     # ── 总组合概览 ──────────────────────────────────────────────
     total_init = total_nav = 0.0
@@ -138,7 +185,9 @@ def main():
         if pos_details:
             for p in pos_details:
                 bar = "▲" if p["pnl"] >= 0 else "▼"
-                lines.append(f"   {bar} {p['name']}({p['symbol']})  {fmt_cny(p['pnl'])} ({p['pnl_pct']:+.2f}%)  现价{p['last_price']:.2f}")
+                sd = p.get("stale_days")
+                stale_tag = f"  🚨陈旧{sd}天" if (sd is not None and sd > STALE_DAYS_LIMIT and _is_trading_day()) else ""
+                lines.append(f"   {bar} {p['name']}({p['symbol']})  {fmt_cny(p['pnl'])} ({p['pnl_pct']:+.2f}%)  现价{p['last_price']:.2f}{stale_tag}")
 
     lines.append("")
 

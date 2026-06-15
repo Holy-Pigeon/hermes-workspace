@@ -172,10 +172,63 @@ def get_daily(code: str, market: str = None):
 
 
 def get_last_close(code: str, market: str = None):
-    """取最近一个交易日收盘价 (float) + 日期 (str)。基于 get_daily 末行。"""
-    df = get_daily(code, market)
-    last = df.iloc[-1]
-    return float(last["close"]), str(last["date"])
+    """取最近一个交易日收盘价 (float) + 日期 (str)。基于 get_daily 末行。
+    日线源链全挂时（东财+akshare-sina 同时失败），降级到独立的 sina 实时
+    快照直连（hq.sinajs.cn，不经 akshare，是真正独立的第三通路）——
+    2026-06-15 事故就是日线两源全挂、无第三通路 → 4 只票退回旧价。"""
+    try:
+        df = get_daily(code, market)
+        last = df.iloc[-1]
+        return float(last["close"]), str(last["date"])
+    except MarketDataError:
+        # 终极兜底：sina 实时快照直连
+        res = _sina_quote_direct(code, market)
+        if res is not None:
+            return res
+        raise
+
+
+def _sina_quote_direct(code: str, market: str = None):
+    """独立于 akshare 的 sina 实时行情直连兜底。
+    返回 (收盘价 float, 日期 str) 或 None。带 3 次指数退避重试。
+    A股: list=sh600519 → 字段[3]=现价(收盘); 港股: list=rt_hk09926 → 字段[6]=现价。"""
+    import urllib.request
+    import datetime as _dt
+    market = (market or detect_market(code)).upper()
+    digits = "".join(ch for ch in str(code) if ch.isdigit())
+
+    def _fetch(url):
+        last_err = None
+        for i in range(3):
+            try:
+                req = urllib.request.Request(
+                    url, headers={"Referer": "https://finance.sina.com.cn",
+                                  "User-Agent": "Mozilla/5.0"})
+                return urllib.request.urlopen(req, timeout=8).read().decode("gbk")
+            except Exception as e:  # noqa
+                last_err = e
+                time.sleep(1.5 * (i + 1))
+        raise last_err
+
+    today = _dt.date.today().isoformat()
+    try:
+        if market == "A":
+            d6 = digits.zfill(6)
+            prefix = "sh" if d6[0] == "6" else "sz"
+            txt = _fetch(f"https://hq.sinajs.cn/list={prefix}{d6}")
+            f = txt.split('"')[1].split(",")
+            if len(f) > 3 and f[3] and float(f[3]) > 0:
+                return float(f[3]), today
+        elif market == "HK":
+            d5 = digits.zfill(5)
+            txt = _fetch(f"https://hq.sinajs.cn/list=rt_hk{d5}")
+            f = txt.split('"')[1].split(",")
+            if len(f) > 6 and f[6] and float(f[6]) > 0:
+                return float(f[6]), today
+        # 美股暂不支持直连，返回 None 让上层抛原始错误
+    except Exception:
+        return None
+    return None
 
 
 def get_spot(code: str, market: str = None):
