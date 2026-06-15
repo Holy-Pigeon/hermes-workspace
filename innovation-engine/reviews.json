@@ -1,137 +1,42 @@
 [
   {
-    "idea_id": "2026-06-11 14:30::Polymarket 异动监控做成独立项目（和 StockChoose 平行，独",
-    "action": "approve",
-    "comment": "",
-    "ts": "2026-06-11 17:51:15",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-13 00:53::【实盘·需你拍板】中信建投两融账户回血换马清单(卖低期望票→换StockChoo",
-    "action": "reject",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-13 11:21:46",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-12 15:50::组合巡检编排器(portfolio_watchdog.py, 纯只读): 把已建",
-    "action": "approve",
-    "comment": "",
-    "stage": "progress",
-    "ts": "2026-06-13 22:47:13",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】科技股价值-成长发现管线(tech_screener",
+    "idea_id": "2026-06-15 16:28::1f637361902a",
     "action": "approve",
     "comment": "",
     "stage": "initial",
-    "ts": "2026-06-13 23:09:54",
+    "ts": "2026-06-15 19:57:12",
     "processed": true
   },
   {
-    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】预测台账计分卡(prediction-ledger)",
+    "idea_id": "2026-06-15 08:42::813ae3cbec7d",
     "action": "approve",
     "comment": "",
     "stage": "initial",
-    "ts": "2026-06-13 23:09:55",
+    "ts": "2026-06-15 19:58:21",
     "processed": true
   },
   {
-    "idea_id": "2026-06-13 22:30::利和兴(301013)购入判断=框架内零价值, 待你拍板要不要碰(纯投机款)",
-    "action": "reject",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-13 23:10:02",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】资本配置层纪律预承诺(源自第六篇配置诊断研究note",
+    "idea_id": "2026-06-15 04:11::d85f76ca7dc9",
     "action": "approve",
     "comment": "",
     "stage": "initial",
-    "ts": "2026-06-13 23:10:40",
+    "ts": "2026-06-15 19:58:21",
     "processed": true
   },
   {
-    "idea_id": "2026-06-13 22:30::把9个取数脚本逐个迁移到marketdata统一层, 待你拍板(涉及改动在跑的盯",
+    "idea_id": "2026-06-15 06:30::33b38ffc4d53",
     "action": "approve",
     "comment": "",
     "stage": "initial",
-    "ts": "2026-06-13 23:10:43",
+    "ts": "2026-06-15 19:58:22",
     "processed": true
   },
   {
-    "idea_id": "2026-06-14 00:19::给研究编排流水线挂每周一次定时任务(周末跑, 紧随选股发现管线之后), 自动产出",
+    "idea_id": "2026-06-15 13:10::deb496e3d57a",
     "action": "approve",
     "comment": "",
     "stage": "initial",
-    "ts": "2026-06-14 00:30:59",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 08:16::驾驶舱治理修复+安全发现: paper-trading心跳缺失已补全, web服",
-    "action": "refine",
-    "comment": "所有网页服务需要穿透到外网的，你改了以后会影响穿透访问不",
-    "stage": "initial",
-    "ts": "2026-06-14 09:14:09",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 05:59::给预测台账挂'到期提醒'轻量cron(prediction-ledger是唯一漏",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-14 09:14:42",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 10:47::孤儿信号工具收口+周度结构巡检建cron(架构审视-消灭建成即沉睡的能力浪费):",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-14 12:40:09",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】科技股价值-成长发现管线(tech_screener",
-    "action": "approve",
-    "comment": "",
-    "stage": "progress",
-    "ts": "2026-06-14 12:40:14",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-13 23:06::【存量补登·原埋于done】科技股价值-成长发现管线(tech_screener",
-    "action": "approve",
-    "comment": "",
-    "stage": "progress",
-    "ts": "2026-06-14 12:40:18",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 17:38::给 cron-health 看门狗挂定时 cron(让它每天自跑并在检出告警时p",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-14 19:08:33",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 15:18::[架构/治理-周度研究cron在生产中已失效] 巡检发现cron'研究编排流水线",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-14 19:08:38",
-    "processed": true
-  },
-  {
-    "idea_id": "2026-06-14 14:05::[架构/治理-风控backbone已确认失效] 盯市cron(daily_mar",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-14 19:08:45",
+    "ts": "2026-06-15 19:58:23",
     "processed": true
   }
 ]

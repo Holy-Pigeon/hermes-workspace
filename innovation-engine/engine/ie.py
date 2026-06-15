@@ -14,7 +14,7 @@
 用法见底部 _usage()，或 `ie.py help`。
 用 /usr/bin/python3 跑（仅 stdlib）。
 """
-import sys, os, re, json, datetime, argparse, shutil
+import sys, os, re, json, datetime, argparse, shutil, hashlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, "ideas_log.md")
@@ -66,8 +66,12 @@ def _write_lines(lines):
 
 
 def idea_id(ts, title):
-    """与 reviews.json 口径一致：日期::标题前40字"""
-    return f"{ts}::{title[:40]}"
+    """与 dashboard/app.py 完全一致：日期::sha1(日期+标题全文)[:12]。
+    必须与 app.py 的 id 生成口径逐字节相同，否则面板审批写入 reviews.json 的 id
+    与本脚本 review 匹配的 id 对不上，导致 approve 的 idea 匹配 NOT_FOUND、状态不推进。
+    (2026-06-15 回归 bug 根因:上次只改了 app.py 的哈希,漏改这里仍用标题前40字明文。)"""
+    key = f"{ts}::{title}"
+    return f"{ts}::{hashlib.sha1(key.encode('utf-8')).hexdigest()[:12]}"
 
 
 def parse_records(lines):
