@@ -29,6 +29,11 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "paper_tradin
 # 给兜底设硬预算: 超时即放弃该源, 保留上次价 + 告警, 让脚本永远跑得到 commit+snapshot。
 # 单只主路(<1s)不受此限, 仅护栏慢兜底。
 FALLBACK_WALL_BUDGET_SEC = float(os.environ.get("DAILY_MARK_FALLBACK_BUDGET", "45"))
+# 单只主路硬墙: akshare *_hist 在东财 hang(不抛异常)时会拖死主路, 普通 try/except 救不了。
+# 历史病根: 主路无此墙 → 东财 hang 时 4 只票串行各 hang 数十秒叠加破 120s cron 墙 →
+# 进程被杀在 commit 前 → NAV 快照丢失(2026-06-12起连续3天盯市失效)。每只票套硬墙,
+# 超时即放弃该只(走全表兜底→兜底再不行保留上次价), 让脚本永远跑得到 commit+snapshot。
+PERSTOCK_TIMEOUT_SEC = float(os.environ.get("DAILY_MARK_PERSTOCK_TIMEOUT", "8"))
 
 
 def log(msg):
@@ -96,8 +101,12 @@ def fetch_prices(symbols_by_market):
     # ---- A股：逐只 stock_zh_a_hist ----
     for s in symbols_by_market.get("A", []):
         try:
-            df = ak.stock_zh_a_hist(symbol=s, period="daily", adjust="")
-            if len(df):
+            df, to = _call_with_timeout(
+                lambda s=s: ak.stock_zh_a_hist(symbol=s, period="daily", adjust=""),
+                PERSTOCK_TIMEOUT_SEC, f"A股单只 {s}")
+            if to:
+                continue
+            if df is not None and len(df):
                 row = df.iloc[-1]
                 if _check_fresh(row["日期"], s):
                     prices[s] = float(row["收盘"])
@@ -107,8 +116,12 @@ def fetch_prices(symbols_by_market):
     # ---- 港股：逐只 stock_hk_hist ----
     for s in symbols_by_market.get("HK", []):
         try:
-            df = ak.stock_hk_hist(symbol=s.zfill(5), period="daily", adjust="")
-            if len(df):
+            df, to = _call_with_timeout(
+                lambda s=s: ak.stock_hk_hist(symbol=s.zfill(5), period="daily", adjust=""),
+                PERSTOCK_TIMEOUT_SEC, f"港股单只 {s}")
+            if to:
+                continue
+            if df is not None and len(df):
                 row = df.iloc[-1]
                 if _check_fresh(row["日期"], s):
                     prices[s] = float(row["收盘"])
@@ -118,8 +131,12 @@ def fetch_prices(symbols_by_market):
     # ---- 美股：逐只 stock_us_hist ----
     for s in symbols_by_market.get("US", []):
         try:
-            df = ak.stock_us_hist(symbol=s, period="daily", adjust="")
-            if len(df):
+            df, to = _call_with_timeout(
+                lambda s=s: ak.stock_us_hist(symbol=s, period="daily", adjust=""),
+                PERSTOCK_TIMEOUT_SEC, f"美股单只 {s}")
+            if to:
+                continue
+            if df is not None and len(df):
                 row = df.iloc[-1]
                 if _check_fresh(row["日期"], s):
                     prices[s] = float(row["收盘"])
