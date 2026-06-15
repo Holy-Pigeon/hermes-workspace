@@ -623,6 +623,10 @@ function renderProjects(projects) {
         ? p.ports.local : p.ports.remote;
       entryRow = `<div class="row"><span class="key">入口</span><span class="val blue" style="font-size:12px">:${port} ↗</span></div>`;
       cardAttrs = `onclick="openProject('${url}')" style="cursor:pointer"`;
+    } else if (p.external_url) {
+      const label = p.external_label || '外部链接';
+      entryRow = `<div class="row"><span class="key">入口</span><span class="val blue" style="font-size:12px">${escHtml(label)} ↗</span></div>`;
+      cardAttrs = `onclick="openProject('${p.external_url}')" style="cursor:pointer"`;
     } else if (p.internal_tab) {
       entryRow = `<div class="row"><span class="key">入口</span><span class="val" style="font-size:12px;color:var(--accent)">本雷达 →</span></div>`;
       cardAttrs = `onclick="switchTabByName('${p.internal_tab}')" style="cursor:pointer"`;

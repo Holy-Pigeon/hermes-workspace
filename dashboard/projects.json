@@ -47,12 +47,14 @@
       "id": "ai-teacher",
       "name": "AI 教师",
       "icon": "🎓",
-      "desc": "脚本 · 暂无控制台",
+      "desc": "脚本 · 8/14/20点课程→Notion",
       "ports": null,
       "heartbeat_file": "~/hermes-workspace/ai-teacher/taught_topics.json",
       "tags": [
         "脚本"
-      ]
+      ],
+      "external_url": "https://app.notion.com/p/36fd8689fc1981e18e24eeb6ff3d8d0a?v=36fd8689fc19816994f0000c9a64baf8",
+      "external_label": "Notion 笔记"
     },
     {
       "id": "stock-discovery",
