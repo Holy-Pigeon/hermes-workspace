@@ -220,6 +220,30 @@ def get_spot(code: str, market: str = None):
         )
 
 
+def safe_call(fn, label="", attempts=3, base_delay=1.5):
+    """
+    通用「任意 akshare 取数」的硬化包装：给任何单个 endpoint 套上
+    指数退避重试 + 12s hang 硬墙（与日线源链同一套机制）。
+
+    存在理由：marketdata 的源链只收口了「价格/日线」，但全工作区真正高频、
+    最易 hang 的是【财务/估值】endpoint（stock_financial_abstract /
+    stock_value_em / stock_financial_*_analysis_indicator* 等），它们散落在
+    各研究脚本里全是裸调用——单源、无重试、无超时。akshare 底层 HTTP 会
+    「挂起不抛异常」，裸调用一旦撞上就把整个 cron 拖死到被 120s 墙杀
+    （实测 stock_financial_abstract 当前就 hang>60s）。
+
+    用法（任意 endpoint 一行硬化，不必先在 core 里枚举该 endpoint）：
+        from marketdata import safe_call
+        df = safe_call(lambda: ak.stock_financial_abstract(symbol=code),
+                       label="abstract:600519")
+    成功返回结果；全部重试/超时失败抛 MarketDataError（绝不返回填充值）。
+    """
+    result, err = _retry(fn, attempts=attempts, base_delay=base_delay, label=label)
+    if result is not None:
+        return result
+    raise MarketDataError(f"safe_call({label}) 失败: {err}")
+
+
 def _spot_from_bidask(df):
     """从 stock_bid_ask_em 的字段表里抽最新价。"""
     if df is None or len(df) == 0:

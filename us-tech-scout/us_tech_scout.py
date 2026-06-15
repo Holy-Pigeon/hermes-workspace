@@ -68,8 +68,17 @@ def load_watchlist():
 def fetch_annual(symbol):
     """拉 26 年年报指标。返回按年降序的 list[dict] 或 None(拉不到)。"""
     import akshare as ak
+    # 经 marketdata.safe_call 硬化：12s hang 硬墙 + 指数退避重试，
+    # 防单只 hang 拖死整条 12 只白名单循环（akshare 财务口经常挂起不抛异常）。
+    import os, sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from marketdata import safe_call, MarketDataError
     try:
-        df = ak.stock_financial_us_analysis_indicator_em(symbol=symbol, indicator="年报")
+        df = safe_call(
+            lambda: ak.stock_financial_us_analysis_indicator_em(symbol=symbol, indicator="年报"),
+            label=f"us_fin:{symbol}")
+    except MarketDataError as e:
+        return None, str(e)[:80]
     except Exception as e:
         return None, f"{type(e).__name__}: {str(e)[:80]}"
     if df is None or df.empty:
