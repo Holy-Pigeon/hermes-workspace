@@ -151,6 +151,39 @@ def fetch_prices(symbols_by_market):
         log(f"逐只接口未覆盖 {missing}，回落全表兜底")
         _fallback_spot(ak, missing, prices)
 
+    # ---- 终极兜底：marketdata 统一层(sina→em 多源降级)。----
+    # 病根: 本脚本逐只/全表全走东财(em)单源, 东财间歇全线 RemoteDisconnected 时(实测
+    # 2026-06-15 全挂)4/4 持仓取价全失败→保留上次价→NAV 快照被陈旧价污染(风控backbone失效)。
+    # marketdata 层有 sina 源, 东财全挂时仍能取到真实收盘。此处仅对"仍缺"的标的兜底,
+    # 且复用 _check_fresh 同一新鲜度闸门, 拿不到/陈旧仍保留上次价, 绝不编造。纯增量、不改既有路径。
+    still_missing = {mk: [s for s in syms if s not in prices]
+                     for mk, syms in symbols_by_market.items() if syms}
+    still_missing = {mk: syms for mk, syms in still_missing.items() if syms}
+    if still_missing:
+        try:
+            import os as _os
+            _root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+            if _root not in sys.path:
+                sys.path.insert(0, _root)
+            from marketdata import get_last_close
+            log(f"全表兜底仍缺 {still_missing}，转 marketdata 统一层(sina→em)兜底")
+            for mk, syms in still_missing.items():
+                for s in syms:
+                    try:
+                        res, to = _call_with_timeout(
+                            lambda s=s, mk=mk: get_last_close(s, mk),
+                            PERSTOCK_TIMEOUT_SEC, f"marketdata {mk} {s}")
+                        if to or res is None:
+                            continue
+                        px, dt = res
+                        if px is not None and _check_fresh(dt, s):
+                            prices[s] = float(px)
+                            log(f"  {s} <- {px} (marketdata sina兜底, {dt})")
+                    except Exception as e:
+                        log(f"  marketdata {mk} {s} 兜底失败: {repr(e)[:60]}")
+        except Exception as e:
+            log(f"  marketdata 兜底整体不可用(忽略, 不影响既有逻辑): {repr(e)[:80]}")
+
     return prices
 
 
