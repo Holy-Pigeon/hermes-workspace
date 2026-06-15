@@ -151,6 +151,32 @@ def cmd_update_thesis(conn, args):
     return res
 
 
+def cmd_add_thesis(conn, args):
+    """复查中发现新论据时追加一条 thesis（论点集合动态演化，不必重入整只票）。
+    与软失效（update-thesis --status invalidated）配对：删用软失效保留痕迹，加用本命令。"""
+    with conn.cursor() as cur:
+        # 校验 pick 存在，给出友好报错
+        cur.execute("SELECT id, stock_code, stock_name FROM stock_picks WHERE id = %s",
+                    (args.stock_pick_id,))
+        pick = cur.fetchone()
+        if not pick:
+            return {"ok": False, "error": f"stock_pick_id={args.stock_pick_id} 不存在"}
+        cur.execute(
+            """
+            INSERT INTO stock_theses
+                (stock_pick_id, thesis_title, thesis_detail, key_supporting_data,
+                 invalidation_condition, status, still_valid, last_checked_date)
+            VALUES (%s, %s, %s, %s, %s, %s, TRUE, CURRENT_DATE)
+            RETURNING id, stock_pick_id, thesis_title, status
+            """,
+            (args.stock_pick_id, args.title, args.detail, args.supporting_data,
+             args.invalidation, args.status),
+        )
+        res = _rows_to_dicts(cur)
+    conn.commit()
+    return res
+
+
 def cmd_add_review(conn, args):
     with conn.cursor() as cur:
         cur.execute(
@@ -232,6 +258,17 @@ def main():
     s.add_argument("--summary")
     s.add_argument("--snapshot")
 
+    s = sub.add_parser("add-thesis",
+                       help="复查中发现新论据时追加一条 thesis（论点动态演化）")
+    s.add_argument("--stock-pick-id", type=int, required=True)
+    s.add_argument("--title", required=True)
+    s.add_argument("--detail", required=True)
+    s.add_argument("--supporting-data", required=True, dest="supporting_data")
+    s.add_argument("--invalidation", dest="invalidation",
+                   help="失效阈值（可选）")
+    s.add_argument("--status", default="valid",
+                   choices=["valid", "needs_review", "invalidated"])
+
     s = sub.add_parser("add-review")
     s.add_argument("--stock-pick-id", type=int, required=True)
     s.add_argument("--action", required=True,
@@ -258,6 +295,7 @@ def main():
             "stale-for-review": cmd_stale_for_review,
             "theses": cmd_theses,
             "update-thesis": cmd_update_thesis,
+            "add-thesis": cmd_add_thesis,
             "add-review": cmd_add_review,
             "set-pick-status": cmd_set_pick_status,
             "run-sql": cmd_run_sql,

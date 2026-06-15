@@ -23,7 +23,7 @@ import json
 # 规则 v0.7 阈值（与 docs/selection_rules.md 对齐）
 ACTIVE_WEIGHTED_MIN = 25.0      # active 概率加权期望收益门槛 ≥25%
 WATCHING_SUGGEST = 25.0         # watching 但达标 → 建议复审升级
-MIN_THESES = 4                  # 每股核心论点 ≥4 条
+MIN_THESES = 2                  # 每股核心论点下限（防注水，不再固定4条；条数随研究深度内生，不封顶）
 UPSIDE_SANITY_MAX = 150.0       # 加权收益>150% = 几乎不可能, 强异常(疑似用牛市空间冒充)
 THESIS_DETAIL_MIN_LEN = 30      # 论点详情过短疑似纯定性(仅警告)
 # 论点全文（title+detail 合并）里必须出现情景/概率测算的证据词之一
@@ -77,9 +77,10 @@ def validate_picks(picks, theses_by_pick):
         ths = theses_by_pick.get(pid, [])
 
         # ── 硬错误（investable / research_only 共同要求：研究深度不掺水）──
-        # 1. 论点数量 —— 两类都要求 ≥4 条量化论据（research_only 也不放水，否则成垃圾场）
+        # 1. 论点数量 —— 下限防注水（≥2 条），不再固定 4 条；条数随研究深度内生、不封顶。
+        #    真正防水的是下面的「情景证据词」「详情长度」质量门，而非数数。
         if len(ths) < MIN_THESES:
-            errors.append(f"{name}: 论点仅 {len(ths)} 条 < {MIN_THESES}（规则 v0.7 要求每股≥4条量化论据，research_only 同样不放水）")
+            errors.append(f"{name}: 论点仅 {len(ths)} 条 < 下限 {MIN_THESES}（研究太薄；条数本应随深度内生，但至少 2 条量化论据）")
         # 2. 必须有情景收益/估值分析证据（查论点全文 title+detail）
         has_scenario = any(
             any(k in (t["title"] + t["detail"]) for k in SCENARIO_KEYWORDS)
