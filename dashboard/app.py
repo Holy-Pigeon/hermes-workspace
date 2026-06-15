@@ -698,11 +698,16 @@ def sc_rules():
 
 @app.route("/")
 def index():
-    return send_from_directory(str(STATIC), "index.html")
+    resp = send_from_directory(str(STATIC), "index.html")
+    # 禁止浏览器缓存HTML,确保前端改动立即生效(手机端尤其爱强缓存,曾导致"看着还是旧的/空的")
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp
 
 @app.route("/stockchoose")
 def stockchoose_page():
-    return send_from_directory(str(STATIC), "stockchoose.html")
+    resp = send_from_directory(str(STATIC), "stockchoose.html")
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5051, debug=False)
