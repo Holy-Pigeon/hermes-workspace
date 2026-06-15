@@ -42,6 +42,7 @@ def days_to(d):
 def cmd_list(preds, due_soon=None, quiet=False):
     lines = []
     overdue = []
+    imminent = []   # ≤14天内到期: 应主动提醒"去拉财报准备resolve"
     for p in preds:
         if p["outcome"] != "pending":
             continue
@@ -54,12 +55,15 @@ def cmd_list(preds, due_soon=None, quiet=False):
             overdue.append(p["id"])
         elif dd <= 14:
             flag = f" 🔴{dd}天内到期"
+            imminent.append(p["id"])
         elif dd <= 45:
             flag = f" 🟡{dd}天"
         lines.append(f"[{p['id']}] {p['subject']} (信心{p['confidence']:.0%}, 截止{p['verify_by']}{flag})")
         lines.append(f"      论点: {p['claim'][:90]}")
         lines.append(f"      证伪: {p['falsification'][:90]}")
-    if quiet and not overdue:
+    # quiet(cron)模式: 仅在有逾期或临近(≤14天)到期的预测时才surface(exit1),
+    # 否则静默exit0。修复前只看overdue=只在错过窗口后才报, 提醒方向是反的。
+    if quiet and not overdue and not imminent:
         return 0
     if not lines:
         print("无匹配的pending预测。")
@@ -68,6 +72,9 @@ def cmd_list(preds, due_soon=None, quiet=False):
     print("\n".join(lines))
     if overdue:
         print(f"\n⏰ {len(overdue)}条已逾期待录入结果: {', '.join(overdue)} — 去拉一手财报后 resolve")
+        return 1
+    if imminent:
+        print(f"\n🔴 {len(imminent)}条14天内到期: {', '.join(imminent)} — 临近窗口, 准备拉一手财报届时 resolve")
         return 1
     return 0
 
