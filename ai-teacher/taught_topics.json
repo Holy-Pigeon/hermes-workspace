@@ -314,8 +314,13 @@
       "topic": "RoBERTa——把 BERT 的训练配方调到极致，证明\"它本可以更强\"",
       "category": "类目 17：Encoder-only 模型",
       "taught_at": "2026-06-15T20:03:00+08:00"
+    },
+    {
+      "topic": "ALBERT——用参数共享和因式分解，把 BERT 压瘦却不变笨",
+      "category": "类目 17：Encoder-only 模型",
+      "taught_at": "2026-06-16T08:03:00+08:00"
     }
   ],
-  "total_count": 63,
-  "last_updated": "2026-06-15T20:03:00+08:00"
+  "total_count": 64,
+  "last_updated": "2026-06-16T08:03:00+08:00"
 }
