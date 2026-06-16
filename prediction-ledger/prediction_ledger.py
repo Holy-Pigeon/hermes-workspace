@@ -144,6 +144,78 @@ def calibration_health(preds):
     return flags
 
 
+def _next_id(preds):
+    mx = 0
+    for p in preds:
+        try:
+            mx = max(mx, int(str(p["id"]).lstrip("P")))
+        except Exception:
+            pass
+    return f"P{mx + 1:03d}"
+
+
+def cmd_add(data, kw):
+    """登记新预测的唯一合法入口(根因机制, 对标 ie.py 治 ideas_log 手写之弊)。
+
+    在登记当下就拦两类自毁问题, 而非靠周度看门狗事后才发现:
+      1) 信心压缩: confidence 落在 0.45~0.65 的'勉强好于抛硬币'泥潭 → 拒绝,
+         强制要么真表态(≥0.70 / ≤0.30)要么显式 --force-mushy 自认没把握并留痕。
+      2) 到期挤堆: 若该 verify_by 已堆 ≥5 条 pending → 警告(不硬拒, 但提示错峰)。
+    必填: --subject --claim --falsification --confidence --verify-by --direction
+    可选: --source-note --force-mushy(自认泥潭区, 留痕放行)
+    """
+    required = ["subject", "claim", "falsification", "confidence", "verify-by", "direction"]
+    missing = [r for r in required if not kw.get(r)]
+    if missing:
+        print(f"缺必填参数: {', '.join('--' + m for m in missing)}")
+        return 1
+    try:
+        conf = float(kw["confidence"])
+    except ValueError:
+        print("--confidence 须为 0~1 的小数")
+        return 1
+    if not (0.0 < conf < 1.0):
+        print("--confidence 须严格在 (0,1) 区间")
+        return 1
+    # 日期格式校验
+    try:
+        datetime.strptime(kw["verify-by"], "%Y-%m-%d")
+    except ValueError:
+        print("--verify-by 须为 YYYY-MM-DD")
+        return 1
+    # ── 信心压缩护栏(登记时拦截, 非事后) ──
+    if 0.45 <= conf <= 0.65 and "force-mushy" not in kw:
+        print(f"❌ 信心 {conf:.0%} 落在 0.45~0.65 泥潭区 = 没真表态, 8/31结算时 Brier 无法区分技巧与运气。")
+        print("   → 真有把握: 拉到 ≥0.70(看多论点)或 ≤0.30(看空论点); 真没把握: 加 --force-mushy 自认并留痕。")
+        print("   敢分散信心才可被证伪。这是 prediction-ledger 的核心纪律, 不是建议。")
+        return 1
+    preds = data["predictions"]
+    # ── 到期挤堆警告(不硬拒) ──
+    same_day = sum(1 for p in preds if p["outcome"] == "pending" and p.get("verify_by") == kw["verify-by"])
+    if same_day >= 5:
+        print(f"⚠️ 警告: {kw['verify-by']} 已堆 {same_day} 条 pending 预测, 再加=校准反馈一次性引爆+同向暴露。")
+        print("   建议拆出可早于该窗口证伪的子论点(批价/月度数据/渠道)错峰结算。已照常登记, 仅提示。")
+    pid = _next_id(preds)
+    rec = {
+        "id": pid,
+        "created": date.today().isoformat(),
+        "subject": kw["subject"],
+        "claim": kw["claim"],
+        "falsification": kw["falsification"],
+        "direction": kw["direction"],
+        "confidence": conf,
+        "verify_by": kw["verify-by"],
+        "source_note": kw.get("source-note", ""),
+        "outcome": "pending",
+        "resolved_value": None,
+        "resolved_date": None,
+    }
+    preds.append(rec)
+    save(data)
+    print(f"✅ 已登记 {pid}: {kw['subject']} (信心{conf:.0%}, 截止{kw['verify-by']})")
+    return 0
+
+
 def cmd_score(preds):
     # ex-ante 校准健康: 结果没出来也要先暴露信心压缩/到期挤堆
     for f in calibration_health(preds):
@@ -184,6 +256,27 @@ def main():
             else:
                 due = int(args[idx])
         return cmd_list(preds, due_soon=due, quiet=quiet)
+    elif args[0] == "add":
+        # 解析 --key value 与布尔 --flag(force-mushy)
+        kw = {}
+        i = 1
+        bool_flags = {"force-mushy"}
+        while i < len(args):
+            a = args[i]
+            if a.startswith("--"):
+                key = a[2:]
+                if key in bool_flags:
+                    kw[key] = True
+                    i += 1
+                elif i + 1 < len(args):
+                    kw[key] = args[i + 1]
+                    i += 2
+                else:
+                    print(f"参数 {a} 缺值")
+                    return 1
+            else:
+                i += 1
+        return cmd_add(data, kw)
     elif args[0] == "resolve":
         val = None
         if "--value" in args:
