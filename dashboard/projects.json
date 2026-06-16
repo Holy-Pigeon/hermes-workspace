@@ -26,10 +26,10 @@
         "remote": 6011
       },
       "path": "/stockchoose",
-      "heartbeat_file": "~/hermes-workspace/StockChoose/logs",
       "tags": [
         "脚本"
-      ]
+      ],
+      "heartbeat_file": "~/hermes-workspace/StockChoose/tmp"
     },
     {
       "id": "research",
