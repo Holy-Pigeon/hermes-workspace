@@ -29,7 +29,7 @@
       "tags": [
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/StockChoose/tmp"
+      "heartbeat_file": "~/.hermes/cron/output/48a00c0c196a"
     },
     {
       "id": "research",
