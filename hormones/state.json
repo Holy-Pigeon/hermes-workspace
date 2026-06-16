@@ -3,7 +3,7 @@
   "version": "0.1-calibration",
   "phase": "calibration",
   "_phase_doc": "calibration=只记录不驱动行为; active=过阈值触发动作。校准期观察曲线是否合理。",
-  "last_updated": "2026-06-16T18:59:47.476036+08:00",
+  "last_updated": "2026-06-16T22:21:03.226886+08:00",
   "hormones": {
     "curiosity": {
       "value": 0.0,
