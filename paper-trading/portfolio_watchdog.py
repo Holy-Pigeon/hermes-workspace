@@ -142,6 +142,12 @@ def main():
             #     另列优化/单独季度 cadence 待办, 避免拖垮 --full。
             ("筹码集中度", lambda: check_quiet("筹码集中度", "holder_concentration.py", timeout=180), None),
             ("南向资金流", lambda: check_quiet("南向资金", "southbound_flow.py", timeout=180), None),
+            # 资本配置纪律(价投第二支柱): allocate.py 此前是孤儿能力——能跑、对真实持仓
+            # 算权重/查行为护栏(单标的封顶/等权惰性/信号-权重错配), 退码0/1合约与 check_quiet
+            # 对齐, 却无任何 cron/编排调用=只在真人手动跑时存在。权重漂移慢, 归入 --full 周度
+            # 结构层(与估值分位同 cadence), 收口这个 built-but-unwired 缺口。
+            ("资本配置纪律", lambda: check_quiet(
+                "资本配置", "../allocation-discipline/allocate.py", ["--all"], timeout=120), None),
         ]
 
     any_flag = False
