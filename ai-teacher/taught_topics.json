@@ -324,8 +324,13 @@
       "topic": "掩码语言模型（MLM）——把句子挖空，逼模型从两侧上下文猜词",
       "category": "类目 17：Encoder-only 模型",
       "taught_at": "2026-06-16T14:03:00+08:00"
+    },
+    {
+      "topic": "NSP（下一句预测）——教模型判断'这两句话是不是上下文'",
+      "category": "类目 17：Encoder-only 模型",
+      "taught_at": "2026-06-16T20:03:00+08:00"
     }
   ],
-  "total_count": 65,
-  "last_updated": "2026-06-16T14:03:00+08:00"
+  "total_count": 66,
+  "last_updated": "2026-06-16T20:03:00+08:00"
 }
