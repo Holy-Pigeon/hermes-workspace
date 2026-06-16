@@ -33,6 +33,18 @@ CONFIG_FILE = os.path.join(SCRIPT_DIR, "config.json")
 STATE_FILE  = os.path.join(SCRIPT_DIR, "state.json")
 LOG_FILE    = os.path.join(SCRIPT_DIR, "monitor.log")
 
+# ─── 数据通路收口（2026-06-16 用户拍板）────────────────────────────────────────
+# polymarket-dashboard（launchd 常驻，每 ~30min fetch_all 全量）已产出 changes_1h.json
+# ＝全量+分类的单一异动真相源。本告警器原先自己用 public-search 按关键词重新 poll
+# gamma-api 子集 + 自有阈值算 delta，与看板形成「两套异动定义/两份 state/双倍 API 压力」冗余。
+# v2 收口：优先消费看板已算好的 changes_1h.json（单一真相源），本告警器退化为
+# 「读快照 → 关键词匹配 → 超阈值推 Discord」的薄层。看板快照陈旧/缺失时自动回落 live poll，
+# 保留韧性。这统一了异动定义，类比 marketdata 收口取数的理念。
+DASHBOARD_CHANGES = os.path.expanduser(
+    "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json")
+# 看板快照最大可接受年龄（分钟）：看板每 30min 刷新，超过 90min 视为陈旧 → 回落 live poll。
+SNAPSHOT_MAX_AGE_MIN = 90.0
+
 GAMMA_API = "https://gamma-api.polymarket.com"
 POLYMARKET_SCRIPT = os.path.expanduser("~/.hermes/skills/research/polymarket/scripts/polymarket.py")
 PYTHON = "/opt/homebrew/bin/python3"
@@ -234,6 +246,106 @@ def send_discord(message: str, target: str, dry_run: bool = False):
 
     log(f"[WARN] Could not find Discord send mechanism. Message was: {message[:120]}")
 
+# ─── 看板快照消费（收口后的主路径）────────────────────────────────────────────
+
+def _snapshot_age_min() -> float | None:
+    """看板 changes_1h.json 的年龄(分钟)。文件不存在/无法解析返回 None。"""
+    if not os.path.exists(DASHBOARD_CHANGES):
+        return None
+    try:
+        with open(DASHBOARD_CHANGES) as f:
+            d = json.load(f)
+        ca = d.get("computed_at")
+        if not ca:
+            return None
+        dt = datetime.fromisoformat(ca)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - dt).total_seconds() / 60.0
+    except Exception as e:
+        log(f"snapshot age parse error: {e}")
+        return None
+
+
+def scan_from_snapshot(config: dict) -> bool:
+    """消费看板 changes_1h.json：看板已用全量数据算好 1h delta，本函数只做
+    [关键词匹配 + volume/到期/阈值过滤 + 推送]。看板的异动定义即唯一真相源，
+    本告警器不再自己算 delta、不再维护 state（state 由看板内部维护）。
+
+    返回 True=成功用快照路径处理(无论是否有告警)，False=快照陈旧/缺失须回落 live。
+    """
+    age = _snapshot_age_min()
+    if age is None or age > SNAPSHOT_MAX_AGE_MIN:
+        log(f"看板快照不可用或陈旧(age={age}min, 阈值{SNAPSHOT_MAX_AGE_MIN}min)，回落 live poll")
+        return False
+
+    alert_thresh = config.get("alert_thresh", 5.0)          # 百分点(pp)
+    min_volume   = config.get("min_volume", 50000)
+    min_days_res = config.get("min_days_to_resolution", 2.0)
+    keywords     = [k.lower() for k in config.get("keywords", [])]
+
+    with open(DASHBOARD_CHANGES) as f:
+        snap = json.load(f)
+    changes = snap.get("changes", [])
+
+    alerts = []
+    for c in changes:
+        # 看板 delta_pct 单位是百分点(pp)，与 alert_thresh 同口径
+        delta_pp = abs(c.get("delta_pct", 0) or 0)
+        if delta_pp < alert_thresh:
+            continue
+        vol = float(c.get("volume", 0) or 0)
+        if vol < min_volume:
+            continue
+        # 到期过滤：临近到期的短线桶市场噪音大
+        end = c.get("end_date")
+        if end:
+            try:
+                dt = datetime.strptime(end[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                dtr = (dt - datetime.now(timezone.utc)).total_seconds() / 86400.0
+                if dtr < min_days_res:
+                    continue
+            except Exception:
+                pass
+        # 关键词匹配：question / event_title / subcategory 命中任一关键词
+        hay = " ".join(str(c.get(k, "")) for k in
+                       ("question", "event_title", "subcategory", "category_label")).lower()
+        matched = next((kw for kw in keywords if kw in hay), None)
+        if not matched:
+            continue
+        delta = c.get("delta", 0) or 0
+        yes = c.get("yes_prob")
+        prev = c.get("prev_prob")
+        alerts.append({
+            "question": c.get("question", "?"),
+            "prev": float(prev) if prev is not None else None,
+            "curr": float(yes) if yes is not None else None,
+            "delta": float(delta),
+            "volume": vol,
+            "direction": "⬆️" if delta > 0 else "⬇️",
+            "keyword": matched,
+        })
+
+    if alerts:
+        alerts_sorted = sorted(alerts, key=lambda a: abs(a["delta"]), reverse=True)[:8]
+        lines = ["**【Polymarket 异动告警】**_（数据源：看板 changes_1h 快照，单一真相源）_\n"]
+        for a in alerts_sorted:
+            pv = f"{a['prev']*100:.1f}%" if a["prev"] is not None else "—"
+            cv = f"{a['curr']*100:.1f}%" if a["curr"] is not None else "—"
+            lines.append(
+                f"{a['direction']} **{a['question'][:70]}**\n"
+                f"   {pv} → {cv}（{a['delta']*100:+.1f}pp）  成交量 {_fmt_volume(a['volume'])}\n"
+            )
+        lines.append(f"\n_看板快照(age {_snapshot_age_min():.0f}min) {len(changes)} 条变动，"
+                     f"匹配 {len(alerts)} 个异动（阈值 {alert_thresh}pp）_")
+        print("\n".join(lines))
+        log(f"[SNAPSHOT] Alert pushed: {len(alerts)} alerts from dashboard snapshot.")
+    else:
+        print("[SILENT]")
+        log(f"[SNAPSHOT] No alerts. {len(changes)} changes scanned, age {age:.0f}min.")
+    return True
+
+
 # ─── Core scan logic ──────────────────────────────────────────────────────────
 
 def scan(config: dict, state: dict, dry_run: bool = False) -> dict:
@@ -363,10 +475,14 @@ def main():
         save_state(new_state)
         log(f"Init complete. Snapshot saved: {len(new_state)} markets.")
     else:
-        new_state = scan(config, state, dry_run=args.dry_run)
-        save_state(new_state)
-
-    log(f"Scan complete. State now covers {len(new_state)} markets.")
+        # 收口主路径：优先消费看板 changes_1h.json（单一异动真相源，零额外 API 调用）。
+        # 仅当看板快照陈旧/缺失时回落到自己 live poll gamma-api（保留韧性）。
+        if not args.dry_run and scan_from_snapshot(config):
+            log("Scan complete via dashboard snapshot (no gamma-api poll).")
+        else:
+            new_state = scan(config, state, dry_run=args.dry_run)
+            save_state(new_state)
+            log(f"Scan complete via live poll. State now covers {len(new_state)} markets.")
 
 
 if __name__ == "__main__":

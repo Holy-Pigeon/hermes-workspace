@@ -1,11 +1,11 @@
 {
-  "NCT06767514": {
-    "nct": "NCT06767514",
-    "title": "Clinical Study of Ivonescimab for First-line Treatment of Metastatic NSCLC Patients With High PD-L1",
+  "NCT06928389": {
+    "nct": "NCT06928389",
+    "title": "Ivonescimab in Combination With Docetaxel in Advanced Non-Small Cell Lung Cancer",
     "status": "RECRUITING",
     "phase": "PHASE3",
-    "pcd": "2028-04",
-    "last_update": "2026-02-24"
+    "pcd": "2027-05",
+    "last_update": "2026-04-09"
   },
   "NCT06953999": {
     "nct": "NCT06953999",
@@ -15,37 +15,13 @@
     "pcd": "2027-05-14",
     "last_update": "2026-03-04"
   },
-  "NCT07076693": {
-    "nct": "NCT07076693",
-    "title": "Standard-of-care Systemic Therapy With or Without Local Therapy in Patients With Oligoprogressive Non-Small Cell Lung Ca",
-    "status": "ACTIVE_NOT_RECRUITING",
-    "phase": "PHASE2,PHASE3",
-    "pcd": "2028-05-31",
-    "last_update": "2025-07-22"
-  },
-  "NCT07264075": {
-    "nct": "NCT07264075",
-    "title": "Study Comparing Ivonescimab Alone or Ivonescimab in Combination With Ligufalimab Versus Pembrolizumab for the Treatment ",
-    "status": "RECRUITING",
-    "phase": "PHASE3",
-    "pcd": "2030-05",
-    "last_update": "2026-05-20"
-  },
-  "NCT06396065": {
-    "nct": "NCT06396065",
-    "title": "Phase III Study of AK112 for NSCLC Patients",
-    "status": "ACTIVE_NOT_RECRUITING",
-    "phase": "PHASE3",
-    "pcd": "2025-04-12",
-    "last_update": "2026-03-24"
-  },
-  "NCT05899608": {
-    "nct": "NCT05899608",
-    "title": "Clinical Study of Ivonescimab for First-line Treatment of Metastatic NSCLC Patients",
+  "NCT07010263": {
+    "nct": "NCT07010263",
+    "title": "A Study of AK112 as Consolidation Treatment for Patients With Limited Stage Small-cell Lung Cancer Who Have Not Progress",
     "status": "RECRUITING",
     "phase": "PHASE3",
     "pcd": "2028-12-31",
-    "last_update": "2026-04-30"
+    "last_update": "2026-03-05"
   },
   "NCT07228832": {
     "nct": "NCT07228832",
@@ -55,13 +31,29 @@
     "pcd": "2028-05-31",
     "last_update": "2026-05-05"
   },
-  "NCT06928389": {
-    "nct": "NCT06928389",
-    "title": "Ivonescimab in Combination With Docetaxel in Advanced Non-Small Cell Lung Cancer",
+  "NCT07076693": {
+    "nct": "NCT07076693",
+    "title": "Standard-of-care Systemic Therapy With or Without Local Therapy in Patients With Oligoprogressive Non-Small Cell Lung Ca",
+    "status": "ACTIVE_NOT_RECRUITING",
+    "phase": "PHASE2,PHASE3",
+    "pcd": "2028-05-31",
+    "last_update": "2025-07-22"
+  },
+  "NCT05899608": {
+    "nct": "NCT05899608",
+    "title": "Clinical Study of Ivonescimab for First-line Treatment of Metastatic NSCLC Patients",
     "status": "RECRUITING",
     "phase": "PHASE3",
-    "pcd": "2027-05",
-    "last_update": "2026-04-09"
+    "pcd": "2028-12-31",
+    "last_update": "2026-04-30"
+  },
+  "NCT07264075": {
+    "nct": "NCT07264075",
+    "title": "Study Comparing Ivonescimab Alone or Ivonescimab in Combination With Ligufalimab Versus Pembrolizumab for the Treatment ",
+    "status": "RECRUITING",
+    "phase": "PHASE3",
+    "pcd": "2030-05",
+    "last_update": "2026-05-20"
   },
   "NCT05184712": {
     "nct": "NCT05184712",
@@ -71,12 +63,20 @@
     "pcd": "2023-03-10",
     "last_update": "2026-03-04"
   },
-  "NCT07010263": {
-    "nct": "NCT07010263",
-    "title": "A Study of AK112 as Consolidation Treatment for Patients With Limited Stage Small-cell Lung Cancer Who Have Not Progress",
+  "NCT06767514": {
+    "nct": "NCT06767514",
+    "title": "Clinical Study of Ivonescimab for First-line Treatment of Metastatic NSCLC Patients With High PD-L1",
     "status": "RECRUITING",
     "phase": "PHASE3",
-    "pcd": "2028-12-31",
-    "last_update": "2026-03-05"
+    "pcd": "2028-04",
+    "last_update": "2026-02-24"
+  },
+  "NCT06396065": {
+    "nct": "NCT06396065",
+    "title": "Phase III Study of AK112 for NSCLC Patients",
+    "status": "ACTIVE_NOT_RECRUITING",
+    "phase": "PHASE3",
+    "pcd": "2025-04-12",
+    "last_update": "2026-03-24"
   }
 }
