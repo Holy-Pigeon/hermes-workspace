@@ -222,6 +222,24 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
+    },
+    {
+      "id": "feishu-notify",
+      "name": "飞书信号通知服务",
+      "icon": "📡",
+      "desc": "监听「快快变富」群消息→规则匹配(sniper)→广播给已订阅在线客户端+结构化期权信号解析。HTTP状态监控页:飞书登录态/抓取健康/在线客户端/今日推送留痕(0客户端也记录)",
+      "ports": {
+        "local": 8766,
+        "remote": 6014
+      },
+      "tags": [
+        "通知服务",
+        "WebSocket",
+        "基础设施",
+        "Web服务"
+      ],
+      "health_path": "/healthz",
+      "heartbeat_file": "~/hermes-workspace/Quant-Futu/notify_service/heartbeat.json"
     }
   ]
 }
