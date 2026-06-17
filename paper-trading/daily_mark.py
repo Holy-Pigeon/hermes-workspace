@@ -89,148 +89,43 @@ def _check_fresh(date_val, sym):
 def fetch_prices(symbols_by_market):
     """返回 {symbol: price}。
 
-    主路：逐只单股 *_hist 接口取最近收盘（快、精准命中、不依赖几千行全表）。
-    实测单只 <0.2s；旧版用 stock_hk_spot_em()/stock_zh_a_spot_em() 全表接口，
-    港股全表分46页爬4660只耗时~52s，三市场叠加超120s → 脚本超时被杀 → 更新未commit
-    → 表现为"持仓没数据"（如康方09926）。逐只方案 4 只票总取数 <1s。
-    兜底：单只接口失效时回落全表批量。查不到/陈旧 → 不写入，保留上次价，绝不编造。
+    统一走 marketdata.get_last_close_batch（腾讯单请求批量一次拿全，未命中的
+    并发降级 sina→em 日线 + sina/腾讯直连终极兜底）。整池通常 <1s，且内部多源
+    自动降级——彻底取代旧版「逐只 akshare 串行 + 全表兜底 + marketdata 垫底」
+    三层复杂逻辑（东财单源一断就全崩、串行 hang 累加破 cron 墙的历史病根）。
+
+    保留 _check_fresh 新鲜度闸门：末行日期距今 >3 天视为停牌/陈旧，不写入，
+    保留上次价 —— 绝不编造，绝不用脏价污染 NAV 快照。
+    查不到的标的不进返回 dict，调用方据此保留上次价。
     """
-    import akshare as ak
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _root not in sys.path:
+        sys.path.insert(0, _root)
+    from marketdata import get_last_close_batch
+
+    # 组装批量请求：[(symbol, market), ...]
+    items = []
+    for mk, syms in symbols_by_market.items():
+        for s in syms:
+            items.append((s, mk))
+    if not items:
+        return {}
+
     prices = {}
+    try:
+        marks = get_last_close_batch(items)  # {(sym,mk): (price, date)}
+    except Exception as e:
+        log(f"  marketdata 批量取价整体失败(保留上次价,不编造): {repr(e)[:80]}")
+        return prices
 
-    # ---- A股：逐只 stock_zh_a_hist ----
-    for s in symbols_by_market.get("A", []):
-        try:
-            df, to = _call_with_timeout(
-                lambda s=s: ak.stock_zh_a_hist(symbol=s, period="daily", adjust=""),
-                PERSTOCK_TIMEOUT_SEC, f"A股单只 {s}")
-            if to:
-                continue
-            if df is not None and len(df):
-                row = df.iloc[-1]
-                if _check_fresh(row["日期"], s):
-                    prices[s] = float(row["收盘"])
-        except Exception as e:
-            log(f"  A股单只 {s} 失败: {repr(e)[:60]}")
-
-    # ---- 港股：逐只 stock_hk_hist ----
-    for s in symbols_by_market.get("HK", []):
-        try:
-            df, to = _call_with_timeout(
-                lambda s=s: ak.stock_hk_hist(symbol=s.zfill(5), period="daily", adjust=""),
-                PERSTOCK_TIMEOUT_SEC, f"港股单只 {s}")
-            if to:
-                continue
-            if df is not None and len(df):
-                row = df.iloc[-1]
-                if _check_fresh(row["日期"], s):
-                    prices[s] = float(row["收盘"])
-        except Exception as e:
-            log(f"  港股单只 {s} 失败: {repr(e)[:60]}")
-
-    # ---- 美股：逐只 stock_us_hist ----
-    for s in symbols_by_market.get("US", []):
-        try:
-            df, to = _call_with_timeout(
-                lambda s=s: ak.stock_us_hist(symbol=s, period="daily", adjust=""),
-                PERSTOCK_TIMEOUT_SEC, f"美股单只 {s}")
-            if to:
-                continue
-            if df is not None and len(df):
-                row = df.iloc[-1]
-                if _check_fresh(row["日期"], s):
-                    prices[s] = float(row["收盘"])
-        except Exception as e:
-            log(f"  美股单只 {s} 失败: {repr(e)[:60]}")
-
-    # ---- 兜底：仍缺的标的，回落全表批量接口（仅对缺失市场拉一次）----
-    missing = {mk: [s for s in syms if s not in prices]
-               for mk, syms in symbols_by_market.items() if syms}
-    missing = {mk: syms for mk, syms in missing.items() if syms}
-    if missing:
-        log(f"逐只接口未覆盖 {missing}，回落全表兜底")
-        _fallback_spot(ak, missing, prices)
-
-    # ---- 终极兜底：marketdata 统一层(sina→em 多源降级)。----
-    # 病根: 本脚本逐只/全表全走东财(em)单源, 东财间歇全线 RemoteDisconnected 时(实测
-    # 2026-06-15 全挂)4/4 持仓取价全失败→保留上次价→NAV 快照被陈旧价污染(风控backbone失效)。
-    # marketdata 层有 sina 源, 东财全挂时仍能取到真实收盘。此处仅对"仍缺"的标的兜底,
-    # 且复用 _check_fresh 同一新鲜度闸门, 拿不到/陈旧仍保留上次价, 绝不编造。纯增量、不改既有路径。
-    still_missing = {mk: [s for s in syms if s not in prices]
-                     for mk, syms in symbols_by_market.items() if syms}
-    still_missing = {mk: syms for mk, syms in still_missing.items() if syms}
-    if still_missing:
-        try:
-            import os as _os
-            _root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
-            if _root not in sys.path:
-                sys.path.insert(0, _root)
-            from marketdata import get_last_close
-            log(f"全表兜底仍缺 {still_missing}，转 marketdata 统一层(sina→em)兜底")
-            for mk, syms in still_missing.items():
-                for s in syms:
-                    try:
-                        res, to = _call_with_timeout(
-                            lambda s=s, mk=mk: get_last_close(s, mk),
-                            PERSTOCK_TIMEOUT_SEC, f"marketdata {mk} {s}")
-                        if to or res is None:
-                            continue
-                        px, dt = res
-                        if px is not None and _check_fresh(dt, s):
-                            prices[s] = float(px)
-                            log(f"  {s} <- {px} (marketdata sina兜底, {dt})")
-                    except Exception as e:
-                        log(f"  marketdata {mk} {s} 兜底失败: {repr(e)[:60]}")
-        except Exception as e:
-            log(f"  marketdata 兜底整体不可用(忽略, 不影响既有逻辑): {repr(e)[:80]}")
-
+    for (sym, mk), val in marks.items():
+        if val is None:
+            continue
+        px, dt = val
+        if px is not None and _check_fresh(dt, sym):
+            prices[sym] = float(px)
+            log(f"  {sym} <- {px} (marketdata, {dt})")
     return prices
-
-
-def _fallback_spot(ak, missing, prices):
-    """全表批量兜底。仅在逐只接口失败时调用，慢但全。
-    每个源套墙钟预算(FALLBACK_WALL_BUDGET_SEC), 总预算在源间共享递减——
-    防止东财 hang 累加破 120s cron 墙杀掉脚本(NAV快照丢失的历史病根)。
-    超时即放弃该源, 保留上次价 + 告警, 让脚本永远跑得到 commit+snapshot。"""
-    import time
-    deadline = time.monotonic() + FALLBACK_WALL_BUDGET_SEC
-
-    def _remaining():
-        return max(1.0, deadline - time.monotonic())
-
-    if missing.get("A"):
-        try:
-            df, to = _call_with_timeout(ak.stock_zh_a_spot_em, _remaining(), "A股全表兜底")
-            if not to and df is not None:
-                m = dict(zip(df["代码"].astype(str), df["最新价"]))
-                for s in missing["A"]:
-                    if s in m and m[s] == m[s]:
-                        prices[s] = float(m[s])
-        except Exception as e:
-            log(f"  A股全表兜底失败: {repr(e)[:60]}")
-    if missing.get("HK"):
-        try:
-            df, to = _call_with_timeout(ak.stock_hk_spot_em, _remaining(), "港股全表兜底")
-            if not to and df is not None:
-                m = dict(zip(df["代码"].astype(str), df["最新价"]))
-                for s in missing["HK"]:
-                    key = s.zfill(5)
-                    if key in m and m[key] == m[key]:
-                        prices[s] = float(m[key])
-                    elif s in m and m[s] == m[s]:
-                        prices[s] = float(m[s])
-        except Exception as e:
-            log(f"  港股全表兜底失败: {repr(e)[:60]}")
-    if missing.get("US"):
-        try:
-            df, to = _call_with_timeout(ak.stock_us_spot_em, _remaining(), "美股全表兜底")
-            if not to and df is not None:
-                m = dict(zip(df["代码"].astype(str), df["最新价"]))
-                for s in missing["US"]:
-                    if s in m and m[s] == m[s]:
-                        prices[s] = float(m[s])
-        except Exception as e:
-            log(f"  美股全表兜底失败: {repr(e)[:60]}")
 
 
 def classify_market(market, currency):

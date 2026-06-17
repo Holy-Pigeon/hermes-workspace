@@ -231,6 +231,116 @@ def _sina_quote_direct(code: str, market: str = None):
     return None
 
 
+# ── 腾讯行情源：qt.gtimg.cn 单请求批量，国内直连不被 Clash 拦 ──────────────
+def _tencent_symbol(code: str, market: str = None) -> str | None:
+    """把 (code, market) 映射成腾讯行情代码。
+    A股 sh/sz+6位；港股 r_hk+5位(实时)；美股 us+TICKER。无法识别返回 None。"""
+    c = str(code).strip().upper()
+    mk = (market or detect_market(c)).upper()
+    digits = "".join(ch for ch in c if ch.isdigit())
+    if mk == "HK":
+        return "r_hk" + digits.zfill(5)
+    if mk == "US":
+        return "us" + c
+    if mk == "A":
+        d6 = digits.zfill(6)
+        if d6 and d6[0] in ("6", "9"):
+            return "sh" + d6
+        if d6:
+            return "sz" + d6
+    return None
+
+
+def _tencent_batch(symbols: list) -> dict:
+    """腾讯批量取价：单请求多只。返回 {腾讯symbol: (price, date|None)}。
+    取不到/价≤0 的不进 dict。字段：[3]=现价，[30]=YYYYMMDDHHMMSS（部分市场无）。"""
+    import urllib.request
+    import ssl
+    if not symbols:
+        return {}
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    url = "https://qt.gtimg.cn/q=" + ",".join(symbols)
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    raw = urllib.request.urlopen(req, timeout=12, context=ctx).read().decode("gbk", "ignore")
+    out = {}
+    for seg in raw.split(";"):
+        seg = seg.strip()
+        if not seg.startswith("v_") or "=" not in seg:
+            continue
+        key, _, val = seg.partition("=")
+        sym = key[2:]  # 去 v_ 前缀；港股保留 r_hk
+        val = val.strip().strip('"')
+        fields = val.split("~")
+        if len(fields) < 4:
+            continue
+        try:
+            price = float(fields[3])
+        except (ValueError, IndexError):
+            continue
+        if price <= 0:
+            continue
+        dt = None
+        if len(fields) > 30 and fields[30]:
+            ds = "".join(ch for ch in fields[30] if ch.isdigit())[:8]
+            if len(ds) == 8:
+                dt = f"{ds[:4]}-{ds[4:6]}-{ds[6:8]}"
+        out[sym] = (price, dt)
+    return out
+
+
+def get_last_close_batch(items: list, max_workers: int = 8) -> dict:
+    """批量取最近收盘价，自动并发 + 多源降级。
+
+    items: [(code, market), ...]，market 可为 None（自动推断）。
+    返回 {(code, market): (price float, date str)}，取不到的标的不进 dict
+    （调用方据此判断缺失，保留上次价，绝不编造）。
+
+    策略：① 先腾讯单请求批量一次拿全（最快，整池 <1s）；
+         ② 腾讯未命中的标的，走线程池并发调 get_last_close
+            （内部 sina→em 日线 + sina/腾讯直连终极兜底），干掉串行慢。
+    """
+    import datetime as _dt
+    from concurrent.futures import ThreadPoolExecutor
+
+    if not items:
+        return {}
+    result = {}
+
+    # ① 腾讯批量
+    sym_to_item = {}
+    for code, market in items:
+        ts = _tencent_symbol(code, market)
+        if ts:
+            sym_to_item[ts] = (code, market)
+    if sym_to_item:
+        try:
+            today = _dt.date.today().isoformat()
+            batch = _tencent_batch(list(sym_to_item.keys()))
+            for ts, (px, dt) in batch.items():
+                item = sym_to_item.get(ts)
+                if item is not None:
+                    result[item] = (px, dt or today)
+        except Exception:
+            pass  # 腾讯整体失败不致命，下面逐只并发兜底
+
+    # ② 未命中的并发兜底
+    missing = [it for it in items if it not in result]
+    if missing:
+        def _one(it):
+            code, market = it
+            try:
+                return it, get_last_close(code, market)
+            except Exception:
+                return it, None
+        with ThreadPoolExecutor(max_workers=max_workers) as ex:
+            for it, val in ex.map(_one, missing):
+                if val is not None:
+                    result[it] = val
+    return result
+
+
 def get_spot(code: str, market: str = None):
     """
     取最新价 (float)。优先用轻量快照源；快照不可用时降级为 get_last_close。
