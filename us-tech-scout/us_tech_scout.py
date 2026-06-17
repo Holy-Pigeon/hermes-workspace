@@ -165,6 +165,7 @@ def analyze(symbol, name):
         "np_yoy": round(np_yoy, 1) if np_yoy is not None else None,
         "rev_yoy": round(rev_yoy, 1) if rev_yoy is not None else None,
         "latest_date": latest.get("date"), "n_years": len(roe_asc), "notes": notes,
+        "eps_annual": latest.get("eps"),  # 最新财年 BASIC_EPS(非TTM), 供下游 reverse_dcf 反算用, 口径须标注
     }
 
 

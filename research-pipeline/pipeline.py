@@ -30,6 +30,7 @@ from datetime import datetime, timezone, timedelta
 WS = os.path.expanduser("~/hermes-workspace")
 PY = "/opt/homebrew/bin/python3"
 SCREENER = os.path.join(WS, "stock-discovery", "tech_screener.py")
+SCOUT = os.path.join(WS, "us-tech-scout", "us_tech_scout.py")  # 美股科技耐久质量发现雷达(JSON输出)
 RDCF = os.path.join(WS, "research", "reverse_dcf.py")
 MOAT = os.path.join(WS, "moat-durability", "moat_scorecard.py")
 LEDGER = os.path.join(WS, "prediction-ledger", "prediction_ledger.py")
@@ -96,6 +97,88 @@ def moat_for(code, name):
         return arr[0] if arr else None
     except Exception:
         return None
+
+
+def scout_us_candidates():
+    """跑 us-tech-scout, 解析出 🏰/⭐ 美股科技候选(已含护城河耐久度判定)。
+    返回 list of dict。零新增数据, 只转发 scout 一手 akshare 年报结论。
+    护城河层在 scout 内已收口 moat_core 单一事实源, 故美股分支不再重复跑 moat_scorecard
+    (moat_scorecard 只吃 A 股 akshare 端口, 对美股无效)——这正是收口的价值。"""
+    out, _, _ = run([PY, SCOUT, "--json"], cwd=os.path.dirname(SCOUT))
+    i = out.find("{")
+    if i < 0:
+        return []
+    try:
+        data = json.loads(out[i:])
+    except Exception:
+        return []
+    cands = []
+    for r in data.get("results", []):
+        if r.get("ok") and r.get("flag") in ("🏰", "⭐"):
+            cands.append(r)
+    return cands
+
+
+def _us_price(symbol):
+    """经 marketdata 统一层取美股最近收盘 (收口, 不另起 akshare 调用)。
+    返回 (price, date) 或 (None, None) — 拉不到绝不编造。"""
+    try:
+        sys.path.insert(0, os.path.join(WS, "marketdata"))
+        import core as md  # marketdata 统一取数层
+        return md.get_last_close(symbol, "US")
+    except Exception:
+        return None, None
+
+
+def build_us_section(us_cands):
+    """美股科技候选简报段: 发现层(scout 护城河耐久度) + 估值层(reverse_dcf, 现价/年度EPS)。
+    EPS 口径透明: 用 scout 的最新【财年】BASIC_EPS(非TTM), 现价经 marketdata 取, 隐含增速仅作量级参考。"""
+    lines = []
+    if not us_cands:
+        return lines
+    lines.append("# 🇺🇸 美股科技 sleeve 候选 (us-tech-scout → reverse_dcf)")
+    lines.append("")
+    lines.append("> us-tech-value sleeve(25M)发现漏斗。护城河耐久度已在 scout 内收口 moat_core 单一")
+    lines.append("> 事实源(8年年报), 故此段不再重复跑 moat_scorecard。估值层 EPS 用最新【财年】BASIC_EPS")
+    lines.append("> (**非TTM**, 口径与 A 股段不同, 隐含增速仅作量级参考), 现价经 marketdata 统一层取。")
+    lines.append("")
+    for c in us_cands:
+        sym, name = c["symbol"], c.get("name") or c["symbol"]
+        lines.append(f"## {c.get('flag')} {sym}")
+        lines.append("")
+        lines.append("### 发现层 (us-tech-scout 一手, 8年年报, 护城河收口moat_core)")
+        lines.append(f"- **判定**: {c.get('verdict')}  | 护城河: {c.get('moat_verdict')}")
+        lines.append(f"- ROE持久性 {c.get('roe_persist')} / ROE中位 {c.get('roe_median')}% "
+                     f"/ 净利率均值 {c.get('npm_mean')}% (CV {c.get('npm_cv')}) / 毛利率 {c.get('gpm_mean')}%")
+        lines.append(f"- 近一年: 净利YoY {c.get('np_yoy')}% | 营收YoY {c.get('rev_yoy')}% "
+                     f"| 截至 {c.get('latest_date')}")
+        for n in c.get("notes", []):
+            lines.append(f"- ⚑ {n}")
+        lines.append("")
+        lines.append("### 估值层 (reverse_dcf, EPS=最新财年BASIC_EPS 非TTM)")
+        price, pdate = _us_price(sym)
+        eps = c.get("eps_annual")
+        if price and eps and eps > 0:
+            lines.append(f"(现价 {price} @ {pdate} via marketdata; 年度EPS {eps})")
+            lines.append("```")
+            lines.append(reverse_dcf_for(name, price, eps))
+            lines.append("```")
+        elif eps is not None and eps <= 0:
+            lines.append("(年度EPS≤0, PE 口径反向DCF 无意义, 跳过 — 须改用 PS/现金流框架)")
+        elif price is None:
+            lines.append("(marketdata 取价失败, 不编造, 跳过估值层; 须人工核现价后手跑 reverse_dcf)")
+        else:
+            lines.append("(缺年度EPS, 无法反算, 跳过)")
+        lines.append("")
+        lines.append("### 待人工/后续研究 cron 深挖 (TODO)")
+        lines.append("- [ ] 用 TTM EPS 复算反向DCF(财年EPS有滞后), 核现价隐含增速 vs 共识")
+        lines.append("- [ ] 护城河来源定性: 网络效应/平台生态/数据飞轮/转换成本 哪一种?")
+        lines.append("- [ ] 该名字是否值得动用 25M 闲置 sleeve? 仓位/估值安全垫判断")
+        lines.append("- [ ] 若通过 → 登记 prediction-ledger + 进 StockChoose 复审")
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+    return lines
 
 
 def ortho_disclosure():
@@ -217,6 +300,9 @@ def main():
     out, err, rc = run(cmd, cwd=os.path.dirname(SCREENER))
     cands = parse_screener(out)
 
+    # 美股科技 sleeve 候选 (us-tech-scout → reverse_dcf). --symbol 调试时只跑 A 股发现层, 跳过美股扫描.
+    us_cands = [] if args.symbol else scout_us_candidates()
+
     # 校准闭环: 无论有无新候选都surface临近到期的站立预测,
     # 这是prediction-ledger唯一的"出"机制——否则只进不出, score()永不触发。
     due_text, has_overdue = ledger_due_soon()
@@ -225,7 +311,7 @@ def main():
     # (review 批准: 并入本流水线零新增 cron 槽位、与研究产出同频)
     scan_text, has_offender = scan_notes_gate()
 
-    if not cands:
+    if not cands and not us_cands:
         tail = []
         if scan_text:
             tail.append("\n⚠️ 正交性治理闸门发现未披露多重印证主张:\n" + scan_text)
@@ -245,7 +331,12 @@ def main():
             print("研究编排流水线: 本轮无 ⭐ 价值成长候选 (发现层空)。")
         sys.exit(0)
 
-    dossier = build_dossier(cands)
+    dossier = build_dossier(cands) if cands else (
+        f"# 候选研究简报 (研究编排流水线自动生成)  "
+        f"{datetime.now(CN_TZ).strftime('%Y-%m-%d %H:%M')} CST\n\n"
+        "> 本轮 A股/港股发现层无 ⭐ 候选; 仅美股 sleeve 有候选, 见下。\n")
+    if us_cands:
+        dossier += "\n\n" + "\n".join(build_us_section(us_cands))
     if due_text:
         dossier += "\n\n## ⏰ 校准闭环: 临近到期的站立预测 (去resolve)\n\n```\n" + due_text + "\n```\n"
     if scan_text:
@@ -262,8 +353,13 @@ def main():
         f.write(dossier)
 
     names = ", ".join(f"{c['name']}({c['code']})" for c in cands)
-    print(f"研究编排流水线: 生成 {len(cands)} 份候选简报 → {fpath}")
-    print(f"候选: {names}")
+    us_names = ", ".join(c["symbol"] for c in us_cands)
+    n_total = len(cands) + len(us_cands)
+    print(f"研究编排流水线: 生成 {n_total} 份候选简报 → {fpath}")
+    if names:
+        print(f"A/HK候选: {names}")
+    if us_names:
+        print(f"美股候选: {us_names}")
     print("（这是尽调起点 stub, 非买卖指令; 须人工补 thesis/催化剂/一手核验）")
     sys.exit(1)
 

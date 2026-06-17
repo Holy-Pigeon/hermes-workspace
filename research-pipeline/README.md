@@ -18,6 +18,13 @@
 - 不替你判断买卖（输出是【尽调起点 stub】非终稿，非买卖指令）
 - 不自动登记 prediction-ledger / 不进 StockChoose（这些是简报里留给人工的 TODO 钩子）
 
+## 双 sleeve 覆盖（2026-06-17 接通美股分支）
+- **A股/港股**：`stock-discovery/tech_screener.py` 发现 ⭐ → `reverse_dcf` + `moat_scorecard`（3 层）
+- **美股科技 sleeve(25M)**：`us-tech-scout/us_tech_scout.py --json` 发现 🏰/⭐ → `reverse_dcf`
+  - 护城河耐久度已在 scout 内收口 `moat_core` 单一事实源，故美股段不重复跑 `moat_scorecard`（后者只吃 A 股 akshare 端口）
+  - 现价经 `marketdata` 统一层取（`get_last_close(sym,"US")`），EPS 用最新【财年】BASIC_EPS（**非TTM，口径与 A 股段不同**，隐含增速仅作量级参考，TODO 钩子提醒用 TTM 复算）
+  - 此前 us-tech-scout 是发现孤儿（产出 🏰 候选但无下游编排），本次接通后 25M 闲置 sleeve 有了完整发现→估值漏斗
+
 ## 怎么用
 ```
 # 全 watchlist 扫一遍, 有 ⭐ 候选则生成简报落盘到 dossiers/
