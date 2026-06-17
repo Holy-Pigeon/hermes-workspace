@@ -222,20 +222,6 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
-    },
-    {
-      "id": "feishu-notify",
-      "name": "飞书信号通知服务",
-      "icon": "📡",
-      "desc": "监听飞书「快快变富」群,SNIPER期权信号实时解析+WebSocket推送给订阅者(公网ws://1.12.235.152:6013)",
-      "ports": null,
-      "tags": [
-        "飞书",
-        "WebSocket",
-        "信号分发",
-        "实时推送"
-      ],
-      "heartbeat_file": "~/hermes-workspace/Quant-Futu/notify_service/heartbeat.json"
     }
   ]
 }
