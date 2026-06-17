@@ -190,6 +190,19 @@ def ledger_due_soon():
     return out, (rc == 1)
 
 
+def scan_notes_gate():
+    """治理闸门: 跑 signal-orthogonality --scan-notes --quiet, 扫 research/*.md
+    找『N重独立印证』却无正交披露的 note。这是把『多重印证必先过正交审计』从纪律
+    口号变成每周自动执行的闸门——并入本已挂周度 cron 的流水线, 零新增 cron 槽位。
+    纯只读文本扫描, 不取数不下单。返回 (text, has_offender): text 为空=全部合规。"""
+    out, _, rc = run([PY, ORTHO, "--scan-notes"])
+    out = (out or "").strip()
+    # --quiet 才静默, 这里要拿到正文; 用 rc 判定有无违规 (1=有未披露多重印证)
+    if rc != 1:
+        return "", False
+    return out, True
+
+
 def main():
     ap = argparse.ArgumentParser(description="研究编排流水线 (纯只读编排器)")
     ap.add_argument("--quiet", action="store_true",
@@ -208,12 +221,26 @@ def main():
     # 这是prediction-ledger唯一的"出"机制——否则只进不出, score()永不触发。
     due_text, has_overdue = ledger_due_soon()
 
+    # 治理闸门: 每周扫一次 research 库, 找声称多重印证却无正交披露的 note
+    # (review 批准: 并入本流水线零新增 cron 槽位、与研究产出同频)
+    scan_text, has_offender = scan_notes_gate()
+
     if not cands:
+        tail = []
+        if scan_text:
+            tail.append("\n⚠️ 正交性治理闸门发现未披露多重印证主张:\n" + scan_text)
         if has_overdue or (due_text and not args.quiet):
             print("研究编排流水线: 本轮无 ⭐ 新候选, 但有站立预测临近到期需校准:")
             print(due_text)
             print("\n→ 去拉一手财报后 prediction_ledger.py resolve <id> <correct|wrong|partial|void>")
-            sys.exit(1 if has_overdue else 0)
+            for t in tail:
+                print(t)
+            sys.exit(1 if (has_overdue or has_offender) else 0)
+        if has_offender:
+            print("研究编排流水线: 本轮无 ⭐ 新候选。")
+            for t in tail:
+                print(t)
+            sys.exit(1)
         if not args.quiet:
             print("研究编排流水线: 本轮无 ⭐ 价值成长候选 (发现层空)。")
         sys.exit(0)
@@ -221,6 +248,8 @@ def main():
     dossier = build_dossier(cands)
     if due_text:
         dossier += "\n\n## ⏰ 校准闭环: 临近到期的站立预测 (去resolve)\n\n```\n" + due_text + "\n```\n"
+    if scan_text:
+        dossier += "\n\n## ⚠️ 正交性治理闸门: 未披露多重印证的 note (补正交披露)\n\n```\n" + scan_text + "\n```\n"
 
     if args.no_write:
         print(dossier)
