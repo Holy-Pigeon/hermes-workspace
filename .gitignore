@@ -74,3 +74,10 @@ workspace-state.json
 
 # Quant-Futu 是独立 git 仓库(独立remote),不纳入workspace跟踪,避免gitlink与子仓库打架
 Quant-Futu/
+
+# 运行时状态/缓存文件(由各系统自动读写,不纳入git跟踪,避免每次跑都冒未提交噪音)
+# 注:ignore只停止跟踪,工作区文件保留,程序照常读写,累积状态不丢
+hormones/state.json
+paper-trading/akeso_trials/trial_state.json
+polymarket-dashboard/data/changes_1h.json
+ai-teacher/comment_review_state.json
