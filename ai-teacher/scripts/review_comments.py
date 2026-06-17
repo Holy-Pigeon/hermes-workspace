@@ -51,10 +51,47 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 PROJECT = os.path.dirname(BASE)
 CONFIG_PATH = os.path.join(PROJECT, ".openclaw", "notion_ai_teacher.json")
 STATE_PATH = os.path.join(PROJECT, "comment_review_state.json")
+# Staging queue between the cheap 10-min discovery scan (--scan) and the daily
+# 08:00 LLM reply pass. Discovery enqueues unanswered comments here; the reply
+# pass drains it (answer -> --mark resolved -> dequeue). Decoupling lets new
+# comments surface within ~10 min instead of waiting up to a full 34h rotation.
+QUEUE_PATH = os.path.join(PROJECT, "pending_comments.json")
+LOG_PATH = os.path.join(PROJECT, "scan_comments.log")
 
 
 def now_iso():
     return time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+def page_url(page_id):
+    return "https://www.notion.so/" + page_id.replace("-", "")
+
+
+def load_queue():
+    if os.path.exists(QUEUE_PATH):
+        try:
+            q = json.loads(open(QUEUE_PATH).read())
+            q.setdefault("comments", [])
+            q.setdefault("last_scan", None)
+            return q
+        except Exception:
+            pass
+    return {"comments": [], "last_scan": None}
+
+
+def save_queue(queue):
+    tmp = QUEUE_PATH + ".tmp"
+    with open(tmp, "w") as f:
+        f.write(json.dumps(queue, ensure_ascii=False, indent=2) + "\n")
+    os.replace(tmp, QUEUE_PATH)
+
+
+def log_line(msg):
+    try:
+        with open(LOG_PATH, "a") as f:
+            f.write("%s %s\n" % (now_iso(), msg))
+    except Exception:
+        pass
 
 
 def get_token():
@@ -223,7 +260,26 @@ def main():
     ap.add_argument("--refresh-order", action="store_true",
                     help="rebuild rotation order from the DB (run when new lessons added)")
     ap.add_argument("--page", default="", help="force-check one page id, don't advance cursor")
+    ap.add_argument("--scan", action="store_true",
+                    help="discovery mode for the 10-min watchdog: check the next "
+                         "page(s) in rotation, enqueue UNRESOLVED+un-queued comments "
+                         "into pending_comments.json, advance cursor. Silent on no "
+                         "new comments; only prints/logs when something is found or errors.")
+    ap.add_argument("--scan-cycles", type=int, default=1,
+                    help="how many pages to walk per --scan run (default 1)")
+    ap.add_argument("--list-queue", action="store_true",
+                    help="print the pending_comments.json queue as JSON and exit "
+                         "(used by the daily reply pass to consume new comments)")
     args = ap.parse_args()
+
+    # --- list pending queue (no network) -------------------------------------
+    if args.list_queue:
+        queue = load_queue()
+        print(json.dumps({"queue_depth": len(queue["comments"]),
+                          "last_scan": queue.get("last_scan"),
+                          "comments": queue["comments"]},
+                         ensure_ascii=False, indent=2))
+        return 0
 
     state = load_state()
 
@@ -233,7 +289,17 @@ def main():
         for cid in args.mark:
             state["resolved"][cid] = {"resolved_at": ts}
         save_state(state)
-        print(json.dumps({"marked": args.mark, "total_resolved": len(state["resolved"])},
+        # also drain these from the pending queue so the daily reply pass and
+        # the scanner both stop surfacing them.
+        queue = load_queue()
+        before = len(queue["comments"])
+        marked = set(args.mark)
+        queue["comments"] = [c for c in queue["comments"] if c["comment_id"] not in marked]
+        dequeued = before - len(queue["comments"])
+        if dequeued:
+            save_queue(queue)
+        print(json.dumps({"marked": args.mark, "total_resolved": len(state["resolved"]),
+                          "dequeued": dequeued, "queue_depth": len(queue["comments"])},
                          ensure_ascii=False))
         return 0
 
@@ -248,6 +314,73 @@ def main():
         save_state(state)
         print(json.dumps({"page_order_size": total, "newly_added": new,
                           "cursor": state["cursor"]}, ensure_ascii=False))
+        return 0
+
+    # --- discovery scan (10-min watchdog) ------------------------------------
+    if args.scan:
+        # lazily init / heal rotation order
+        if not state.get("page_order"):
+            refresh_order(call, state, database_id)
+        order = state["page_order"]
+        if not order:
+            save_state(state)
+            log_line("scan: no lessons in DB, nothing to do")
+            return 0
+
+        queue = load_queue()
+        already_queued = {c["comment_id"] for c in queue["comments"]}
+        resolved = state.get("resolved", {})
+
+        cycles = max(1, args.scan_cycles)
+        newly_enqueued = []
+        pages_checked = []
+        for _ in range(min(cycles, len(order))):
+            idx = state["cursor"] % len(order)
+            page_id = order[idx]
+            title = state.get("page_titles", {}).get(page_id, "(unknown)")
+            pages_checked.append(title)
+            try:
+                comments = collect_comments(call, page_id)
+            except Exception as e:
+                log_line("scan: error collecting comments for %s (%s): %s"
+                         % (page_id, title, e))
+                state["cursor"] = (idx + 1) % len(order)
+                continue
+            for c in comments:
+                cid = c["comment_id"]
+                if cid in resolved or cid in already_queued:
+                    continue
+                c["page_id"] = page_id
+                c["page_title"] = title
+                c["page_url"] = page_url(page_id)
+                c["discovered_at"] = now_iso()
+                queue["comments"].append(c)
+                already_queued.add(cid)
+                newly_enqueued.append(c)
+            state["cursor"] = (idx + 1) % len(order)
+
+        state["last_review"] = now_iso()
+        save_state(state)
+        queue["last_scan"] = now_iso()
+        save_queue(queue)
+
+        if newly_enqueued:
+            log_line("scan: enqueued %d new comment(s) from %s; queue depth now %d"
+                     % (len(newly_enqueued), ", ".join(pages_checked), len(queue["comments"])))
+            # non-silent: surface a compact summary so a notify-on-output watchdog
+            # can ping, while routine empty scans stay silent.
+            print(json.dumps({
+                "scan": True,
+                "newly_enqueued": len(newly_enqueued),
+                "queue_depth": len(queue["comments"]),
+                "pages_checked": pages_checked,
+                "comments": [{"comment_id": c["comment_id"],
+                              "page_title": c["page_title"],
+                              "page_url": c["page_url"],
+                              "anchored_text": c.get("anchored_text"),
+                              "text": c.get("text")} for c in newly_enqueued],
+            }, ensure_ascii=False, indent=2))
+        # silent when nothing new
         return 0
 
     # --- single-page debug ---------------------------------------------------
