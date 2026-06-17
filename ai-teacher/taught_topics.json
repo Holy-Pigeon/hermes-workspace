@@ -339,8 +339,13 @@
       "topic": "自回归生成（Autoregressive Generation）——一次只吐一个词，再把它喂回自己",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-06-17T14:03:00+08:00"
+    },
+    {
+      "topic": "因果注意力（Causal Attention）——让模型只能看见过去，看不见未来",
+      "category": "类目 18：Decoder-only 模型",
+      "taught_at": "2026-06-17T20:03:00+08:00"
     }
   ],
-  "total_count": 68,
-  "last_updated": "2026-06-17T14:03:00+08:00"
+  "total_count": 69,
+  "last_updated": "2026-06-17T20:03:00+08:00"
 }
