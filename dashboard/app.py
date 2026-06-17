@@ -595,6 +595,7 @@ def sc_picks():
                        p.selected_date, p.selected_price, p.currency,
                        p.expected_upside_pct, p.target_price, p.conviction_rating,
                        p.score, p.status, p.updated_at,
+                       p.gain_since_pick_pct, p.last_mark_price, p.last_mark_date,
                        (SELECT count(*) FROM stock_theses t WHERE t.stock_pick_id = p.id) AS n_thesis,
                        (SELECT count(*) FROM stock_theses t WHERE t.stock_pick_id = p.id AND t.still_valid) AS n_thesis_valid,
                        (SELECT count(*) FROM stock_pick_reviews r WHERE r.stock_pick_id = p.id) AS n_review,
@@ -609,14 +610,18 @@ def sc_picks():
         out = []
         for r in rows:
             d = dict(r)
-            for k in ("selected_price", "expected_upside_pct", "target_price", "score", "last_price"):
+            for k in ("selected_price", "expected_upside_pct", "target_price", "score", "last_price",
+                      "gain_since_pick_pct", "last_mark_price"):
                 d[k] = _num(d.get(k))
-            for k in ("selected_date", "last_review_date"):
+            for k in ("selected_date", "last_review_date", "last_mark_date"):
                 if d.get(k):
                     d[k] = str(d[k])
             d["updated_at"] = str(d["updated_at"])[:16] if d.get("updated_at") else None
-            # 较选入价的当前涨跌幅（用最近复核价）
-            if d.get("last_price") and d.get("selected_price"):
+            # 较选入价的当前涨跌幅：优先用主表每日盯市值 gain_since_pick_pct（refresh_pick_marks.py 刷新），
+            # 主表无盯市值时回退到最近一次复核价反推（旧逻辑，数据可能陈旧）。
+            if d.get("gain_since_pick_pct") is not None:
+                d["price_change_since_pick"] = d["gain_since_pick_pct"]
+            elif d.get("last_price") and d.get("selected_price"):
                 d["price_change_since_pick"] = round((d["last_price"] / d["selected_price"] - 1) * 100, 2)
             else:
                 d["price_change_since_pick"] = None
@@ -646,9 +651,10 @@ def sc_pick_detail(pick_id):
             if not pick:
                 return jsonify({"error": "未找到该标的"}), 404
             pick = dict(pick)
-            for k in ("selected_price", "expected_upside_pct", "target_price", "target_market_cap", "score"):
+            for k in ("selected_price", "expected_upside_pct", "target_price", "target_market_cap", "score",
+                      "gain_since_pick_pct", "last_mark_price"):
                 pick[k] = _num(pick.get(k))
-            for k in ("selected_date",):
+            for k in ("selected_date", "last_mark_date"):
                 if pick.get(k):
                     pick[k] = str(pick[k])
             for k in ("created_at", "updated_at"):

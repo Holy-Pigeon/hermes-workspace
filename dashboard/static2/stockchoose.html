@@ -239,7 +239,8 @@ function renderCards(picks) {
         <span class="exp ${pctClass(p.expected_upside_pct)}">${fmtPct(p.expected_upside_pct)}<span class="unit"> 期望</span></span>
         <span class="meta">信心 <b class="${convClass(p.conviction_rating)}">${convLabel(p.conviction_rating)}</b></span>
         <span class="meta">选入 <b>${p.selected_price?.toFixed(2)??"—"}</b> <span class="dim">@${esc(p.selected_date||"")}</span></span>
-        ${since!=null ? `<span class="meta">较选入 <b class="${pctClass(since)}">${fmtPct(since)}</b></span>` : ""}
+        ${p.target_price!=null ? `<span class="meta">目标 <b>${p.target_price.toFixed(2)}</b></span>` : ""}
+        ${since!=null ? `<span class="meta">较选入 <b class="${pctClass(since)}">${fmtPct(since)}</b>${p.last_mark_date?` <span class="dim" style="font-size:11px">@${esc(p.last_mark_date)}</span>`:""}</span>` : ""}
       </div>
       <div class="badges">${thesisBadge}${reviewBadge}</div>
     </div>`;
@@ -303,7 +304,9 @@ function renderDetail(d) {
       ${kv("概率加权期望收益", fmtPct(p.expected_upside_pct), pctClass(p.expected_upside_pct))}
       ${kv("信心评级", convLabel(p.conviction_rating), convClass(p.conviction_rating))}
       ${kv("选入价", (p.selected_price?.toFixed(2)??"—")+" "+(p.currency||""))}
-      ${p.target_price!=null ? kv("目标价", p.target_price.toFixed(2)) : ""}
+      ${p.last_mark_price!=null ? kv("最新盯市价", p.last_mark_price.toFixed(2)+" "+(p.currency||"")+(p.last_mark_date?` <span class="dim" style="font-size:12px">@${esc(p.last_mark_date)}</span>`:"")) : ""}
+      ${p.gain_since_pick_pct!=null ? kv("入选后涨跌幅", fmtPct(p.gain_since_pick_pct), pctClass(p.gain_since_pick_pct)) : ""}
+      ${p.target_price!=null ? kv("概率加权目标价", p.target_price.toFixed(2)+" "+(p.currency||"")) : ""}
       ${p.score!=null ? kv("综合评分", p.score.toFixed(1)) : ""}
       ${kv("状态", p.status)}
       ${kv("选入日期", p.selected_date||"—")}
