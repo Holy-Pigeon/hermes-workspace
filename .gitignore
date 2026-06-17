@@ -71,3 +71,6 @@ Thumbs.db
 *.pid
 heartbeat.txt
 workspace-state.json
+
+# Quant-Futu 是独立 git 仓库(独立remote),不纳入workspace跟踪,避免gitlink与子仓库打架
+Quant-Futu/
