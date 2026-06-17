@@ -20,13 +20,24 @@
 
 ## 用法
 ```bash
-/usr/bin/python3 cron_health.py            # 人读摘要
-/usr/bin/python3 cron_health.py --json     # 完整 JSON
+/usr/bin/python3 cron_health.py            # 人读摘要(并去重 append 失败台账)
+/usr/bin/python3 cron_health.py --json     # 完整 JSON(含 newly_logged / flapping_7d)
 /usr/bin/python3 cron_health.py --quiet    # 无告警 exit0 静默 / 有告警 exit1 打印(给 cron 判断要不要 ping)
+/usr/bin/python3 cron_health.py --history 168   # 只读台账, 报告近 N 小时各 job 失败 run 次数
+/usr/bin/python3 cron_health.py --no-record     # 不写台账(纯快照)
 ```
 
+## 失败累积台账(2026-06-17 加固:把快照态升级为可累积的 flapping 记录)
+**根因**:原版只读每个 job 的 `last_delivery_error`/`last_status` **快照**——一个 job 这轮交付失败、下轮成功就把 flag 清掉。**间歇性失败(flapping)对快照式监控天然隐形**:任意时点跑都可能恰好 exit0,被误读成「已恢复」(2026-06-17 今晨的「backbone 已恢复」结论 7 小时内即被同日傍晚的 ai-teacher DELIVERY_FAIL 证伪,正是这个盲区)。
+
+**修复**:每轮把 DELIVERY_FAIL / RUN_ERROR 失败事件**去重后 append 进 `delivery_failures.log`**(JSONL)。去重键 = `(job_id, last_run, type)`——同一次失败 run 被多轮 cron-health 重复读到只记一次,下一次 run 再失败则 `last_run` 变化=新事件入账。于是「按失败 run 计数」可见,**flapping 频率/占比浮出水面**。
+
+**纪律**:`--history` 让「已恢复」这类结论必须以**一段时间窗内零失败**为据,而非单次快照 exit0。正常输出末尾也会附近 7d 失败计数,提醒「快照清也别急着说已恢复」。
+
+- 台账 `delivery_failures.log` 是运行时状态,`*.log` 已被 `.gitignore` 覆盖=不入库,删文件即回滚。
+
 ## 设计纪律
-- **纯只读**:只读 `~/.hermes/cron/jobs.json`,绝不修改 jobs.json、绝不动任何 cron 定义、绝不下单。完全可逆(删目录即回滚)
+- **纯只读 jobs.json**:绝不修改 jobs.json、绝不动任何 cron 定义、绝不下单。台账是 append-only 本地文件,写失败也绝不影响主告警路径。完全可逆(删目录/台账即回滚)
 - **不误报**:STALE 阈值给足冗余(3 周期),cadence 估不准直接不判;实测当前所有 enabled job 近期都跑过,STALE 零误报
 - **不重复造轮子**:不是又一个业务看门狗,而是盯**看门狗们自己**的元监控
 

@@ -26,6 +26,10 @@ import argparse
 from datetime import datetime, timezone, timedelta
 
 JOBS_PATH = os.path.expanduser("~/.hermes/cron/jobs.json")
+# 交付/运行失败累积台账(JSONL, 每行一条去重后的失败事件)。
+# *.log 已被 .gitignore 覆盖=运行时状态不入库, 删文件即回滚。
+LEDGER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "delivery_failures.log")
 
 # ── 看门狗型脚本「exit 1 = 发现告警」并非崩溃 ──────────────────────────
 # 根因(2026-06-15 创新引擎实测): cron-health 自身是 --quiet 看门狗, 有告警即 exit 1。
@@ -155,27 +159,143 @@ def analyze(now=None):
     return alerts
 
 
+def _ledger_key(a):
+    """失败事件的去重键: 同一个 job 的同一次失败 run 只记一次。
+    锚定 (id, last_run, type)——因 last_run 随每次 run 变化, 同一次失败 run 被
+    多轮 cron-health 重复读到时 key 相同=不重复入账; 下一次 run 再失败则 last_run
+    不同=新事件入账。这正是把『快照态』转成『按失败 run 计数』的关键。"""
+    return f"{a.get('id')}|{a.get('last_run')}|{a.get('type')}"
+
+
+def _load_ledger_keys():
+    keys = set()
+    rows = []
+    if not os.path.exists(LEDGER_PATH):
+        return keys, rows
+    with open(LEDGER_PATH) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            rows.append(r)
+            keys.add(r.get("key"))
+    return keys, rows
+
+
+def record_failures(alerts, now=None):
+    """把本轮 DELIVERY_FAIL / RUN_ERROR 失败事件去重后 append 进台账。
+    返回本轮新记入的条数。纯 append-only, 不改 jobs.json。"""
+    if now is None:
+        now = datetime.now(timezone.utc)
+    failures = [a for a in alerts if a.get("type") in ("DELIVERY_FAIL", "RUN_ERROR")]
+    if not failures:
+        return 0
+    seen, _ = _load_ledger_keys()
+    new = 0
+    with open(LEDGER_PATH, "a") as f:
+        for a in failures:
+            key = _ledger_key(a)
+            if key in seen:
+                continue
+            rec = {
+                "key": key,
+                "logged_at": now.isoformat(),
+                "type": a.get("type"),
+                "job": a.get("job"),
+                "id": a.get("id"),
+                "last_run": a.get("last_run"),
+                "deliver_target": a.get("deliver_target"),
+                "detail": a.get("detail"),
+            }
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            seen.add(key)
+            new += 1
+    return new
+
+
+def ledger_history(window_hours=168):
+    """读台账, 统计近 window_hours 内各 job 的失败 run 次数=flapping 可见性。
+    『已恢复』结论必须以一段窗口内零失败为据, 而非单次快照 exit0。"""
+    _, rows = _load_ledger_keys()
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=window_hours)
+    per_job = {}
+    for r in rows:
+        ts = parse_dt(r.get("logged_at"))
+        if ts is None:
+            continue
+        if ts.tzinfo is None:
+            ts = ts.replace(tzinfo=timezone.utc)
+        if ts < cutoff:
+            continue
+        name = r.get("job", "?")
+        d = per_job.setdefault(name, {"DELIVERY_FAIL": 0, "RUN_ERROR": 0,
+                                      "last": None, "id": r.get("id")})
+        t = r.get("type")
+        if t in d:
+            d[t] += 1
+        if d["last"] is None or r.get("logged_at") > d["last"]:
+            d["last"] = r.get("logged_at")
+    return per_job
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true", help="输出完整 JSON")
     ap.add_argument("--quiet", action="store_true",
                     help="无告警 exit 0 静默; 有告警 exit 1 并打印")
+    ap.add_argument("--no-record", action="store_true",
+                    help="不写失败台账(默认会去重 append)")
+    ap.add_argument("--history", type=int, metavar="HOURS", nargs="?", const=168,
+                    help="只读台账, 报告近 N 小时(默认168=7天)各 job 失败 run 次数")
     args = ap.parse_args()
+
+    # --history: 纯只读台账, 把 flapping 频率打出来, 不读 jobs.json 不写台账
+    if args.history is not None:
+        hist = ledger_history(args.history)
+        if args.json:
+            print(json.dumps({"window_hours": args.history, "per_job": hist},
+                             ensure_ascii=False, indent=2))
+        elif not hist:
+            print(f"✅ 近 {args.history}h 台账零失败事件(交付/运行均健康)")
+        else:
+            print(f"⚠️ 近 {args.history}h 交付/运行失败台账(按失败 run 去重计数):")
+            for name, d in sorted(hist.items(),
+                                  key=lambda kv: -(kv[1]['DELIVERY_FAIL'] + kv[1]['RUN_ERROR'])):
+                total = d["DELIVERY_FAIL"] + d["RUN_ERROR"]
+                print(f"  {name}: {total} 次失败 run "
+                      f"(送达失败 {d['DELIVERY_FAIL']} / 运行错 {d['RUN_ERROR']}), "
+                      f"最近 {d['last']}")
+        return
+
     try:
         alerts = analyze()
     except FileNotFoundError:
         print(json.dumps({"error": f"jobs.json not found at {JOBS_PATH}"}))
         sys.exit(2)
+
+    # 把本轮失败事件去重 append 进台账(把快照态转成可累积的 flapping 记录)
+    newly_logged = 0
+    if not args.no_record:
+        try:
+            newly_logged = record_failures(alerts)
+        except Exception:
+            newly_logged = 0  # 台账写失败绝不影响主告警路径
     out = {
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "alert_count": len(alerts),
         "alerts": alerts,
+        "newly_logged": newly_logged,
+        "flapping_7d": ledger_history(168),
     }
     if args.json:
         print(json.dumps(out, ensure_ascii=False, indent=2))
     else:
         if not alerts:
-            print("✅ 所有 enabled cron 交付健康: 无 RUN_ERROR / DELIVERY_FAIL / STALE")
+            print("✅ 所有 enabled cron 交付健康(本快照): 无 RUN_ERROR / DELIVERY_FAIL / STALE")
         else:
             print(f"⚠️ 检出 {len(alerts)} 条 cron 健康告警:")
             for a in alerts:
@@ -187,6 +307,11 @@ def main():
                 elif a["type"] == "STALE":
                     line += f" → 已 {a.get('overdue_hours')}h 未跑 (期望每 {a.get('expected_interval_hours')}h)"
                 print(line)
+        # flapping 可见性: 即便本快照干净, 近 7d 有过失败 run 也要提示(防『已恢复』误判)
+        flap = out["flapping_7d"]
+        if flap:
+            print(f"  ⏳ 近7d失败台账(快照清也别急着说『已恢复』): " +
+                  "; ".join(f"{n}×{d['DELIVERY_FAIL']+d['RUN_ERROR']}" for n, d in flap.items()))
     if args.quiet:
         sys.exit(1 if alerts else 0)
 
