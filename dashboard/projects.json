@@ -208,7 +208,7 @@
         "告警",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/state.json"
+      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log"
     },
     {
       "id": "signal-orthogonality",
