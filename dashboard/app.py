@@ -502,7 +502,17 @@ def _project_runtime_uncached(p: dict) -> dict:
     if hb:
         mtime = _heartbeat_mtime(hb)
         if mtime is not None:
-            fresh = (datetime.datetime.now().timestamp() - mtime) < HEARTBEAT_FRESH_SECONDS
+            # 每项目可声明 freshness_hours 覆盖全局 25h 阈值。
+            # 根因修复(2026-06-18): 全局单一 25h 阈值对周度/按需库类项目天然误判——
+            # 周度 cron 项目必然有 ~6/7 时间超过 25h 却完全健康, 历次只换心跳锚点
+            # 治不了本(L13/L24/L31), 真正的修复是让阈值随 cadence 自适应。
+            try:
+                _fh_raw = p.get("freshness_hours")
+                fh = float(_fh_raw) if _fh_raw else None
+            except (TypeError, ValueError):
+                fh = None
+            threshold = fh * 3600 if fh else HEARTBEAT_FRESH_SECONDS
+            fresh = (datetime.datetime.now().timestamp() - mtime) < threshold
             return {
                 "online": bool(fresh),
                 "last_seen": datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S"),

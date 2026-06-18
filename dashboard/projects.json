@@ -66,7 +66,8 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/stock-discovery"
+      "heartbeat_file": "~/hermes-workspace/stock-discovery",
+      "freshness_hours": 192
     },
     {
       "id": "moat-durability",
@@ -78,7 +79,8 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/moat-durability"
+      "heartbeat_file": "~/hermes-workspace/moat-durability",
+      "freshness_hours": 192
     },
     {
       "id": "prediction-ledger",
@@ -90,7 +92,8 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/prediction-ledger"
+      "heartbeat_file": "~/hermes-workspace/prediction-ledger",
+      "freshness_hours": 192
     },
     {
       "id": "marketdata",
@@ -126,7 +129,8 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/price-watch/pool.json"
+      "heartbeat_file": "~/hermes-workspace/price-watch/pool.json",
+      "freshness_hours": 192
     },
     {
       "id": "research-pipeline",
@@ -138,7 +142,8 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/research-pipeline"
+      "heartbeat_file": "~/hermes-workspace/research-pipeline",
+      "freshness_hours": 192
     },
     {
       "id": "polymarket-dashboard",
@@ -195,7 +200,8 @@
         "只读",
         "纪律"
       ],
-      "heartbeat_file": "~/hermes-workspace/allocation-discipline"
+      "heartbeat_file": "~/hermes-workspace/allocation-discipline",
+      "freshness_hours": 192
     },
     {
       "id": "polymarket-monitor",
@@ -221,7 +227,8 @@
         "准则诊断",
         "只读"
       ],
-      "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
+      "heartbeat_file": "~/hermes-workspace/signal-orthogonality",
+      "freshness_hours": 192
     },
     {
       "id": "feishu-notify",
