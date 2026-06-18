@@ -695,8 +695,25 @@ def sc_picks():
         return jsonify({"error": f"DB 连接失败: {e}", "picks": []}), 503
     try:
         with conn.cursor(cursor_factory=RDC) as cur:
-            where = "" if status == "all" else "WHERE p.status = %s"
-            params = () if status == "all" else (status,)
+            # status=all 时按 stock_code 去重：同一代码只显示一条，活跃态(active/watching/research)
+            # 优先，否则取最新一条(closed 历史按 selected_date 倒序取最新)。避免同股多条历史记录在
+            # 「全部」页签里并排显示造成"重复"观感。具体某只票的完整历史仍可在详情页查看。
+            if status == "all":
+                where = ""
+                params = ()
+                dedup = """
+                    AND p.id = (
+                        SELECT p2.id FROM stock_picks p2
+                        WHERE p2.stock_code = p.stock_code
+                        ORDER BY (p2.status IN ('active','watching','research')) DESC,
+                                 p2.selected_date DESC, p2.id DESC
+                        LIMIT 1
+                    )
+                """
+                where = "WHERE TRUE " + dedup
+            else:
+                where = "WHERE p.status = %s"
+                params = (status,)
             cur.execute(f"""
                 SELECT p.id, p.stock_code, p.stock_name, p.market, p.sector,
                        p.selected_date, p.selected_price, p.currency,
