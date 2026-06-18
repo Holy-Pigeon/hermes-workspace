@@ -537,6 +537,10 @@ def api_projects():
 
     enriched = [{**p, **_project_runtime(p)} for p in config.get("projects", [])]
 
+    # 整体排序（在 facets/过滤/分页之前）：有控制台(ports.local)的项目恒排最前，
+    # 否则跨分页时有控制台项目会被切到第2页，要"加载更多"才看到。组内保持 projects.json 原序（稳定排序）。
+    enriched.sort(key=lambda p: 0 if (p.get("ports") or {}).get("local") else 1)
+
     # facets
     tag_facet = {}
     online_count = 0
