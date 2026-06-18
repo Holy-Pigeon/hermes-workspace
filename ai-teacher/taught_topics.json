@@ -349,8 +349,13 @@
       "topic": "Linear Attention（线性注意力）——把 O(n²) 的账单砍成 O(n) 的换序魔术",
       "category": "类目 19：高效注意力",
       "taught_at": "2026-06-18T08:03:00+08:00"
+    },
+    {
+      "topic": "FlashAttention——不省计算量，却把注意力跑快好几倍的 IO 魔术",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-06-18T14:01:00+08:00"
     }
   ],
-  "total_count": 70,
-  "last_updated": "2026-06-18T08:03:00+08:00"
+  "total_count": 71,
+  "last_updated": "2026-06-18T14:01:00+08:00"
 }
