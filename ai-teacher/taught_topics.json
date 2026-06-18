@@ -344,8 +344,13 @@
       "topic": "因果注意力（Causal Attention）——让模型只能看见过去，看不见未来",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-06-17T20:03:00+08:00"
+    },
+    {
+      "topic": "Linear Attention（线性注意力）——把 O(n²) 的账单砍成 O(n) 的换序魔术",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-06-18T08:03:00+08:00"
     }
   ],
-  "total_count": 69,
-  "last_updated": "2026-06-17T20:03:00+08:00"
+  "total_count": 70,
+  "last_updated": "2026-06-18T08:03:00+08:00"
 }
