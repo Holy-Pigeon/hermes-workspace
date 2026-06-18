@@ -354,8 +354,13 @@
       "topic": "FlashAttention——不省计算量，却把注意力跑快好几倍的 IO 魔术",
       "category": "类目 19：高效注意力",
       "taught_at": "2026-06-18T14:01:00+08:00"
+    },
+    {
+      "topic": "Prompt Engineering（提示工程）——不改一个参数，靠怎么问撬动大模型的能力",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-06-18T20:03:00+08:00"
     }
   ],
-  "total_count": 71,
-  "last_updated": "2026-06-18T14:01:00+08:00"
+  "total_count": 72,
+  "last_updated": "2026-06-18T20:03:00+08:00"
 }
