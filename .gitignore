@@ -58,6 +58,7 @@ credentials.json
 # ── 大体积数据快照 / 抓取缓存（可再生，不入库）──
 polymarket-dashboard/data/snapshot_latest.json
 polymarket-dashboard/data/snapshots/
+us-tech-scout/data/latest_scan.json
 */data/snapshot_*.json
 */data/snapshots/
 *.cache

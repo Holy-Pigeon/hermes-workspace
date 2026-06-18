@@ -174,6 +174,8 @@ def main():
     ap.add_argument("--symbol", help="只跑单只(调试)")
     ap.add_argument("--quiet", action="store_true", help="无🏰/⭐候选时静默 exit0 (cron友好)")
     ap.add_argument("--json", action="store_true", help="输出 JSON")
+    ap.add_argument("--save", action="store_true",
+                    help="把扫描快照落盘到 data/latest_scan.json (供 web 控制台读取, 不每次现跑)")
     args = ap.parse_args()
 
     wl = [(args.symbol, args.symbol)] if args.symbol else load_watchlist()
@@ -188,6 +190,22 @@ def main():
     order = {"🏰": 0, "⭐": 1, "🔍": 2, "·": 3}
     results.sort(key=lambda r: (order.get(r["flag"], 9), -(r["roe_median"] or 0)))
     candidates = [r for r in results if r["flag"] in ("🏰", "⭐")]
+
+    # 落盘快照供 web 控制台读取(扫描慢60s+, web 不每次现跑, 读这份缓存)
+    if args.save:
+        data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+        os.makedirs(data_dir, exist_ok=True)
+        snapshot = {
+            "scanned_at": datetime.now(CN_TZ).strftime("%Y-%m-%d %H:%M:%S CST"),
+            "watchlist_n": len(wl), "ok_n": len(results), "skipped_n": len(skipped),
+            "candidate_n": len(candidates),
+            "results": results, "skipped": skipped,
+        }
+        out = os.path.join(data_dir, "latest_scan.json")
+        with open(out, "w") as f:
+            json.dump(snapshot, f, ensure_ascii=False, indent=2)
+        if not args.json:
+            print(f"[已落盘] {out} ({len(results)} 只成功, {len(candidates)} 候选)")
 
     if args.json:
         print(json.dumps({"results": results, "skipped": skipped}, ensure_ascii=False, indent=2))

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>美股科技发现雷达</title>
+<style>
+:root{
+  --bg:#080810; --surface:rgba(255,255,255,0.05); --surface2:rgba(255,255,255,0.08);
+  --border:rgba(255,255,255,0.09); --text:#e2e2f0; --dim:#7878a0;
+  --green:#34d399; --red:#f87171; --accent:#818cf8; --gold:#fbbf24; --cyan:#22d3ee;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);
+  font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;
+  font-size:14px;line-height:1.5;padding-bottom:72px;}
+a{color:inherit;text-decoration:none;}
+#topbar{position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);
+  background:rgba(8,8,16,.78);border-bottom:1px solid var(--border);
+  padding:14px 16px;display:flex;align-items:center;gap:10px;}
+#topbar h1{font-size:17px;font-weight:700;letter-spacing:.3px;}
+#topbar .eagle{font-size:22px;}
+#topbar .meta{margin-left:auto;font-size:11px;color:var(--dim);text-align:right;line-height:1.35;}
+.page{padding:14px 14px 0;display:none;}
+.page.active{display:block;}
+
+/* 概览指标 */
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.metric .v{font-size:26px;font-weight:700;line-height:1;}
+.metric .l{font-size:11px;color:var(--dim);margin-top:6px;}
+.metric.moat .v{color:var(--gold);}
+.metric.growth .v{color:var(--cyan);}
+.metric.watch .v{color:var(--accent);}
+.metric.out .v{color:var(--dim);}
+
+.section-title{font-size:13px;font-weight:600;color:var(--dim);margin:18px 2px 10px;
+  display:flex;align-items:center;gap:7px;}
+.section-title .badge{background:var(--surface2);border-radius:20px;padding:1px 9px;font-size:11px;}
+
+/* 股票卡 */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:14px;margin-bottom:11px;cursor:pointer;transition:background .15s;}
+.card:active{background:var(--surface2);}
+.card .hd{display:flex;align-items:baseline;gap:8px;margin-bottom:9px;}
+.card .flag{font-size:18px;}
+.card .nm{font-size:16px;font-weight:700;}
+.card .sym{font-size:12px;color:var(--dim);font-weight:500;}
+.card .vd{font-size:11.5px;color:var(--dim);margin-left:auto;text-align:right;max-width:42%;}
+.card .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 6px;margin-top:4px;}
+.card .kv{display:flex;flex-direction:column;}
+.card .kv .k{font-size:10px;color:var(--dim);}
+.card .kv .vv{font-size:13.5px;font-weight:600;margin-top:1px;}
+.pos{color:var(--green);} .neg{color:var(--red);}
+.card .note{margin-top:9px;font-size:11px;color:var(--gold);
+  background:rgba(251,191,36,.08);border-radius:8px;padding:6px 9px;}
+.card.dim{opacity:.62;}
+
+/* 刷新按钮 */
+.refresh-bar{display:flex;gap:10px;align-items:center;margin-bottom:6px;}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:11px;
+  padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn.ghost{background:var(--surface2);color:var(--text);}
+.scan-status{font-size:12px;color:var(--dim);}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid var(--dim);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;
+  vertical-align:-2px;margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.explain{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:15px;font-size:13px;line-height:1.7;color:var(--dim);}
+.explain b{color:var(--text);}
+.explain .tag{display:inline-block;background:var(--surface2);border-radius:6px;
+  padding:1px 7px;margin:0 2px;font-size:12px;}
+
+/* 底部 tabbar */
+#tabbar{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;background:rgba(8,8,16,.9);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);}
+.tb-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 0 11px;color:var(--dim);font-size:10.5px;cursor:pointer;}
+.tb-tab .ic{font-size:19px;}
+.tb-tab.active{color:var(--accent);}
+
+/* 详情 bottom sheet */
+#sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;
+  pointer-events:none;transition:opacity .2s;}
+#sheet-bg.open{opacity:1;pointer-events:all;}
+#sheet{position:fixed;left:0;right:0;bottom:0;z-index:201;
+  background:#11111c;border-radius:20px 20px 0 0;border-top:1px solid var(--border);
+  padding:20px 18px 30px;transform:translateY(100%);
+  transition:transform .3s cubic-bezier(.32,.72,0,1);max-height:86vh;overflow-y:auto;}
+#sheet.open{transform:translateY(0);}
+#sheet .sh-hd{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
+#sheet .sh-hd .flag{font-size:24px;}
+#sheet .sh-hd .nm{font-size:21px;font-weight:700;}
+#sheet .sh-hd .sym{font-size:13px;color:var(--dim);}
+#sheet .vd-full{font-size:13px;color:var(--accent);background:rgba(129,140,248,.1);
+  border-radius:10px;padding:10px 12px;margin-bottom:14px;line-height:1.6;}
+#sheet .dl{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+#sheet .dl .row{background:var(--surface);border-radius:10px;padding:10px 12px;}
+#sheet .dl .row .k{font-size:11px;color:var(--dim);}
+#sheet .dl .row .v{font-size:17px;font-weight:700;margin-top:3px;}
+#sheet .notes{margin-top:14px;}
+#sheet .notes .n{font-size:12.5px;color:var(--gold);background:rgba(251,191,36,.08);
+  border-radius:9px;padding:8px 11px;margin-bottom:7px;line-height:1.55;}
+#sheet .dd{margin-top:14px;font-size:12px;color:var(--dim);line-height:1.6;
+  border-top:1px solid var(--border);padding-top:12px;}
+
+/* ── PC ≥900px: 侧栏布局 ── */
+@media (min-width:900px){
+  body{padding-bottom:0;}
+  #shell{width:min(1320px,96vw);margin:18px auto;border:1px solid var(--border);
+    border-radius:18px;overflow:hidden;display:grid;
+    grid-template-columns:200px 1fr;grid-template-rows:auto 1fr;
+    grid-template-areas:"topbar topbar" "sidebar content";min-height:calc(100vh - 36px);}
+  #topbar{grid-area:topbar;}
+  #tabbar{grid-area:sidebar;position:static;flex-direction:column;
+    border-top:none;border-right:1px solid var(--border);padding:14px 10px;
+    background:transparent;backdrop-filter:none;gap:4px;}
+  .tb-tab{flex-direction:row;justify-content:flex-start;gap:11px;border-radius:10px;
+    padding:11px 13px;font-size:13.5px;}
+  .tb-tab.active{background:rgba(129,140,248,.14);}
+  .tb-tab .ic{font-size:17px;}
+  .content-wrap{grid-area:content;overflow-y:auto;max-height:calc(100vh - 36px - 56px);}
+  .page{padding:18px 22px;}
+  .metric-grid{grid-template-columns:repeat(4,1fr);}
+  #moat-list,#growth-list,#watch-list,#out-list{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:11px;}
+  .card{margin-bottom:0;}
+  /* sheet → 居中弹窗 */
+  #sheet{left:50%;right:auto;bottom:auto;top:50%;width:min(640px,86vw);
+    border-radius:16px;border:1px solid var(--border);
+    transform:translate(-50%,-44%) scale(.96);opacity:0;}
+  #sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1;}
+}
+</style>
+</head>
+<body>
+<div id="shell">
+  <div id="topbar">
+    <span class="eagle">🦅</span>
+    <h1>美股科技发现雷达</h1>
+    <div class="meta" id="topmeta">加载中…</div>
+  </div>
+
+  <div id="tabbar">
+    <div class="tb-tab active" data-tab="overview"><span class="ic">📊</span>概览</div>
+    <div class="tb-tab" data-tab="candidates"><span class="ic">🏰</span>候选</div>
+    <div class="tb-tab" data-tab="all"><span class="ic">📋</span>全名单</div>
+    <div class="tb-tab" data-tab="about"><span class="ic">ℹ️</span>说明</div>
+  </div>
+
+  <div class="content-wrap">
+    <!-- 概览 -->
+    <div class="page active" id="page-overview">
+      <div class="refresh-bar">
+        <button class="btn" id="refresh-btn" onclick="doRefresh()">🔄 刷新扫描</button>
+        <span class="scan-status" id="scan-status"></span>
+      </div>
+      <div class="metric-grid" id="metric-grid"></div>
+      <div class="section-title">🏰 宽护城河候选 <span class="badge" id="ov-moat-n">0</span></div>
+      <div id="ov-moat-list"></div>
+      <div class="section-title">⭐ 优质成长候选 <span class="badge" id="ov-growth-n">0</span></div>
+      <div id="ov-growth-list"></div>
+    </div>
+
+    <!-- 候选 -->
+    <div class="page" id="page-candidates">
+      <div class="section-title">🏰 宽护城河候选 <span class="badge" id="c-moat-n">0</span></div>
+      <div id="moat-list"></div>
+      <div class="section-title">⭐ 优质成长候选 <span class="badge" id="c-growth-n">0</span></div>
+      <div id="growth-list"></div>
+      <div class="section-title">🔍 价值陷阱预警 <span class="badge" id="c-watch-n">0</span></div>
+      <div id="watch-list"></div>
+    </div>
+
+    <!-- 全名单 -->
+    <div class="page" id="page-all">
+      <div class="section-title">📋 白名单全扫描结果 <span class="badge" id="a-n">0</span></div>
+      <div id="all-list"></div>
+      <div class="section-title">· 未达门槛 / 被护栏挡出 <span class="badge" id="out-n">0</span></div>
+      <div id="out-list"></div>
+    </div>
+
+    <!-- 说明 -->
+    <div class="page" id="page-about">
+      <div class="explain">
+        <b>这是什么</b><br>
+        美股科技「耐久质量」发现扫描器的控制台。组合 90M 分 5 个 sleeve，其中
+        <b>us-tech-value(25M) 至今 0% 部署</b>，而全部分析工具只覆盖 A股+港股——美股是分析暗区。
+        这个雷达给最该用价投框架的 sleeve 装一个一手年报驱动的候选漏斗。<br><br>
+        <b>它只回答一件事</b>：这是不是一门<b>耐久的好生意</b>，<u>不回答"现在贵不贵"</u>
+        （估值留给后续 reverse_dcf 阶段）。所以输出是<b>候选漏斗起点，不是买卖指令</b>。<br><br>
+        <b>判定口径</b>（护城河判定收口到 moat-durability 单一事实源，与 A股工具同源）<br>
+        <span class="tag">🏰 宽护城河</span> 高持久ROE + 厚稳净利率(CV≤0.20) + 毛利≥40% + 在成长<br>
+        <span class="tag">⭐ 优质成长</span> 质量近门槛 + 净利/营收 YoY>15%<br>
+        <span class="tag">🔍 价值陷阱</span> 宽护城河但成长停滞，须人工判<br>
+        <span class="tag">· 出局</span> 护城河被侵蚀(利润率收缩)/薄利/杠杆型ROE<br><br>
+        <b>数据诚实</b>：全 akshare 一手年报，某只拉不到显式跳过、绝不填充；
+        ROE>100% 触发"回购致权益缩水失真"护栏，标注以净利率/毛利为准。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 详情 sheet -->
+<div id="sheet-bg" onclick="closeSheet()"></div>
+<div id="sheet"></div>
+
+<script>
+let DATA=null, POLL=null;
+
+function fmtPct(v,sign){
+  if(v===null||v===undefined) return '—';
+  const cls=sign?(v>=0?'pos':'neg'):'';
+  const s=(sign&&v>=0?'+':'')+v+'%';
+  return `<span class="${cls}">${s}</span>`;
+}
+
+function cardHtml(r,dim){
+  const note=(r.notes&&r.notes.length)?`<div class="note">⚠️ ${r.notes[0]}</div>`:'';
+  return `<div class="card ${dim?'dim':''}" onclick='openSheet("${r.symbol}")'>
+    <div class="hd">
+      <span class="flag">${r.flag}</span>
+      <span class="nm">${r.name}</span>
+      <span class="sym">${r.symbol}</span>
+      <span class="vd">${r.verdict||''}</span>
+    </div>
+    <div class="grid">
+      <div class="kv"><span class="k">ROE中位</span><span class="vv">${r.roe_median??'—'}%</span></div>
+      <div class="kv"><span class="k">净利率(CV)</span><span class="vv">${r.npm_mean??'—'}% <span style="color:var(--dim);font-size:11px">${r.npm_cv??''}</span></span></div>
+      <div class="kv"><span class="k">毛利率</span><span class="vv">${r.gpm_mean??'—'}%</span></div>
+      <div class="kv"><span class="k">净利YoY</span><span class="vv">${fmtPct(r.np_yoy,1)}</span></div>
+      <div class="kv"><span class="k">营收YoY</span><span class="vv">${fmtPct(r.rev_yoy,1)}</span></div>
+      <div class="kv"><span class="k">ROE持久</span><span class="vv">${r.roe_persist??'—'}</span></div>
+    </div>
+    ${note}
+  </div>`;
+}
+
+function renderList(el,arr,dim){
+  const box=document.getElementById(el);
+  if(!arr||!arr.length){box.innerHTML='<div style="color:var(--dim);font-size:12px;padding:6px 2px">无</div>';return;}
+  box.innerHTML=arr.map(r=>cardHtml(r,dim)).join('');
+}
+
+function render(){
+  if(!DATA||!DATA.ok){return;}
+  const s=DATA.snapshot, b=DATA.buckets;
+  document.getElementById('topmeta').innerHTML=
+    `扫描于 ${s.scanned_at}<br>白名单 ${s.watchlist_n} · 候选 ${s.candidate_n} · 跳过 ${s.skipped_n}`;
+  // 概览指标
+  document.getElementById('metric-grid').innerHTML=`
+    <div class="metric moat"><div class="v">${b.moat.length}</div><div class="l">🏰 宽护城河候选</div></div>
+    <div class="metric growth"><div class="v">${b.growth.length}</div><div class="l">⭐ 优质成长候选</div></div>
+    <div class="metric watch"><div class="v">${b.watch.length}</div><div class="l">🔍 价值陷阱预警</div></div>
+    <div class="metric out"><div class="v">${b.out.length}</div><div class="l">· 未入候选</div></div>`;
+  // 概览
+  document.getElementById('ov-moat-n').textContent=b.moat.length;
+  document.getElementById('ov-growth-n').textContent=b.growth.length;
+  renderList('ov-moat-list',b.moat);
+  renderList('ov-growth-list',b.growth);
+  // 候选页
+  document.getElementById('c-moat-n').textContent=b.moat.length;
+  document.getElementById('c-growth-n').textContent=b.growth.length;
+  document.getElementById('c-watch-n').textContent=b.watch.length;
+  renderList('moat-list',b.moat);
+  renderList('growth-list',b.growth);
+  renderList('watch-list',b.watch);
+  // 全名单
+  const all=[...b.moat,...b.growth,...b.watch,...b.out];
+  document.getElementById('a-n').textContent=all.length;
+  document.getElementById('out-n').textContent=b.out.length;
+  renderList('all-list',all);
+  renderList('out-list',b.out,true);
+}
+
+function openSheet(sym){
+  const r=DATA.snapshot.results.find(x=>x.symbol===sym);
+  if(!r)return;
+  const notes=(r.notes&&r.notes.length)?
+    `<div class="notes">${r.notes.map(n=>`<div class="n">⚠️ ${n}</div>`).join('')}</div>`:'';
+  const dd=(r.flag==='🏰'||r.flag==='⭐')?
+    `<div class="dd">↳ 尽调下一步：须补 <b>reverse_dcf</b>（现价 price-in 了多高增速）+ 现金流质量 + 可选权。<b>候选 ≠ 买入</b>。</div>`:
+    `<div class="dd">本工具只判生意质量，不判估值。此标的未进候选漏斗。</div>`;
+  document.getElementById('sheet').innerHTML=`
+    <div class="sh-hd"><span class="flag">${r.flag}</span>
+      <span class="nm">${r.name}</span><span class="sym">${r.symbol} · ${r.latest_date} 年报 · 近${r.n_years}年</span></div>
+    <div class="vd-full">${r.verdict||''}</div>
+    <div class="dl">
+      <div class="row"><div class="k">ROE 持久性(≥15%占比)</div><div class="v">${r.roe_persist??'—'}</div></div>
+      <div class="row"><div class="k">ROE 中位</div><div class="v">${r.roe_median??'—'}%</div></div>
+      <div class="row"><div class="k">净利率均值</div><div class="v">${r.npm_mean??'—'}%</div></div>
+      <div class="row"><div class="k">净利率 CV</div><div class="v">${r.npm_cv??'—'}</div></div>
+      <div class="row"><div class="k">毛利率</div><div class="v">${r.gpm_mean??'—'}%</div></div>
+      <div class="row"><div class="k">护城河判定</div><div class="v" style="font-size:14px">${r.moat_verdict||'—'}</div></div>
+      <div class="row"><div class="k">净利 YoY</div><div class="v">${fmtPct(r.np_yoy,1)}</div></div>
+      <div class="row"><div class="k">营收 YoY</div><div class="v">${fmtPct(r.rev_yoy,1)}</div></div>
+    </div>
+    ${notes}${dd}`;
+  document.getElementById('sheet-bg').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+}
+function closeSheet(){
+  document.getElementById('sheet-bg').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+}
+
+// tab 切换
+document.querySelectorAll('.tb-tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('.tb-tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('page-'+t.dataset.tab).classList.add('active');
+  };
+});
+
+async function load(){
+  try{
+    DATA=await fetch('/api/scan').then(r=>r.json());
+    if(DATA.ok){render();}
+    else{document.getElementById('topmeta').textContent=DATA.error||'无数据';}
+    updateScanBtn(DATA.scan_state);
+  }catch(e){document.getElementById('topmeta').textContent='加载失败';}
+}
+
+function updateScanBtn(st){
+  const btn=document.getElementById('refresh-btn');
+  const status=document.getElementById('scan-status');
+  if(st&&st.running){
+    btn.disabled=true;
+    status.innerHTML='<span class="spinner"></span>扫描中（约60-120s，逐只拉一手年报）…';
+  }else{
+    btn.disabled=false;
+    if(st&&st.error){status.innerHTML='<span style="color:var(--red)">上次扫描出错：'+st.error.slice(0,80)+'</span>';}
+    else if(st&&st.finished_at){status.textContent='上次扫描完成 '+st.finished_at;}
+    else{status.textContent='';}
+  }
+}
+
+async function doRefresh(){
+  const btn=document.getElementById('refresh-btn');
+  btn.disabled=true;
+  try{
+    const r=await fetch('/api/refresh',{method:'POST'}).then(r=>r.json());
+    if(!r.ok){updateScanBtn(r.scan_state);
+      document.getElementById('scan-status').textContent=r.error||'启动失败';
+      btn.disabled=false;return;}
+    updateScanBtn(r.scan_state);
+    if(POLL)clearInterval(POLL);
+    POLL=setInterval(pollStatus,3000);
+  }catch(e){btn.disabled=false;}
+}
+
+async function pollStatus(){
+  try{
+    const st=await fetch('/api/status').then(r=>r.json());
+    updateScanBtn(st.scan_state);
+    if(st.scan_state&&!st.scan_state.running){
+      clearInterval(POLL);POLL=null;
+      await load();  // 扫完重新拉快照
+    }
+  }catch(e){}
+}
+
+load();
+</script>
+</body>
+</html>

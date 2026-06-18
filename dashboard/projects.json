@@ -180,13 +180,17 @@
       "name": "美股科技发现雷达",
       "icon": "🦅",
       "desc": "美股科技耐久质量发现扫描器·点亮未部署的us-tech-value(25M)暗区sleeve·Buffett硬标准筛护城河",
-      "ports": null,
+      "ports": {
+        "local": 5053,
+        "remote": 6015
+      },
       "tags": [
         "研究",
         "脚本",
         "美股"
       ],
-      "heartbeat_file": "~/hermes-workspace/us-tech-scout"
+      "heartbeat_file": "~/hermes-workspace/us-tech-scout",
+      "health_path": "/healthz"
     },
     {
       "id": "allocation-discipline",
