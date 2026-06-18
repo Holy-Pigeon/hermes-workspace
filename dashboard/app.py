@@ -7,9 +7,9 @@ port 5051 | frpc → 6011
 1. Cron 雷达：所有定时任务状态、最近输出、项目评估记录（从 ideas_log.md 读）
 2. 系统监控：CPU / 内存 / 磁盘 / 网络 / 进程等实时指标
 """
-import os, sys, json, glob, re, datetime, subprocess, urllib.request, urllib.error, hashlib
+import os, sys, json, glob, re, datetime, subprocess, urllib.request, urllib.error, hashlib, hmac, secrets, time
 from pathlib import Path
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, send_from_directory, request, session, redirect, Response
 import psutil
 
 HERMES_HOME   = Path.home() / ".hermes"
@@ -28,6 +28,103 @@ HEARTBEAT_FRESH_SECONDS = 25 * 3600  # 心跳文件 25 小时内更新过视为"
 HEALTH_CHECK_TIMEOUT_S  = 1.0
 
 app = Flask(__name__, static_folder=str(STATIC))
+
+# ── 登录鉴权 ─────────────────────────────────────────────────────────────────
+# 该面板经 frpc 暴露到公网(1.12.235.152:6011)，必须登录才能访问。
+# 密码从环境变量 DASHBOARD_PASSWORD 读取(不硬编码、不进 git)；
+# session 密钥从 DASHBOARD_SECRET_KEY 读，未设则每次启动随机生成(重启即登出，可接受)。
+DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "")
+app.secret_key = os.environ.get("DASHBOARD_SECRET_KEY") or secrets.token_hex(32)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    PERMANENT_SESSION_LIFETIME=datetime.timedelta(days=14),
+)
+# 失败限速：同一 IP 连续失败计数，超阈值临时锁定，挡暴力破解
+_login_fails = {}          # ip -> [fail_count, lock_until_ts]
+_LOCK_THRESHOLD = 5        # 连续失败 5 次
+_LOCK_SECONDS = 300        # 锁 5 分钟
+
+LOGIN_HTML = """<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>价值雷达 · 登录</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080810;color:#e2e2f0;font-family:-apple-system,'SF Pro Display','PingFang SC',sans-serif;
+min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{width:100%;max-width:360px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+border-radius:18px;padding:36px 28px;backdrop-filter:blur(20px)}
+h1{font-size:22px;font-weight:600;margin-bottom:6px;background:linear-gradient(90deg,#818cf8,#34d399);
+-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+p{color:#7878a0;font-size:13px;margin-bottom:24px}
+input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+padding:13px 14px;color:#e2e2f0;font-size:15px;margin-bottom:14px;outline:none}
+input:focus{border-color:#818cf8}
+button{width:100%;background:#818cf8;color:#080810;border:none;border-radius:10px;padding:13px;
+font-size:15px;font-weight:600;cursor:pointer}
+button:active{transform:scale(.98)}
+.err{color:#f87171;font-size:13px;margin-bottom:14px;min-height:18px}
+</style></head><body><div class="box">
+<h1>价值雷达</h1><p>合伙人驾驶舱 · 请登录</p>
+<form method="post" action="/login">
+<div class="err">__ERR__</div>
+<input type="password" name="password" placeholder="访问密码" autofocus autocomplete="current-password">
+<button type="submit">进入</button>
+</form></div></body></html>"""
+
+# 无需登录即可访问的端点
+_PUBLIC_PATHS = {"/login", "/healthz"}
+
+def _client_ip():
+    return request.headers.get("X-Forwarded-For", request.remote_addr or "?").split(",")[0].strip()
+
+@app.before_request
+def _require_login():
+    if request.path in _PUBLIC_PATHS:
+        return None
+    # 未配置密码 => 鉴权关闭(本地开发场景)，但记一条警告头
+    if not DASHBOARD_PASSWORD:
+        return None
+    if session.get("authed"):
+        return None
+    # 未登录：API 返回 401 JSON，页面跳登录
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "unauthorized"}), 401
+    return redirect("/login")
+
+@app.route("/healthz")
+def healthz():
+    return jsonify({"ok": True})
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if not DASHBOARD_PASSWORD:
+        return redirect("/")
+    ip = _client_ip()
+    now = time.time()
+    fc = _login_fails.get(ip, [0, 0])
+    if request.method == "POST":
+        if fc[1] > now:
+            return Response(LOGIN_HTML.replace("__ERR__", "尝试过多，请 5 分钟后再试"), mimetype="text/html"), 429
+        pw = request.form.get("password", "")
+        if hmac.compare_digest(pw, DASHBOARD_PASSWORD):
+            session.permanent = True
+            session["authed"] = True
+            _login_fails.pop(ip, None)
+            return redirect("/")
+        # 失败
+        fc[0] += 1
+        if fc[0] >= _LOCK_THRESHOLD:
+            fc[1] = now + _LOCK_SECONDS
+            fc[0] = 0
+        _login_fails[ip] = fc
+        return Response(LOGIN_HTML.replace("__ERR__", "密码错误"), mimetype="text/html"), 401
+    return Response(LOGIN_HTML.replace("__ERR__", ""), mimetype="text/html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -722,4 +819,5 @@ def stockchoose_page():
     return resp
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5051, debug=False)
+    # 绑回环：只允许本机/frpc(localIP=127.0.0.1)访问，掐掉局域网直连暴露
+    app.run(host="127.0.0.1", port=5051, debug=False)

@@ -269,4 +269,4 @@ if __name__ == "__main__":
     STATIC_DIR.mkdir(exist_ok=True)
     t = threading.Thread(target=_bg_fetch, daemon=True)
     t.start()
-    app.run(host="0.0.0.0", port=5052, debug=False)
+    app.run(host="127.0.0.1", port=5052, debug=False)

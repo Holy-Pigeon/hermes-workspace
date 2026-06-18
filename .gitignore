@@ -83,3 +83,7 @@ polymarket-dashboard/data/changes_1h.json
 ai-teacher/comment_review_state.json
 ai-teacher/pending_comments.json
 ai-teacher/scan_comments.log
+
+# 运行时锁文件
+*.app.lock
+.app.lock
