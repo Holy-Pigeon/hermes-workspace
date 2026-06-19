@@ -1,6 +1,6 @@
 # 个股研究 Note 总索引
 
-自动生成：`build_index.py` 扫描 `research/note_*.md`。共 **18** 篇。最后更新：2026-06-18 20:00
+自动生成：`build_index.py` 扫描 `research/note_*.md`。共 **18** 篇。最后更新：2026-06-19 20:00
 
 > 纯只读索引，不修改任何 note。新增 note 后重跑 `build_index.py` 即刷新。结论一句话/证伪条件均自原文抓取，以原文为准。
 
