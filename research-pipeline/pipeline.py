@@ -30,6 +30,7 @@ from datetime import datetime, timezone, timedelta
 WS = os.path.expanduser("~/hermes-workspace")
 PY = "/opt/homebrew/bin/python3"
 SCREENER = os.path.join(WS, "stock-discovery", "tech_screener.py")
+QUALITY = os.path.join(WS, "quality-compounder", "quality_screener.py")  # 质量正交镜头(💎好生意优先)
 SCOUT = os.path.join(WS, "us-tech-scout", "us_tech_scout.py")  # 美股科技耐久质量发现雷达(JSON输出)
 RDCF = os.path.join(WS, "research", "reverse_dcf.py")
 MOAT = os.path.join(WS, "moat-durability", "moat_scorecard.py")
@@ -181,6 +182,72 @@ def build_us_section(us_cands):
     return lines
 
 
+def quality_candidates():
+    """跑 quality-compounder --json, 解析出 💎 高质量复利候选(锚=质量非估值)。
+    正交于 tech_screener 的 value 镜头——抓的是『好生意优先』被估值低分位锚定遗漏的伟大公司。
+    此前 quality-compounder 的 💎 产出无下游编排=发现孤儿(同 us-tech-scout 06-17 前), 本次接通。
+    零新增数据, 只转发 quality_screener 一手 akshare 财报结论。返回 list of dict。"""
+    out, _, _ = run([PY, QUALITY, "--json"], cwd=os.path.dirname(QUALITY))
+    i = out.find("{")
+    if i < 0:
+        return []
+    try:
+        data = json.loads(out[i:])
+    except Exception:
+        return []
+    return data.get("candidates", [])
+
+
+def build_quality_section(q_cands, value_codes):
+    """质量镜头候选简报段: 💎 高质量复利候选 → reverse_dcf + moat_scorecard。
+    与价值镜头(tech_screener ⭐)同款下游尽调三件套, 仅锚不同(质量 vs 便宜)。
+    value_codes=本轮价值镜头已出的代码集, 用于标注『双镜头共振』(便宜+优质=最高优先)。"""
+    lines = []
+    if not q_cands:
+        return lines
+    lines.append("# 💎 质量复利 sleeve 候选 (quality-compounder → reverse_dcf + moat)")
+    lines.append("")
+    lines.append("> 正交镜头: 锚=企业复利质量本身(ROE/毛利/现金含量), 非历史估值低分位。")
+    lines.append("> 补『好生意优先』盲区——PE 处史中位的伟大公司不会被价值镜头看见。**💎≠买入**。")
+    lines.append("")
+    for c in q_cands:
+        code, name = c["code"], c.get("name") or c["code"]
+        resonance = "  🔥双镜头共振(便宜+优质·最高优先)" if code in value_codes else ""
+        lines.append(f"## 💎 {name}({code}){resonance}")
+        lines.append("")
+        lines.append("### 发现层 (quality-compounder 一手, 锚=质量)")
+        lines.append(f"- **判定**: {c.get('reason')}")
+        lines.append(f"- ROE年度 {c.get('roe_annual')}% / ROE持久性 {c.get('roe_persistence')} "
+                     f"/ 毛利率 {c.get('gross_margin')}% / 净利率 {c.get('net_margin')}%")
+        lines.append(f"- 营收成长广度 {c.get('rev_growth_breadth')} / TTM现金含量 {c.get('cash_content_ttm')}% "
+                     f"/ PE自身史分位 {c.get('pe_pct')}")
+        # 估值层: 用 PE 分位无法直接反算 EPS(没有现价/PE 绝对值), 转发 reverse_dcf 须现价+EPS,
+        # 这里 quality JSON 未带现价绝对值, 故留 TODO 钩子提示人工/后续 cron 补, 绝不编造。
+        lines.append("")
+        lines.append("### 护城河层 (moat_scorecard 一手, 8年年报)")
+        mv = moat_for(code, name)
+        if mv:
+            lines.append(f"- **verdict**: {mv.get('verdict')}  (rank {mv.get('rank')})")
+            lines.append(f"- ROE中位 {mv.get('roe_median')}% / ROE持久性 {mv.get('roe_persistence')} "
+                         f"/ 净利率均值 {mv.get('npm_mean')}% / CV {mv.get('npm_cv')} "
+                         f"/ 近5年净利率斜率 {mv.get('npm_slope_recent5_pp_yr')}pp/年")
+            if mv.get("flags"):
+                for f in mv["flags"]:
+                    lines.append(f"- ⚑ {f}")
+        else:
+            lines.append("(moat 端口无数据/港股无此端口, 跳过)")
+        lines.append("")
+        lines.append("### 待人工/后续研究 cron 深挖 (TODO)")
+        lines.append("- [ ] 取现价+EPS-TTM 手跑 reverse_dcf: 现价 price-in 多高增速? 好公司是否好价格?")
+        lines.append("- [ ] 护城河来源定性: 网络效应/品牌定价权/规模经济/转换成本 哪一种?")
+        lines.append("- [ ] 跑道还有多长? ROE 能否再投资维持(成长广度是否够)?")
+        lines.append("- [ ] 若通过 → 登记 prediction-ledger + 进 StockChoose 复审")
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+    return lines
+
+
 def ortho_disclosure():
     """跑 signal-orthogonality 审计本流水线三件套, 把『印证力折扣』如实写进简报头。
     这是反确认偏误的工程化: 流水线把 tech_screener+reverse_dcf+moat 拼成『三层尽调』,
@@ -303,6 +370,10 @@ def main():
     # 美股科技 sleeve 候选 (us-tech-scout → reverse_dcf). --symbol 调试时只跑 A 股发现层, 跳过美股扫描.
     us_cands = [] if args.symbol else scout_us_candidates()
 
+    # 质量正交镜头候选 (quality-compounder 💎 → reverse_dcf + moat). --symbol 调试时跳过.
+    # 接通此前的发现孤儿: 💎好生意优先候选此前无下游编排, 同 us-tech-scout 06-17 前.
+    q_cands = [] if args.symbol else quality_candidates()
+
     # 校准闭环: 无论有无新候选都surface临近到期的站立预测,
     # 这是prediction-ledger唯一的"出"机制——否则只进不出, score()永不触发。
     due_text, has_overdue = ledger_due_soon()
@@ -311,7 +382,7 @@ def main():
     # (review 批准: 并入本流水线零新增 cron 槽位、与研究产出同频)
     scan_text, has_offender = scan_notes_gate()
 
-    if not cands and not us_cands:
+    if not cands and not us_cands and not q_cands:
         tail = []
         if scan_text:
             tail.append("\n⚠️ 正交性治理闸门发现未披露多重印证主张:\n" + scan_text)
@@ -334,9 +405,12 @@ def main():
     dossier = build_dossier(cands) if cands else (
         f"# 候选研究简报 (研究编排流水线自动生成)  "
         f"{datetime.now(CN_TZ).strftime('%Y-%m-%d %H:%M')} CST\n\n"
-        "> 本轮 A股/港股发现层无 ⭐ 候选; 仅美股 sleeve 有候选, 见下。\n")
+        "> 本轮 A股/港股价值镜头无 ⭐ 候选; 见下方质量镜头/美股 sleeve 候选。\n")
     if us_cands:
         dossier += "\n\n" + "\n".join(build_us_section(us_cands))
+    if q_cands:
+        value_codes = {c["code"] for c in cands}
+        dossier += "\n\n" + "\n".join(build_quality_section(q_cands, value_codes))
     if due_text:
         dossier += "\n\n## ⏰ 校准闭环: 临近到期的站立预测 (去resolve)\n\n```\n" + due_text + "\n```\n"
     if scan_text:
@@ -354,12 +428,15 @@ def main():
 
     names = ", ".join(f"{c['name']}({c['code']})" for c in cands)
     us_names = ", ".join(c["symbol"] for c in us_cands)
-    n_total = len(cands) + len(us_cands)
+    q_names = ", ".join(f"{c.get('name')}({c['code']})" for c in q_cands)
+    n_total = len(cands) + len(us_cands) + len(q_cands)
     print(f"研究编排流水线: 生成 {n_total} 份候选简报 → {fpath}")
     if names:
         print(f"A/HK候选: {names}")
     if us_names:
         print(f"美股候选: {us_names}")
+    if q_names:
+        print(f"质量复利💎候选: {q_names}")
     print("（这是尽调起点 stub, 非买卖指令; 须人工补 thesis/催化剂/一手核验）")
     sys.exit(1)
 

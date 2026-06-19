@@ -246,6 +246,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--quiet", action="store_true", help="只在有💎候选时输出(可挂cron)")
     ap.add_argument("--symbol", help="只扫单只")
+    ap.add_argument("--json", action="store_true", help="机读: 输出💎/🌱候选JSON供research-pipeline编排消费(零新增数据)")
     args = ap.parse_args()
 
     wl = load_watchlist()
@@ -267,6 +268,35 @@ def main():
 
     gems = [r for r in rows if r["flag"] == "💎"]
     sprouts = [r for r in rows if r["flag"] == "🌱"]
+
+    if args.json:
+        # 机读输出供 research-pipeline 编排消费: 只吐 💎(高质量复利候选), 零新增数据
+        out = {
+            "source": "quality-compounder",
+            "lens": "quality",  # 正交于 tech_screener 的 value 镜头
+            "ts": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "scanned": len(rows),
+            "skipped": [{"symbol": s[0], "name": s[1], "reason": s[2]} for s in skipped],
+            "candidates": [
+                {
+                    "code": r["w"]["symbol"],
+                    "name": r["w"].get("name", ""),
+                    "theme": r["w"].get("theme", ""),
+                    "flag": r["flag"],
+                    "reason": r["reason"],
+                    "roe_annual": r["q"].get("roe_annual"),
+                    "roe_persistence": r["q"].get("roe_persistence"),
+                    "gross_margin": r["q"].get("gross_margin"),
+                    "net_margin": r["q"].get("net_margin"),
+                    "rev_growth_breadth": r["q"].get("rev_growth_breadth"),
+                    "cash_content_ttm": r["q"].get("cash_content_ttm"),
+                    "pe_pct": r["pe_pct"],
+                }
+                for r in gems
+            ],
+        }
+        print(json.dumps(out, ensure_ascii=False))
+        return
 
     if args.quiet and not gems:
         return  # watchdog: 无💎候选则静默 exit0

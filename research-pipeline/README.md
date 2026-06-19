@@ -18,6 +18,12 @@
 - 不替你判断买卖（输出是【尽调起点 stub】非终稿，非买卖指令）
 - 不自动登记 prediction-ledger / 不进 StockChoose（这些是简报里留给人工的 TODO 钩子）
 
+## 三镜头覆盖（2026-06-20 接通质量镜头）
+发现侧三个正交镜头各喂同款下游尽调三件套, 互不冗余:
+- **价值镜头 (A股/港股)**：`stock-discovery/tech_screener.py` 发现 ⭐(便宜) → `reverse_dcf` + `moat_scorecard`
+- **质量镜头 (A股/港股)**：`quality-compounder/quality_screener.py --json` 发现 💎(好生意优先, 锚=复利质量非估值) → `reverse_dcf`(TODO钩子) + `moat_scorecard`。同标的两镜头都命中=「🔥双镜头共振」最高优先。此前 💎 无下游编排=发现孤儿, 06-20 接通
+- **美股科技 sleeve(25M)**：`us-tech-scout/us_tech_scout.py --json` 发现 🏰/⭐ → `reverse_dcf`
+
 ## 双 sleeve 覆盖（2026-06-17 接通美股分支）
 - **A股/港股**：`stock-discovery/tech_screener.py` 发现 ⭐ → `reverse_dcf` + `moat_scorecard`（3 层）
 - **美股科技 sleeve(25M)**：`us-tech-scout/us_tech_scout.py --json` 发现 🏰/⭐ → `reverse_dcf`
