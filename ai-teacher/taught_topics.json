@@ -359,8 +359,13 @@
       "topic": "Prompt Engineering（提示工程）——不改一个参数，靠怎么问撬动大模型的能力",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-06-18T20:03:00+08:00"
+    },
+    {
+      "topic": "Fine-tuning（微调）——不重新造模型，只把通用大脑改造成专才",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-06-19T08:03:00+08:00"
     }
   ],
-  "total_count": 72,
-  "last_updated": "2026-06-18T20:03:00+08:00"
+  "total_count": 73,
+  "last_updated": "2026-06-19T08:03:00+08:00"
 }
