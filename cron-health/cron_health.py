@@ -99,13 +99,18 @@ def expected_interval_seconds(job):
         # 每小时(分钟固定, 小时*)
         if hour == "*" and minute != "*":
             return 3600
-        # 每天(小时固定单值)
+        # 每周(dow 固定) —— 必须先于「每天」判断, 否则 `0 18 * * 0` 会被
+        # 「每天」分支(只看 hour/dom/mon 不看 dow)截胡误判成 24h, 把 168h 一跑的
+        # 周度任务在 72h 后误报 STALE(狼来了)。dow 限定才是周度的判别特征。
+        if dow not in ("*",) and (hour.isdigit() or "," in hour):
+            return 7 * 86400
+        # 每天(小时固定单值, 且非周度)
         if hour.isdigit() and dom == "*" and mon == "*":
             return 86400
-        # 含逗号的多次/天
+        # 含逗号的多次/天(dow=*)
         if "," in hour:
             return 86400  # 保守按天
-        # 每周(dow 固定)
+        # 每周(dow 固定) — 兜底(理论上已被上面提前分支覆盖)
         if dow not in ("*",) and hour.isdigit():
             return 7 * 86400
     return None
