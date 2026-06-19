@@ -49,6 +49,18 @@ except Exception as e:
     print(f"[FATAL] akshare 不可用: {e}", file=sys.stderr); sys.exit(2)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# 收口到 marketdata.safe_call：12s hang 硬墙 + 指数退避重试。
+# 否则裸调 stock_financial_abstract(safe_call 文档实测正 hang>60s)会把无人值守的
+# 周度 cron 整轮拖死到被 120s 墙杀。与 us-tech-scout 同款硬化路径。
+sys.path.insert(0, os.path.dirname(HERE))
+try:
+    from marketdata import safe_call, MarketDataError
+except Exception:
+    # 取数层不可用时退化为原始调用(不静默吞，便于发现路径问题)
+    def safe_call(fn, label="", **kw):
+        return fn()
+    class MarketDataError(Exception):
+        pass
 # 复用 stock-discovery 的 watchlist(同一能力圈, 不另维护一份避免漂移)
 DISCOVERY_WL = os.path.expanduser("~/hermes-workspace/stock-discovery/watchlist.json")
 
@@ -100,7 +112,7 @@ def get_pe_pct(symbol):
     """只取 PE 自身历史分位作泡沫护栏(不作主门槛)。失败返回 None 不阻断质量判定。"""
     for _ in range(3):
         try:
-            d = ak.stock_value_em(symbol=symbol)
+            d = safe_call(lambda: ak.stock_value_em(symbol=symbol), label=f"value_em:{symbol}")
             break
         except Exception:
             time.sleep(2)
@@ -117,7 +129,7 @@ def get_pe_pct(symbol):
 def get_quality(symbol):
     """复利质量指标集。复用 tech_screener 同款口径: ROE年度(最近1231)、TTM现金含量、净利率。"""
     try:
-        f = ak.stock_financial_abstract(symbol=symbol)
+        f = safe_call(lambda: ak.stock_financial_abstract(symbol=symbol), label=f"abstract:{symbol}")
     except Exception:
         return None
     if f is None or "指标" not in f.columns:
