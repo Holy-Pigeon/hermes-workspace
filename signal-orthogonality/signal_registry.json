@@ -22,6 +22,7 @@
     {"id": "southbound_flow",      "project": "paper-trading",         "claim": "南向聪明钱吸筹/派发",     "root_inputs": ["price", "southbound_flow"]},
     {"id": "moat_scorecard",       "project": "moat-durability",       "claim": "护城河耐久度/定价权",     "root_inputs": ["income_statement", "balance_sheet"]},
     {"id": "earnings_quality",     "project": "stock-discovery",       "claim": "盈利质量/一次性收益剔除", "root_inputs": ["income_statement", "cash_flow"]},
-    {"id": "us_tech_scout",        "project": "us-tech-scout",        "claim": "美股科技耐久质量(共享moat_core)", "root_inputs": ["income_statement", "balance_sheet"]}
+    {"id": "us_tech_scout",        "project": "us-tech-scout",        "claim": "美股科技耐久质量(共享moat_core)", "root_inputs": ["income_statement", "balance_sheet"]},
+    {"id": "quality_compounder",   "project": "quality-compounder",   "claim": "复利质量发现(ROE/毛利/净利/成长广度/现金含量+PE分位泡沫护栏)", "root_inputs": ["price", "income_statement", "cash_flow", "balance_sheet"]}
   ]
 }

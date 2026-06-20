@@ -27,6 +27,7 @@
 # 写 note 主张『N重独立印证』前,先核实这 N 条信号没落在 🔴 共线对里
 python3 signal_orthogonality.py --signals valuation_percentile,alpha_check,holder_concentration
 python3 signal_orthogonality.py --audit-all          # 全表两两重叠矩阵
+python3 signal_orthogonality.py --coverage-check      # 元层自检:dashboard 产信号项目是否都已登记(防漏登记,exit 1=有缺口)
 python3 signal_orthogonality.py --quiet --signals ... # cron 友好:仅🔴 surface, exit 1
 ```
 退出码：发现 🔴 共线 → 1；正交 → 0。

@@ -42,6 +42,49 @@ import sys
 from itertools import combinations
 
 REG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "signal_registry.json")
+PROJECTS_PATH = os.path.expanduser("~/hermes-workspace/dashboard/projects.json")
+
+# 已知不产出『信号/印证』的项目(基础设施/服务/元层/通知)——不应进正交登记表,免误报。
+# 维护纪律:新增非信号项目时加入此白名单;新增产信号项目时必须登记 signal_registry.json。
+NON_SIGNAL_PROJECTS = {
+    "paper-trading",          # 容器项目,其内信号(valuation/alpha/correlation/holder/southbound)已分条登记
+    "marketdata", "innovation-engine", "polymarket-dashboard", "cron-health",
+    "polymarket-monitor", "signal-orthogonality", "feishu-notify", "ai-teacher",
+    "prediction-ledger",      # 校准器,不产发现信号
+    "price-watch",            # 涨价观测池,跟踪非裁定信号(如后续作裁定再登记)
+    "allocation-discipline",  # 配置层,消费信号非产信号
+    "research", "research-pipeline",  # 编排/库,信号来自被编排的工具
+    "stockchoose",
+}
+
+
+def coverage_check(by_id, quiet=False):
+    """元层自检:dashboard 上疑似产信号的项目是否都已登记进正交表。
+    根因防御——登记是人工的,本检查把『漏登记』从靠运气手动发现变成自动 surface。"""
+    if not os.path.exists(PROJECTS_PATH):
+        print(f"⚠️ 找不到 {PROJECTS_PATH},跳过覆盖检查")
+        return 0
+    with open(PROJECTS_PATH, "r", encoding="utf-8") as f:
+        projects = json.load(f).get("projects", [])
+    registered_projects = set()
+    for s in by_id.values():
+        for p in str(s.get("project", "")).split("/"):
+            registered_projects.add(p.strip())
+    gaps = []
+    for proj in projects:
+        pid = proj.get("id", "")
+        if pid in NON_SIGNAL_PROJECTS or pid in registered_projects:
+            continue
+        gaps.append((pid, proj.get("name", ""), proj.get("desc", "")[:50]))
+    if not gaps:
+        if not quiet:
+            print("✅ 覆盖检查:dashboard 上所有产信号项目均已登记进正交表,无盲区。")
+        return 0
+    print("🟠 正交登记覆盖缺口(疑似产信号却未登记,『N重印证』可能漏审):")
+    for pid, name, desc in gaps:
+        print(f"  · {pid} ({name}): {desc}")
+    print("  → 若确产『裁定/印证类信号』,登记进 signal_registry.json;若纯基础设施,加入 NON_SIGNAL_PROJECTS 白名单。")
+    return 1
 
 
 def load_registry():
@@ -216,6 +259,7 @@ def main():
     ap.add_argument("--signals", help="逗号分隔的信号 id,审计它们是否真独立")
     ap.add_argument("--audit-all", action="store_true", help="审计全登记表两两重叠")
     ap.add_argument("--scan-notes", action="store_true", help="扫描 research/*.md:找声称多重印证却未做正交披露的 note")
+    ap.add_argument("--coverage-check", action="store_true", help="自检:dashboard 产信号项目是否都已登记进正交表(防漏登记)")
     ap.add_argument("--quiet", action="store_true", help="cron 友好:仅🔴 surface")
     args = ap.parse_args()
 
@@ -223,6 +267,9 @@ def main():
         sys.exit(scan_notes(quiet=args.quiet))
 
     reg, by_id = load_registry()
+
+    if args.coverage_check:
+        sys.exit(coverage_check(by_id, quiet=args.quiet))
 
     if args.audit_all:
         sys.exit(audit_all(reg, by_id, quiet=args.quiet))
