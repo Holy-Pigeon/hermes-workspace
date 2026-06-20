@@ -52,11 +52,26 @@ def _now():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
 
+_BACKUP_KEEP = 5  # SOUL纪律: git才是回退机制, .backups仅留极小滚动窗口做单次写前崩溃保护, 不做归档
+
+
 def _backup():
+    # 写前安全副本(防in-place改写中途崩溃), 但只保留最近 _BACKUP_KEEP 份滚动窗口。
+    # 不再无限增长成「手工备份归档」——那是 git 的职责(SOUL: git即备份, 不留.bak堆积)。
     os.makedirs(BACKUP_DIR, exist_ok=True)
     if os.path.exists(LOG):
         stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         shutil.copy2(LOG, os.path.join(BACKUP_DIR, f"ideas_log.{stamp}.md"))
+    # 滚动清理: 仅保留最近 _BACKUP_KEEP 份
+    try:
+        snaps = sorted(
+            f for f in os.listdir(BACKUP_DIR)
+            if f.startswith("ideas_log.") and f.endswith(".md")
+        )
+        for stale in snaps[:-_BACKUP_KEEP]:
+            os.remove(os.path.join(BACKUP_DIR, stale))
+    except OSError:
+        pass
 
 
 def _read_lines():

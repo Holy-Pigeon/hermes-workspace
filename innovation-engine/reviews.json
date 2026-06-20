@@ -94,5 +94,37 @@
     "stage": "initial",
     "ts": "2026-06-18 15:14:24",
     "processed": true
+  },
+  {
+    "idea_id": "2026-06-18 21:06::8247dc4ec733",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-18 22:12:50",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-18 18:06::849939d87376",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-18 22:12:52",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-19 18:11::9af7db3ae080",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-19 19:47:48",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-18 18:06::849939d87376",
+    "action": "reject",
+    "comment": "",
+    "stage": "progress",
+    "ts": "2026-06-20 13:57:21",
+    "processed": true
   }
 ]
