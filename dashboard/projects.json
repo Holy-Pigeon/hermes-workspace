@@ -264,6 +264,20 @@
         "发现侧"
       ],
       "heartbeat_file": "~/hermes-workspace/quality-compounder"
+    },
+    {
+      "id": "valuation-trigger",
+      "name": "估值触发观察哨",
+      "icon": "🟢",
+      "desc": "纵向监控候选reverse_dcf隐含增速 补SOUL等合理价格自动化半边 好生意跌进合理价时告警 价格要求增速远低于已兑现增速判买入区",
+      "ports": null,
+      "tags": [
+        "配置触发",
+        "研究",
+        "脚本",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/valuation-trigger/history.json"
     }
   ]
 }
