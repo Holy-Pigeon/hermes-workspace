@@ -26,14 +26,16 @@
   "ASML": {
     "last_in_zone": false,
     "last_seen": "2026-06-21",
-    "g_now": 26.9,
-    "g_req15x": 53.0
+    "g_now": null,
+    "g_req15x": null,
+    "ccy_conflict": true
   },
   "TSM": {
-    "last_in_zone": true,
+    "last_in_zone": false,
     "last_seen": "2026-06-21",
-    "g_now": 46.5,
-    "g_req15x": -5.4
+    "g_now": null,
+    "g_req15x": null,
+    "ccy_conflict": true
   },
   "GOOGL": {
     "last_in_zone": false,

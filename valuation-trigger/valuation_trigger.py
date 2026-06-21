@@ -33,6 +33,19 @@ ROOT = pathlib.Path(__file__).resolve().parent
 DOSSIER_DIR = ROOT.parent / "research-pipeline" / "dossiers"
 HISTORY = ROOT / "history.json"
 
+# 防御纵深(数据真实性铁律): 报告币种≠USD 的美股ADR(TSM=TWD/ASML=EUR), 财报BASIC_EPS用当地币种、
+# 现价用USD, 二者相除得到的「当前倍数→隐含增速」是币种错配的伪数(把世界级公司误标成全场最便宜=锚定陷阱)。
+# research-pipeline 的护栏理应在 dossier 里把这些标记为「币种冲突·跳过反向DCF」, 但若某期 dossier 未被
+# 该护栏覆盖(如护栏落地前生成、未重生成), 失真的 g_req 会漏进来触发【假买入区】。本观察哨作为下游消费者,
+# 独立再设一道闸: 凡落在 NON_USD_REPORTING 的标的, 一律不解析其估值层、不进买入区判定。
+# 单一事实源: 复用 pipeline.NON_USD_REPORTING, 避免两处清单漂移。
+try:
+    sys.path.insert(0, str(ROOT.parent / "research-pipeline"))
+    from pipeline import NON_USD_REPORTING as _NON_USD
+    NON_USD_REPORTING = dict(_NON_USD)
+except Exception:
+    NON_USD_REPORTING = {"TSM": "TWD", "ASML": "EUR"}  # 兜底, 与上游护栏同口径
+
 # 参数(护栏型, 偏保守, 对抗确认偏误/线性外推)
 REF_EXIT_MULT = 15      # 用最保守退出倍数档算「价格要求的增速」
 MARGIN_PP = 10.0        # 安全垫: 已兑现增速须超价格要求至少这么多 pp
@@ -65,6 +78,12 @@ def parse_dossier(path):
                         "price": None, "g_now": None, "g_req": None}
             continue
         if cur is None:
+            continue
+        # 币种冲突闸: 上游 dossier 标了「币种冲突」或该标的在 NON_USD_REPORTING →
+        # 作废本候选的估值层(g_req 是币种错配伪数, 绝不让它进买入区)。
+        if cur in NON_USD_REPORTING or "币种冲突" in line:
+            out[cur]["g_req"] = None
+            out[cur]["ccy_conflict"] = True
             continue
         mp = PRICE.search(line)
         if mp and out[cur]["price"] is None:
@@ -147,6 +166,14 @@ def main():
             zone, margin = in_buy_zone(rec)
             newhist[name] = {"last_in_zone": zone, "last_seen": rec["date"],
                              "g_now": rec["g_now"], "g_req15x": rec["g_req"]}
+        # 清洗币种冲突标的的历史: 它们被估值层闸拦下不在 parsed 里, 但旧 history 可能残留
+        # 之前(护栏落地前)写入的伪买入区(如 TSM last_in_zone=true/g_req=-5.4)。
+        # 不清洗会留下假阴性: 未来 TSM 真跌入合理价时, 因 prev_zone 仍为 true 而不触发穿越告警。
+        for sym in NON_USD_REPORTING:
+            if sym in newhist:
+                newhist[sym] = {"last_in_zone": False, "last_seen": parsed and
+                                next(iter(parsed.values()))["date"] or newhist[sym].get("last_seen", ""),
+                                "g_now": None, "g_req15x": None, "ccy_conflict": True}
         HISTORY.write_text(json.dumps(newhist, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # 输出
