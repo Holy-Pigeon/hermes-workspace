@@ -384,8 +384,13 @@
       "topic": "向量点积与余弦相似度（Dot Product & Cosine Similarity）——衡量两个方向有多像的核心运算",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-20T20:03:00+08:00"
+    },
+    {
+      "topic": "范数（Norm）——给向量一把统一的长度尺",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-21T08:03:00+08:00"
     }
   ],
-  "total_count": 77,
-  "last_updated": "2026-06-20T20:03:00+08:00"
+  "total_count": 78,
+  "last_updated": "2026-06-21T08:03:00+08:00"
 }
