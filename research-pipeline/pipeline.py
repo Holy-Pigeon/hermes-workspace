@@ -81,6 +81,11 @@ def _grab(pat, s):
     return float(m.group(1)) if m else None
 
 
+# 报告币种≠USD 的美股ADR: 财报BASIC_EPS用当地币种, 现价用USD, 直接相除得到的PE倍数失真。
+# 无FX源时绝不编造换算, 显式跳过估值层并标注币种冲突, 避免把世界级公司误标成"最便宜"(锚定陷阱)。
+NON_USD_REPORTING = {"TSM": "TWD", "ASML": "EUR"}
+
+
 def reverse_dcf_for(name, price, eps):
     out, _, _ = run([PY, RDCF, "--name", name, "--price", f"{price}",
                      "--eps", f"{eps}", "--exit-mults", "15,18,22"])
@@ -159,7 +164,12 @@ def build_us_section(us_cands):
         lines.append("### 估值层 (reverse_dcf, EPS=最新财年BASIC_EPS 非TTM)")
         price, pdate = _us_price(sym)
         eps = c.get("eps_annual")
-        if price and eps and eps > 0:
+        ccy = NON_USD_REPORTING.get(sym)
+        if ccy:
+            lines.append(f"(⚠️币种冲突: {sym} 财报BASIC_EPS={eps} 以{ccy}计, 现价以USD计, "
+                         f"直接相除的PE倍数失真→跳过反向DCF, 绝不编造FX换算。"
+                         f"须人工取同币种EPS(或ADR调整后EPS)再手跑 reverse_dcf)")
+        elif price and eps and eps > 0:
             lines.append(f"(现价 {price} @ {pdate} via marketdata; 年度EPS {eps})")
             lines.append("```")
             lines.append(reverse_dcf_for(name, price, eps))
