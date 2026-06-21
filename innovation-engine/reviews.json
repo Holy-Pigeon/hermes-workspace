@@ -126,5 +126,21 @@
     "stage": "progress",
     "ts": "2026-06-20 13:57:21",
     "processed": true
+  },
+  {
+    "idea_id": "2026-06-21 09:13::e28eb81343c3",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-21 09:54:40",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-20 18:09::323e255f6c2f",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-21 09:54:44",
+    "processed": true
   }
 ]
