@@ -195,6 +195,23 @@ def cmd_add(data, kw):
     if same_day >= 5:
         print(f"⚠️ 警告: {kw['verify-by']} 已堆 {same_day} 条 pending 预测, 再加=校准反馈一次性引爆+同向暴露。")
         print("   建议拆出可早于该窗口证伪的子论点(批价/月度数据/渠道)错峰结算。已照常登记, 仅提示。")
+    # ── 结果相关/伪多重印证警告(登记时拦, 与 calibration_health 第三诊断对齐) ──
+    # calibration_health 事后会抓'同标的+同窗口=由同一份财报驱动, 结果不独立, Brier 高估统计力',
+    # 但旧 cmd_add 只在登记时拦了'信心压缩'与'到期挤堆'两类, 漏了这第三类 → 每周看门狗反复 rc=1
+    # 报同一簇(601138×2/300750×2)却从不在决策点阻断。此处补齐: 同(标的代码,窗口)已有 pending 时
+    # 在登记当下就提示合并计1分或错开窗口, 把事后唠叨变成决策点护栏(软警告, 与挤堆同档不硬拒)。
+    import re as _re_add
+    def _subj_code(s):
+        m = _re_add.search(r"\((\d{4,6})\)", s)
+        return m.group(1) if m else s
+    new_code = _subj_code(kw["subject"])
+    dup = [p for p in preds if p["outcome"] == "pending"
+           and p.get("verify_by") == kw["verify-by"]
+           and _subj_code(p["subject"]) == new_code]
+    if dup:
+        ids = ", ".join(p["id"] for p in dup)
+        print(f"⚠️ 结果相关警告: {new_code} 在 {kw['verify-by']} 已有 pending 预测({ids}), 同标的+同窗口由同一份财报驱动")
+        print("   = 结果不独立, Brier 按 n 计会高估统计力(伪多重印证)。建议: 合并为1条多子论点计1分, 或错开结算窗口让结果真正独立。已照常登记, 仅提示。")
     pid = _next_id(preds)
     rec = {
         "id": pid,
