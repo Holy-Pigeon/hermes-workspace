@@ -141,6 +141,7 @@ def ensure_database(token: str, config: dict[str, Any]) -> dict[str, Any]:
             "Name": {"title": {}},
             "Topic": {"rich_text": {}},
             "Category": {"select": {}},
+            "Doc Type": {"select": {}},
             "Tags": {"multi_select": {}},
             "Maturity": {"select": {}},
             "Lesson Date": {"date": {}},
@@ -416,6 +417,8 @@ def create_lesson_page(args: argparse.Namespace) -> dict[str, Any]:
     }
     if args.category:
         properties["Category"] = {"select": {"name": args.category[:100]}}
+    if args.doc_type:
+        properties["Doc Type"] = {"select": {"name": args.doc_type[:100]}}
     if args.tags:
         tag_names = [t.strip()[:100] for t in args.tags.split(",") if t.strip()]
         properties["Tags"] = {"multi_select": [{"name": t} for t in tag_names]}
@@ -451,6 +454,7 @@ def main() -> int:
     parser.add_argument("--title", help="Lesson title.")
     parser.add_argument("--topic", default="")
     parser.add_argument("--category", default="")
+    parser.add_argument("--doc-type", default="", help="文章类型: 分析文 / 经验文")
     parser.add_argument("--tags", default="", help="Comma-separated multi-select tags.")
     parser.add_argument("--maturity", default="", help="验证过 / 经验法则 / 待验证")
     parser.add_argument("--lesson-date", default="")
