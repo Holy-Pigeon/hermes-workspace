@@ -42,6 +42,14 @@ LANGUAGE_ALIASES = {
     "py": "python",
     "sh": "shell",
     "zsh": "shell",
+    "bash": "bash",
+    "ts": "typescript",
+    "tsx": "typescript",
+    "js": "javascript",
+    "jsx": "javascript",
+    "yml": "yaml",
+    "rs": "rust",
+    "md": "markdown",
 }
 
 
