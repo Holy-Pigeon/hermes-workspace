@@ -207,12 +207,64 @@ def code_block(code: str, language: str = "plain text") -> dict[str, Any]:
     }
 
 
+def _is_table_row(s: str) -> bool:
+    s = s.strip()
+    return s.startswith("|") and s.count("|") >= 2
+
+
+def _is_table_sep(s: str) -> bool:
+    s = s.strip()
+    return bool(re.match(r"^\|[\s:|-]+\|$", s)) and "-" in s
+
+
+def _parse_cells(s: str) -> list[str]:
+    s = s.strip()
+    if s.startswith("|"):
+        s = s[1:]
+    if s.endswith("|"):
+        s = s[:-1]
+    return [c.strip() for c in s.split("|")]
+
+
+def table_block(rows: list[list[str]], has_header: bool) -> dict[str, Any]:
+    width = max((len(r) for r in rows), default=1)
+    children: list[dict[str, Any]] = []
+    for r in rows:
+        cells = []
+        for i in range(width):
+            cell_text = r[i] if i < len(r) else ""
+            # rich_text 不解析 **bold**，去掉标记避免单元格里残留星号
+            cell_text = cell_text.replace("**", "")
+            cells.append(rich_text(cell_text))
+        children.append({"type": "table_row", "table_row": {"cells": cells}})
+    return {
+        "object": "block",
+        "type": "table",
+        "table": {
+            "table_width": width,
+            "has_column_header": has_header,
+            "has_row_header": False,
+            "children": children,
+        },
+    }
+
+
 def markdown_to_blocks(markdown: str) -> list[dict[str, Any]]:
     blocks: list[dict[str, Any]] = []
     in_code = False
     code_lang = "plain text"
     code_lines: list[str] = []
     para_lines: list[str] = []
+
+    table_rows: list[list[str]] = []
+    table_has_header = False
+
+    def flush_table() -> None:
+        nonlocal table_has_header
+        if table_rows:
+            blocks.append(table_block(list(table_rows), table_has_header))
+            table_rows.clear()
+            table_has_header = False
 
     def flush_para() -> None:
         if para_lines:
@@ -268,6 +320,19 @@ def markdown_to_blocks(markdown: str) -> list[dict[str, Any]]:
             code_lines.append(line)
             continue
 
+        # Table detection: collect consecutive | ... | rows
+        if _is_table_row(line):
+            if _is_table_sep(line):
+                # separator row marks header above
+                if table_rows:
+                    table_has_header = True
+                continue
+            flush_para()
+            table_rows.append(_parse_cells(line))
+            continue
+        else:
+            flush_table()
+
         if not line.strip():
             flush_para()
             continue
@@ -299,6 +364,7 @@ def markdown_to_blocks(markdown: str) -> list[dict[str, Any]]:
 
     if in_code and code_lines:
         blocks.append(code_block("\n".join(code_lines), code_lang))
+    flush_table()
     flush_para()
     return blocks
 
