@@ -54,6 +54,22 @@
 
 脚本按 Name 幂等 upsert（同标题先归档再建，可安全重同步修正稿）。
 
+## Sub-item 缩进树（一个 Category = 一棵树）
+
+Notion 的「缩进树 / Sub-item」底层是 DB 自关联 dual_property（`Parent item` ↔ 同步反向字段），
+脚本已封装：加 `--parent-title "总纲页标题"` 即自动①确保自关联字段存在 ②按 Name 幂等找/建该总纲根页 ③把本条挂到根下。
+重同步（upsert）会重建子页换新 page_id，但因每次都带 `--parent-title` 会重新挂载，故树关系自愈、不会断。
+
+```bash
+# 子条目挂到 Context Engineering 总纲下，形成缩进树
+/opt/homebrew/bin/python3 .../sync_to_notion.py --file ... --title ... \
+  --category "Context Engineering" --doc-type "分析文" \
+  --parent-title "【总纲】Context Engineering：给模型组织上下文的全部机制"
+```
+
+约定：每个 Category 建一个 `【总纲】<Category>：…` 根页（Doc Type=分析文，正文放父设计导览），
+该 Category 下所有父设计条目用 `--parent-title` 挂到它下面。子设计仍是条目页内的 H1/H2 标题。
+
 ## 公式格式硬约束
 
 同 ai-teacher：LaTeX 用 `$...$` / `$$...$$`，禁塞代码块，禁 Unicode 上下标。

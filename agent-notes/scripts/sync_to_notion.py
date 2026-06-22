@@ -164,6 +164,43 @@ def ensure_database(token: str, config: dict[str, Any]) -> dict[str, Any]:
     return database
 
 
+def ensure_self_relation(token: str, database_id: str) -> None:
+    """确保 DB 上有 sub-item 所需的自关联字段（Parent item ↔ 同步反向字段）。
+
+    Notion 的「缩进树 / Sub-item」底层就是一个 dual_property 自关联。
+    幂等：已存在指向本库的 relation 字段则跳过，不重复加。
+    """
+    meta = notion_request("GET", f"databases/{database_id}", token)
+    for prop in meta.get("properties", {}).values():
+        if prop.get("type") == "relation":
+            rel = prop.get("relation", {})
+            if rel.get("database_id", "").replace("-", "") == database_id.replace("-", ""):
+                return  # 已有自关联，复用
+    notion_request("PATCH", f"databases/{database_id}", token, {
+        "properties": {
+            "Parent item": {"relation": {"database_id": database_id, "type": "dual_property", "dual_property": {}}}
+        }
+    })
+
+
+def ensure_parent_page(token: str, database_id: str, parent_title: str) -> str:
+    """查找或创建一个充当「总纲根」的页面，返回其 page_id（幂等，按 Name 精确匹配）。"""
+    res = notion_request("POST", f"databases/{database_id}/query", token, {
+        "filter": {"property": "Name", "title": {"equals": parent_title}}, "page_size": 1,
+    })
+    if res.get("results"):
+        return res["results"][0]["id"]
+    page = notion_request("POST", "pages", token, {
+        "parent": {"database_id": database_id},
+        "properties": {
+            "Name": {"title": [{"type": "text", "text": {"content": parent_title}}]},
+            "Status": {"select": {"name": "Published"}},
+            "Source": {"rich_text": [{"type": "text", "text": {"content": "agent-notes"}}]},
+        },
+    })
+    return page["id"]
+
+
 def rich_text(text: str) -> list[dict[str, Any]]:
     """Convert text to Notion rich_text array, handling inline LaTeX $...$ as equation annotations."""
     parts: list[dict[str, Any]] = []
@@ -444,6 +481,15 @@ def create_lesson_page(args: argparse.Namespace) -> dict[str, Any]:
     for batch in chunks(blocks):
         notion_request("PATCH", f"blocks/{page['id']}/children", token, {"children": batch})
 
+    parent_page_id = None
+    parent_title = getattr(args, "parent_title", "")
+    if parent_title:
+        ensure_self_relation(token, database["id"])
+        parent_page_id = ensure_parent_page(token, database["id"], parent_title)
+        notion_request("PATCH", f"pages/{page['id']}", token, {
+            "properties": {"Parent item": {"relation": [{"id": parent_page_id}]}}
+        })
+
     result = {
         "page_id": page["id"],
         "url": page.get("url") or page_url(page["id"]),
@@ -451,6 +497,7 @@ def create_lesson_page(args: argparse.Namespace) -> dict[str, Any]:
         "database_title": config.get("database_title"),
         "blocks": len(blocks),
         "archived_old": archived,
+        "parent_page_id": parent_page_id,
     }
     return result
 
@@ -466,6 +513,8 @@ def main() -> int:
     parser.add_argument("--tags", default="", help="Comma-separated multi-select tags.")
     parser.add_argument("--maturity", default="", help="验证过 / 经验法则 / 待验证")
     parser.add_argument("--lesson-date", default="")
+    parser.add_argument("--parent-title", default="",
+                        help="挂到某个总纲根页下形成 Sub-item 缩进树（按 Name 幂等找/建该父页）。")
     parser.add_argument("--status", default="Published")
     parser.add_argument("--no-upsert", action="store_true",
                         help="Skip archiving existing pages with the same title (default: upsert on).")
