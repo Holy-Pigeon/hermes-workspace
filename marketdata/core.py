@@ -407,6 +407,48 @@ def safe_call(fn, label="", attempts=3, base_delay=1.5):
     raise MarketDataError(f"safe_call({label}) 失败: {err}")
 
 
+# ---------------------------------------------------------------------------
+# 报告币种登记表（单一事实源）
+# ---------------------------------------------------------------------------
+# 为什么在 marketdata 里：现价由本层以「上市交易币种」取（美股 ADR 报 USD），
+# 而财报每股盈利按公司「报告币种」披露（台积电=TWD、阿斯麦=EUR）。两者相除得
+# 到的 PE/隐含增速是币种错配的伪数——曾在 2026-06-21 同一天令 research-pipeline
+# 与 valuation-trigger 各自踩坑，根因正是两处各自 hardcode 一份 NON_USD_REPORTING
+# 清单、彼此漂移。取数层是唯一该知道「一只票财报用什么币种计」的地方，故把这份
+# 登记收口到这里作为单一事实源，消费方一律 import，禁止再各自重定义。
+#
+# 无 FX 源时绝不编造换算：is_reporting_currency_mismatch() 只回答「现价币种 ≠
+# 报告币种?」这个布尔事实，让消费方据此显式跳过估值层并标注币种冲突，绝不返回
+# 失真倍数（数据真实性铁律）。
+_REPORTING_CURRENCY = {
+    # 美股 ADR / 双重上市：交易价 USD，但财报按本国币种披露
+    "TSM": "TWD",   # 台积电
+    "ASML": "EUR",  # 阿斯麦
+    # 在此追加新标的即可，全工作区自动同步
+}
+
+
+def reporting_currency(symbol: str) -> str | None:
+    """返回该标的财报披露所用币种（如 'TWD'/'EUR'）。未登记返回 None
+    （None 表示「按其交易市场本币计，无错配」，最常见情形）。"""
+    return _REPORTING_CURRENCY.get(str(symbol).strip().upper())
+
+
+def trading_currency(symbol: str, market: str | None = None) -> str:
+    """返回该标的交易价所用币种。A股=CNY, 港股=HKD, 美股=USD。"""
+    mk = (market or detect_market(symbol)).upper()
+    return {"A": "CNY", "HK": "HKD", "US": "USD"}.get(mk, "USD")
+
+
+def is_reporting_currency_mismatch(symbol: str, market: str | None = None) -> bool:
+    """现价币种 ≠ 财报币种?  True 表示「现价/财报每股盈利」直接相除会失真，
+    消费方应跳过基于该比值的估值层（PE/隐含增速）并标注币种冲突。"""
+    rc = reporting_currency(symbol)
+    if rc is None:
+        return False
+    return rc != trading_currency(symbol, market)
+
+
 def _spot_from_bidask(df):
     """从 stock_bid_ask_em 的字段表里抽最新价。"""
     if df is None or len(df) == 0:

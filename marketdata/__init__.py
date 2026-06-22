@@ -31,6 +31,9 @@ from .core import (
     safe_call,
     MarketDataError,
     detect_market,
+    reporting_currency,
+    trading_currency,
+    is_reporting_currency_mismatch,
 )
 
 __all__ = [
@@ -41,4 +44,7 @@ __all__ = [
     "safe_call",
     "MarketDataError",
     "detect_market",
+    "reporting_currency",
+    "trading_currency",
+    "is_reporting_currency_mismatch",
 ]
