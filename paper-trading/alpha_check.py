@@ -64,11 +64,21 @@ def fetch_index_series(market):
         if market == "A":
             df = ak.stock_zh_index_daily(symbol=A_BENCH_SYMBOL)  # 新浪源, 稳
             return {str(d): float(cl) for d, cl in zip(df["date"], df["close"])}, "sina:stock_zh_index_daily"
-        else:  # HK
-            df = ak.stock_hk_index_daily_em(symbol="HSI")
-            # 列名: date, open, high, low, latest
-            col = "latest" if "latest" in df.columns else "close"
-            return {str(d): float(cl) for d, cl in zip(df["date"], df[col])}, "em:stock_hk_index_daily_em"
+        else:  # HK —— 多源容错: 东财(em)单源经常 RemoteDisconnected,
+               #       降级到新浪(sina)源(HSI 日线, 稳)。任一成功即返回, 绝不编造。
+            last_err = None
+            # 源1: 东财
+            try:
+                df = ak.stock_hk_index_daily_em(symbol="HSI")
+                col = "latest" if "latest" in df.columns else "close"
+                return {str(d): float(cl) for d, cl in zip(df["date"], df[col])}, "em:stock_hk_index_daily_em"
+            except Exception as e:
+                last_err = e
+                log(f"  [warn] HK 基准东财源失败: {repr(e)[:60]}, 降级新浪源")
+            # 源2: 新浪 (降级)
+            df = ak.stock_hk_index_daily_sina(symbol="HSI")
+            col = "close" if "close" in df.columns else "latest"
+            return {str(d): float(cl) for d, cl in zip(df["date"], df[col])}, "sina:stock_hk_index_daily_sina"
     except Exception as e:
         log(f"  [warn] {market} 基准抓取失败: {repr(e)[:70]}")
         return None, None
