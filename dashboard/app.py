@@ -652,8 +652,11 @@ def api_system():
         "memory": {
             # 内存用 GiB(1024^3),对齐 macOS 活动监视器/top 与厂商标称(16G=16GiB);
             # 用 1e9 会把 16GiB 显示成 17.2,与用户认知不符。磁盘另算(见下,Finder 用十进制 GB)。
+            # used 用 total-available 而非 mem.used:在 macOS 上 psutil 的 mem.used
+            # (wired+active...) 与 mem.percent((total-available)/total) 口径不同,
+            # 直接显示会出现 6.7/16=42% 但 pct 标 59.7% 的自相矛盾。统一用同源口径。
             "total_gb":  round(mem.total   / 1024**3, 1),
-            "used_gb":   round(mem.used    / 1024**3, 1),
+            "used_gb":   round((mem.total - mem.available) / 1024**3, 1),
             "avail_gb":  round(mem.available / 1024**3, 1),
             "pct":       mem.percent,
             "swap_total_gb": round(swap.total / 1024**3, 1),
