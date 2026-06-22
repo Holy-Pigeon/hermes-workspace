@@ -428,6 +428,12 @@ _REPORTING_CURRENCY = {
 }
 
 
+def reporting_currency_registry() -> dict:
+    """返回所有「报告币种≠交易币种」登记标的的副本 {symbol: reporting_ccy}。
+    消费方需要遍历这批标的(如清洗历史)时用此入口，仍是单一事实源——不要在外部 hardcode。"""
+    return dict(_REPORTING_CURRENCY)
+
+
 def reporting_currency(symbol: str) -> str | None:
     """返回该标的财报披露所用币种（如 'TWD'/'EUR'）。未登记返回 None
     （None 表示「按其交易市场本币计，无错配」，最常见情形）。"""

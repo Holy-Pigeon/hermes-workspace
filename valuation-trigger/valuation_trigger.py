@@ -37,14 +37,21 @@ HISTORY = ROOT / "history.json"
 # 现价用USD, 二者相除得到的「当前倍数→隐含增速」是币种错配的伪数(把世界级公司误标成全场最便宜=锚定陷阱)。
 # research-pipeline 的护栏理应在 dossier 里把这些标记为「币种冲突·跳过反向DCF」, 但若某期 dossier 未被
 # 该护栏覆盖(如护栏落地前生成、未重生成), 失真的 g_req 会漏进来触发【假买入区】。本观察哨作为下游消费者,
-# 独立再设一道闸: 凡落在 NON_USD_REPORTING 的标的, 一律不解析其估值层、不进买入区判定。
-# 单一事实源: 复用 pipeline.NON_USD_REPORTING, 避免两处清单漂移。
+# 独立再设一道闸: 凡报告币种≠交易币种的标的, 一律不解析其估值层、不进买入区判定。
+# 单一事实源收口: 币种登记表已收口到 marketdata.core, 本处不再 hardcode/复制 pipeline 清单(消灭两处漂移),
+# 一律经取数层 reporting_currency_registry()/is_reporting_currency_mismatch() 判定。
 try:
-    sys.path.insert(0, str(ROOT.parent / "research-pipeline"))
-    from pipeline import NON_USD_REPORTING as _NON_USD
-    NON_USD_REPORTING = dict(_NON_USD)
+    sys.path.insert(0, str(ROOT.parent / "marketdata"))
+    import core as _md
+    NON_USD_REPORTING = _md.reporting_currency_registry()
+
+    def _is_ccy_mismatch(sym):
+        return _md.is_reporting_currency_mismatch(sym)
 except Exception:
-    NON_USD_REPORTING = {"TSM": "TWD", "ASML": "EUR"}  # 兜底, 与上游护栏同口径
+    NON_USD_REPORTING = {}  # 取数层不可用: 退化为只依赖 dossier 内「币种冲突」文本标记这一道闸
+
+    def _is_ccy_mismatch(sym):
+        return sym in NON_USD_REPORTING
 
 # 参数(护栏型, 偏保守, 对抗确认偏误/线性外推)
 REF_EXIT_MULT = 15      # 用最保守退出倍数档算「价格要求的增速」
@@ -81,7 +88,7 @@ def parse_dossier(path):
             continue
         # 币种冲突闸: 上游 dossier 标了「币种冲突」或该标的在 NON_USD_REPORTING →
         # 作废本候选的估值层(g_req 是币种错配伪数, 绝不让它进买入区)。
-        if cur in NON_USD_REPORTING or "币种冲突" in line:
+        if _is_ccy_mismatch(cur) or "币种冲突" in line:
             out[cur]["g_req"] = None
             out[cur]["ccy_conflict"] = True
             continue

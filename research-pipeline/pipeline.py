@@ -83,7 +83,16 @@ def _grab(pat, s):
 
 # 报告币种≠USD 的美股ADR: 财报BASIC_EPS用当地币种, 现价用USD, 直接相除得到的PE倍数失真。
 # 无FX源时绝不编造换算, 显式跳过估值层并标注币种冲突, 避免把世界级公司误标成"最便宜"(锚定陷阱)。
-NON_USD_REPORTING = {"TSM": "TWD", "ASML": "EUR"}
+# 单一事实源收口: 币种登记表已收口到 marketdata.core, 本处不再 hardcode 清单(消灭两处漂移源头),
+# 一律 import 取数层的 reporting_currency()/is_reporting_currency_mismatch() 原语。
+def _reporting_currency(sym):
+    """经 marketdata 单一事实源判该美股报告币种; 取数层不可用时安全返回 None(不标冲突)。"""
+    try:
+        sys.path.insert(0, os.path.join(WS, "marketdata"))
+        import core as md
+        return md.reporting_currency(sym)
+    except Exception:
+        return None
 
 
 def reverse_dcf_for(name, price, eps):
@@ -164,7 +173,7 @@ def build_us_section(us_cands):
         lines.append("### 估值层 (reverse_dcf, EPS=最新财年BASIC_EPS 非TTM)")
         price, pdate = _us_price(sym)
         eps = c.get("eps_annual")
-        ccy = NON_USD_REPORTING.get(sym)
+        ccy = _reporting_currency(sym)
         if ccy:
             lines.append(f"(⚠️币种冲突: {sym} 财报BASIC_EPS={eps} 以{ccy}计, 现价以USD计, "
                          f"直接相除的PE倍数失真→跳过反向DCF, 绝不编造FX换算。"

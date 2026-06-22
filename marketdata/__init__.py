@@ -32,6 +32,7 @@ from .core import (
     MarketDataError,
     detect_market,
     reporting_currency,
+    reporting_currency_registry,
     trading_currency,
     is_reporting_currency_mismatch,
 )
@@ -45,6 +46,7 @@ __all__ = [
     "MarketDataError",
     "detect_market",
     "reporting_currency",
+    "reporting_currency_registry",
     "trading_currency",
     "is_reporting_currency_mismatch",
 ]
