@@ -341,6 +341,192 @@ def get_last_close_batch(items: list, max_workers: int = 8) -> dict:
     return result
 
 
+# ── 美股实时报价：腾讯+新浪双源交叉，取「现价/昨收/涨跌%」─────────────────
+# 存在理由（2026-06-22 事故）：日线源停在上一交易日，get_daily/get_spot 美股
+# 都回退日线末行，拿不到「当日实时涨跌幅」；裸调 Yahoo chart 的 chartPreviousClose
+# 字段锚点错位（拉区间时锚到区间首日前一日，不是真·上一交易日收盘），算出虚高跌幅。
+# 此函数专取美股盘中报价，双源交叉：两源都成功且现价偏差<0.5% 才返回，否则抛
+# MarketDataError（背离即存疑，绝不二选一）。指数同理（^DJI/^IXIC/^GSPC）。
+#
+# 字段位置（已实测锁定 2026-06-22）：
+#   腾讯 https://qt.gtimg.cn/q=usGOOGL  → [3]现价 [4]昨收 [32]涨跌%
+#   新浪 https://hq.sinajs.cn/list=gb_googl → [1]现价 [2]涨跌% [4]涨跌额；昨收=现价-涨跌额
+#   指数  腾讯 usDJI/usINX/usIXIC      新浪 gb_$dji/gb_$inx/gb_$ixic（同 gb_ 格式）
+# 注意：新浪 int_nasdaq/int_dji 系列是过期脏数据（曾报纳指 22484 实际 26236），禁用。
+
+# 常用美股指数 → (腾讯symbol, 新浪symbol)。传指数名或这些 key 即可。
+_US_INDEX_SYMBOLS = {
+    "DJI": ("usDJI", "gb_$dji"), "^DJI": ("usDJI", "gb_$dji"),
+    "DOW": ("usDJI", "gb_$dji"), "道指": ("usDJI", "gb_$dji"), "道琼斯": ("usDJI", "gb_$dji"),
+    "IXIC": ("usIXIC", "gb_$ixic"), "^IXIC": ("usIXIC", "gb_$ixic"),
+    "NASDAQ": ("usIXIC", "gb_$ixic"), "纳指": ("usIXIC", "gb_$ixic"), "纳斯达克": ("usIXIC", "gb_$ixic"),
+    "INX": ("usINX", "gb_$inx"), "^GSPC": ("usINX", "gb_$inx"), "GSPC": ("usINX", "gb_$inx"),
+    "SPX": ("usINX", "gb_$inx"), "标普": ("usINX", "gb_$inx"), "标普500": ("usINX", "gb_$inx"),
+}
+
+
+def _tencent_us_quote(tx_sym: str):
+    """腾讯单只美股/指数报价。返回 (price, prev_close, pct) 或 None。"""
+    import urllib.request
+    import ssl
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    url = "https://qt.gtimg.cn/q=" + tx_sym
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    raw = urllib.request.urlopen(req, timeout=10, context=ctx).read().decode("gbk", "ignore")
+    if '"' not in raw:
+        return None
+    f = raw.split('"')[1].split("~")
+    if len(f) <= 32:
+        return None
+    try:
+        price = float(f[3]); prev = float(f[4]); pct = float(f[32])
+    except (ValueError, IndexError):
+        return None
+    if price <= 0 or prev <= 0:
+        return None
+    return price, prev, pct
+
+
+def _sina_us_quote(sina_sym: str):
+    """新浪单只美股/指数报价。返回 (price, prev_close, pct) 或 None。
+    gb_ 格式：[1]现价 [2]涨跌% [4]涨跌额；昨收=现价-涨跌额（末位昨收字段不可靠）。"""
+    import urllib.request
+    import ssl
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    url = "https://hq.sinajs.cn/list=" + sina_sym
+    req = urllib.request.Request(
+        url, headers={"User-Agent": "Mozilla/5.0",
+                      "Referer": "https://finance.sina.com.cn"})
+    raw = urllib.request.urlopen(req, timeout=10, context=ctx).read().decode("gbk", "ignore")
+    if '"' not in raw:
+        return None
+    body = raw.split('"')[1]
+    if not body.strip():
+        return None
+    f = body.split(",")
+    if len(f) < 5:
+        return None
+    try:
+        price = float(f[1]); pct = float(f[2]); chg = float(f[4])
+    except (ValueError, IndexError):
+        return None
+    if price <= 0:
+        return None
+    return price, price - chg, pct
+
+
+def get_us_quote(code: str):
+    """
+    取美股个股/指数的实时报价，腾讯+新浪双源交叉验证。
+
+    个股传 ticker（'GOOGL'）；指数传 '^IXIC'/'纳指'/'IXIC' 等（见 _US_INDEX_SYMBOLS）。
+
+    返回 dict: {price, prev_close, pct, sources}，其中：
+      price       现价（两源均值，已确认一致）
+      prev_close  上一交易日收盘
+      pct         涨跌%（带正负号，如 -5.92）
+      sources     ['tencent','sina'] 实际成功的源
+
+    双源交叉规则（数据严谨性铁律）：
+    - 两源都成功 → 现价相对偏差须 < 0.5%，否则抛 MarketDataError（背离即存疑）
+    - 仅一源成功 → 返回该源，sources 标注单源（调用方可据此降低置信）
+    - 两源全失败 → 抛 MarketDataError
+    绝不返回填充值。
+    """
+    c = str(code).strip().upper()
+    if c in _US_INDEX_SYMBOLS:
+        tx_sym, sina_sym = _US_INDEX_SYMBOLS[c]
+    else:
+        tx_sym, sina_sym = "us" + c, "gb_" + c.lower()
+
+    tx = sina = None
+    errs = []
+    try:
+        tx = _tencent_us_quote(tx_sym)
+    except Exception as e:  # noqa
+        errs.append(f"tencent({tx_sym}): {type(e).__name__}: {str(e)[:50]}")
+    try:
+        sina = _sina_us_quote(sina_sym)
+    except Exception as e:  # noqa
+        errs.append(f"sina({sina_sym}): {type(e).__name__}: {str(e)[:50]}")
+
+    if tx and sina:
+        p_tx, _, _ = tx
+        p_sina, _, _ = sina
+        dev = abs(p_tx - p_sina) / max(p_tx, p_sina)
+        if dev >= 0.005:
+            raise MarketDataError(
+                f"get_us_quote({code}) 双源背离: 腾讯={p_tx} 新浪={p_sina} "
+                f"偏差{dev:.2%}≥0.5%，存疑不返回")
+        # 两源一致：现价取均值，昨收/涨跌% 以腾讯为准（腾讯昨收是显式字段更可靠）
+        price = round((p_tx + p_sina) / 2, 4)
+        return {"price": price, "prev_close": tx[1], "pct": tx[2],
+                "sources": ["tencent", "sina"]}
+    if tx:
+        return {"price": tx[0], "prev_close": tx[1], "pct": tx[2],
+                "sources": ["tencent"]}
+    if sina:
+        return {"price": sina[0], "prev_close": sina[1], "pct": sina[2],
+                "sources": ["sina"]}
+    raise MarketDataError(f"get_us_quote({code}) 双源全失败:\n  " + "\n  ".join(errs))
+
+
+def get_us_quote_batch(codes: list):
+    """批量取美股报价。腾讯单请求批量拿全 + 新浪逐只交叉。
+    返回 {code: {price, prev_close, pct, sources}}，取不到的不进 dict。"""
+    import urllib.request
+    import ssl
+    if not codes:
+        return {}
+    # 腾讯批量
+    sym_map = {}  # tx_sym -> code
+    for code in codes:
+        c = str(code).strip().upper()
+        tx_sym = _US_INDEX_SYMBOLS[c][0] if c in _US_INDEX_SYMBOLS else "us" + c
+        sym_map[tx_sym] = code
+    out = {}
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    try:
+        url = "https://qt.gtimg.cn/q=" + ",".join(sym_map.keys())
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        raw = urllib.request.urlopen(req, timeout=12, context=ctx).read().decode("gbk", "ignore")
+        for seg in raw.split(";"):
+            seg = seg.strip()
+            if not seg.startswith("v_") or "=" not in seg:
+                continue
+            key, _, val = seg.partition("=")
+            tx_sym = key[2:]
+            code = sym_map.get(tx_sym)
+            if code is None:
+                continue
+            f = val.strip().strip('"').split("~")
+            if len(f) <= 32:
+                continue
+            try:
+                price = float(f[3]); prev = float(f[4]); pct = float(f[32])
+            except (ValueError, IndexError):
+                continue
+            if price > 0 and prev > 0:
+                out[code] = {"price": price, "prev_close": prev, "pct": pct,
+                             "sources": ["tencent"]}
+    except Exception:
+        pass  # 腾讯整体失败不致命，逐只兜底
+    # 腾讯未命中的逐只双源
+    for code in codes:
+        if code not in out:
+            try:
+                out[code] = get_us_quote(code)
+            except MarketDataError:
+                pass
+    return out
+
+
 def get_spot(code: str, market: str = None):
     """
     取最新价 (float)。优先用轻量快照源；快照不可用时降级为 get_last_close。

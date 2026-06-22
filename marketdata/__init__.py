@@ -26,6 +26,8 @@ marketdata — 统一行情/财务取数层（多源 + 重试 + 自动降级）
 from .core import (
     get_daily,
     get_spot,
+    get_us_quote,
+    get_us_quote_batch,
     get_last_close,
     get_last_close_batch,
     safe_call,
@@ -40,6 +42,8 @@ from .core import (
 __all__ = [
     "get_daily",
     "get_spot",
+    "get_us_quote",
+    "get_us_quote_batch",
     "get_last_close",
     "get_last_close_batch",
     "safe_call",
