@@ -399,8 +399,13 @@
       "topic": "正交性与正交矩阵（Orthogonality & Orthogonal Matrix）——一组互不干扰、又不改变长度的理想坐标轴",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-21T20:03:00+08:00"
+    },
+    {
+      "topic": "采样策略（Temperature / Top-k / Top-p Sampling）——决定模型下一个词怎么挑的旋钮",
+      "category": "类目 18：Decoder-only 模型",
+      "taught_at": "2026-06-22T08:03:00+08:00"
     }
   ],
-  "total_count": 80,
-  "last_updated": "2026-06-21T20:03:00+08:00"
+  "total_count": 81,
+  "last_updated": "2026-06-22T08:03:00+08:00"
 }
