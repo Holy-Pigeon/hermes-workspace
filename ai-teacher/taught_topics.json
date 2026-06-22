@@ -409,8 +409,13 @@
       "topic": "KV Cache（键值缓存）——别让模型每吐一个字都把前文重算一遍",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-06-22T14:03:00+08:00"
+    },
+    {
+      "topic": "行列式（Determinant）——一个数字告诉你线性变换把空间撑大还是压扁了多少",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-22T20:03:00+08:00"
     }
   ],
-  "total_count": 82,
-  "last_updated": "2026-06-22T14:03:00+08:00"
+  "total_count": 83,
+  "last_updated": "2026-06-22T20:03:00+08:00"
 }
