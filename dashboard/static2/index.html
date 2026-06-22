@@ -1051,7 +1051,7 @@ function renderSys(d) {
       <div class="metric-card">
         <div class="m-lbl">内存占用</div>
         <div class="m-val ${pctColor(mem.pct)}">${mem.pct}%</div>
-        <div class="m-sub">${mem.used_gb}/${mem.total_gb} GB</div>
+        <div class="m-sub">${mem.used_gb}/${mem.total_gb} GiB</div>
       </div>
       <div class="metric-card">
         <div class="m-lbl">负载 (1m)</div>
@@ -1061,7 +1061,7 @@ function renderSys(d) {
       <div class="metric-card">
         <div class="m-lbl">Swap</div>
         <div class="m-val ${pctColor(mem.swap_pct)} ">${mem.swap_pct}%</div>
-        <div class="m-sub">${mem.swap_used_gb}/${mem.swap_total_gb} GB</div>
+        <div class="m-sub">${mem.swap_used_gb}/${mem.swap_total_gb} GiB</div>
       </div>
     </div>
 

@@ -650,12 +650,14 @@ def api_system():
             "load_15": round(load[2], 2),
         },
         "memory": {
-            "total_gb":  round(mem.total   / 1e9, 1),
-            "used_gb":   round(mem.used    / 1e9, 1),
-            "avail_gb":  round(mem.available / 1e9, 1),
+            # 内存用 GiB(1024^3),对齐 macOS 活动监视器/top 与厂商标称(16G=16GiB);
+            # 用 1e9 会把 16GiB 显示成 17.2,与用户认知不符。磁盘另算(见下,Finder 用十进制 GB)。
+            "total_gb":  round(mem.total   / 1024**3, 1),
+            "used_gb":   round(mem.used    / 1024**3, 1),
+            "avail_gb":  round(mem.available / 1024**3, 1),
             "pct":       mem.percent,
-            "swap_total_gb": round(swap.total / 1e9, 1),
-            "swap_used_gb":  round(swap.used  / 1e9, 1),
+            "swap_total_gb": round(swap.total / 1024**3, 1),
+            "swap_used_gb":  round(swap.used  / 1024**3, 1),
             "swap_pct":      swap.percent,
         },
         "disks": disks,
