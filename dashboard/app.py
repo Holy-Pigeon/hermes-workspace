@@ -34,6 +34,65 @@ app = Flask(__name__, static_folder=str(STATIC))
 # 密码从环境变量 DASHBOARD_PASSWORD 读取(不硬编码、不进 git)；
 # session 密钥从 DASHBOARD_SECRET_KEY 读，未设则每次启动随机生成(重启即登出，可接受)。
 DASHBOARD_PASSWORD = os.environ.get("DASHBOARD_PASSWORD", "")
+
+# ── API Token 体系(密码登录之外的第二条鉴权通道)──────────────────────────────
+# 用途:给手机/脚本/第三方一个可携带的 token(URL ?token= 或 X-Auth-Token 头),
+#       支持「有效期」与「最多 N 个不同 IP」两道闸,到期/超 IP/吊销即失效。
+# 安全:tokens.json 只存 sha256(token),绝不存明文;明文仅 issue 时返回一次,丢了只能重发。
+#       文件放 ~/.hermes 下(该仓库 .gitignore 黑名单覆盖凭证),0600 权限。
+TOKENS_FILE = HERMES_HOME / "dashboard_tokens.json"
+
+def _load_tokens() -> dict:
+    try:
+        return json.loads(TOKENS_FILE.read_text())
+    except Exception:
+        return {"tokens": []}
+
+def _save_tokens(data: dict):
+    fd = os.open(str(TOKENS_FILE), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def _hash_token(tok: str) -> str:
+    return hashlib.sha256(tok.encode()).hexdigest()
+
+def _check_token(tok: str, ip: str):
+    """校验 token。返回 (ok: bool, reason: str)。
+    通过时若是新 IP 会落库(消耗一个 IP 名额)。所有时间用 epoch 秒。"""
+    if not tok:
+        return False, "no_token"
+    h = _hash_token(tok)
+    data = _load_tokens()
+    now = time.time()
+    changed = False
+    for rec in data.get("tokens", []):
+        if rec.get("token_hash") != h:
+            continue
+        if rec.get("revoked"):
+            return False, "revoked"
+        exp = rec.get("expires")
+        if exp is not None and now > exp:
+            return False, "expired"
+        seen = rec.setdefault("seen_ips", [])
+        max_ips = rec.get("max_ips")
+        if ip not in seen:
+            if max_ips is not None and len(seen) >= max_ips:
+                return False, "ip_limit"   # 已满,且这是个新 IP → 拒
+            seen.append(ip)
+            rec["last_ip"] = ip
+            rec["last_seen"] = now
+            changed = True
+        else:
+            rec["last_ip"] = ip
+            rec["last_seen"] = now
+            changed = True
+        if changed:
+            try:
+                _save_tokens(data)
+            except Exception:
+                pass
+        return True, "ok"
+    return False, "unknown_token"
 app.secret_key = os.environ.get("DASHBOARD_SECRET_KEY") or secrets.token_hex(32)
 app.config.update(
     SESSION_COOKIE_HTTPONLY=True,
@@ -86,6 +145,16 @@ def _require_login():
         return None
     if session.get("authed"):
         return None
+    # ── Token 通道:?token= 或 X-Auth-Token 头 ──
+    tok = request.args.get("token") or request.headers.get("X-Auth-Token", "")
+    if tok:
+        ok, reason = _check_token(tok, _client_ip())
+        if ok:
+            return None
+        # token 提供了但无效:API 给明确原因(401),页面也直接拒(不跳登录,避免误导)
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "unauthorized", "token_reason": reason}), 401
+        return Response(f"token 无效:{reason}", status=401, mimetype="text/plain; charset=utf-8")
     # 未登录：API 返回 401 JSON，页面跳登录
     if request.path.startswith("/api/"):
         return jsonify({"error": "unauthorized"}), 401
