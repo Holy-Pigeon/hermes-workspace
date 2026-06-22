@@ -1,57 +1,34 @@
-# 工具系统：从理想 Schema 到真实实现，再用源码证伪
+# 工具系统：从一次工具调用的生命周期，看三家如何治理 Schema 与输出
 
-> 本文是一篇分析文（Analysis），不是单点实战经验条目。写法上先从「一个工具应该被设计成什么数据结构」的直觉推导出发，再请出 OpenCode 的真实源码逐条验证或证伪这套推导。Tool Schema 与 Tool Call/Observation 这两个话题在源码里是一体两面，故合并成一篇。
+> 本文是一篇分析文（Analysis）。按「问题引入 → 数据结构设计 → 流程分析」三段式展开，对照 Claude Code、OpenCode、Hermes 三家的真实实现，看一个 agent 工具系统在工程上到底要解决哪些问题、各自落到了什么数据结构、串成了什么流程。
 >
-> 证据级别在文中逐处标注：OpenCode 为完全开源一手源码（本机 clone，commit 见行内引用）；Claude Code 官方不开源，相关结论来自先前会话对官方二进制 v2.1.161 的 `strings` 取证，仍属一手二进制证据，但本次未复核，标注为「二进制取证·待复核」。
+> 证据级别逐处标注：
+> - **OpenCode** —— 完全开源，本机 clone 一手源码，commit 见行内引用。
+> - **Hermes** —— 本机可读 Python 源码（`~/.hermes/hermes-agent/`），一手。
+> - **Claude Code** —— 官方不开源，结论来自对官方二进制 v2.1.161（`/opt/homebrew/lib/node_modules/@anthropic-ai/claude-code/bin/claude.exe`，218MB）的 `strings` 取证，属一手二进制证据，本次已复核。文中凡引 CC 的字符串/常量均可在该二进制中检出。
 
 ---
 
-## 一、从问题出发：为什么工具不能只是 `run(command)`
+## 一、问题引入：一次工具调用要穿过多少道关
 
-Agent 的能力边界，本质上由「它能用什么方式影响外部世界」决定，而这件事完全由工具定义。一个朴素的 agent 可能只给模型一个万能工具：
+Agent 的能力边界，本质由「它能用什么方式影响外部世界」决定，而这件事完全由工具系统定义。把镜头拉到**一次工具调用的完整生命周期**，会发现它要依次穿过四道关，每一道都对应一个必须在工程上解决的问题：
 
-```
-run_shell(command: string)
-```
+1. **模型决定调用什么、传什么参数** —— 工具怎么向模型描述自己？参数错了怎么办？（Schema 与输入治理）
+2. **系统决定让不让这次调用发生** —— 读、写、执行的风险天差地别，权限怎么分级？（执行控制）
+3. **工具执行、产出结果** —— 结果可能是 3 行，也可能是 30 万字符，怎么不撑爆上下文？（输出治理）
+4. **结果回到模型、进入历史、最终被压缩** —— 历史里的旧输出怎么不拖垮长会话？（生命周期治理）
 
-这能跑通 demo，但工程上极不稳定，原因有三：
+这四个问题，三家都必须回答。下面先看它们各自把「工具」这个东西定义成了什么数据结构（决定了第 1、2 关的答案），再看一次调用怎么在这套结构上流动（第 3、4 关）。
 
-1. **太泛，模型决策空间爆炸**。一个 `command: string` 参数意味着模型每次都要现场拼一段 shell，拼错的概率、踩到副作用的概率、输出无法预测的概率都很高。
-2. **无法做权限分级**。读文件和 `rm -rf` 都走同一个入口，沙箱无从下手——要么全放开（危险），要么全拦截（没法用）。
-3. **输出不可控**。`cat 一个大文件` 和 `ls` 返回同一个通道，体积无上限，直接灌爆上下文。
-
-直觉上的改进方向是两条：**把工具拆细 + 给每个工具配结构化 schema**。拆细后变成：
-
-```
-search_files / read_file / edit_file / run_tests / run_build / git_diff / git_status
-```
-
-每个工具窄、可预测、可单独授权。这个方向是对的，下面用源码验证。但拆细之后，"schema 该长什么样"这件事，直觉会想当然，源码会打脸。
+一个反面参照能让问题更清楚：最朴素的 agent 只给模型一个万能工具 `run_shell(command: string)`。它能跑通 demo，但三关全失守 —— 参数是自由文本无从校验、读和 `rm -rf` 同一个入口无法分级、输出体积无上限。三家的工具系统，本质都是在系统性地修补这三个洞。
 
 ---
 
-## 二、理想 Schema vs 真实 Schema（第一处证伪）
+## 二、数据结构设计：工具被定义成什么
 
-### 2.1 直觉版本
+### 2.1 三家的「工具定义」核心字段
 
-凭直觉设计一个工具规格，多半会写成这样：
-
-```
-ToolSpec {
-  name, description,
-  input_schema:  { ... },
-  output_schema: { ... },     // 直觉：得声明返回结构
-  side_effect: false,         // 直觉：标注有没有副作用
-  permission_required: false, // 直觉：标注要不要权限
-  max_output_length, on_failure ...
-}
-```
-
-看起来很完备：输入输出都声明、副作用和权限都做成字段，调度器读字段就能决定拦不拦、怎么回滚。
-
-### 2.2 OpenCode 真实接口
-
-`packages/opencode/src/tool/tool.ts` 里 `Tool.Def` 的真实字段：
+**OpenCode —— `Tool.Def`**（`packages/opencode/src/tool/tool.ts`，一手源码）：
 
 ```ts
 export interface Def<Parameters, M extends Metadata> {
@@ -64,77 +41,82 @@ export interface Def<Parameters, M extends Metadata> {
 }
 ```
 
-`ExecuteResult` 长这样：
+**Hermes —— `ToolEntry`**（`tools/registry.py`，一手源码）：
 
-```ts
-export interface ExecuteResult<M> {
-  title: string
-  metadata: M
-  output: string                    // 注意：output 是运行期产物，不是声明期 schema
-  attachments?: FilePart[]
-}
+```python
+class ToolEntry:
+    __slots__ = (
+        "name", "toolset", "schema", "handler", "check_fn",
+        "requires_env", "is_async", "description", "emoji",
+        "max_result_size_chars", "dynamic_schema_overrides",
+    )
 ```
 
-**被证伪的三处**：
+**Claude Code** —— 二进制里检出工具以常量名登记（`DnO="Read"`、`MnO="Write"`、`_DK="Grep"`、Bash 工具等），并存在一个关键的布尔维度 `isDeferred` / `deferredBuiltinTools`（`/context` 面板把工具按 `systemTools` 与 `deferredBuiltinTools` 分列渲染）。
 
-| 直觉字段 | 真实情况 |
-|---|---|
-| `output_schema` | **不存在**。只有运行时的 `output: string`。模型不被告知返回结构，工具自己决定怎么把结果序列化成文本/附件喂回去。 |
-| `side_effect: bool` | **不存在**。没有任何静态的"副作用"声明字段。 |
-| `permission_required: bool` | **不存在**。权限不是声明出来的字段，而是命令式地在 `execute` 里临场询问（见第三节）。 |
+### 2.2 三个值得记住的设计共性与差异
 
-只有 `input_schema`（`parameters`）是真实存在且核心的——它驱动 AI SDK 的 function-calling，参数不合法会抛 `InvalidArgumentsError`，其 `message` getter 直接生成喂回模型的纠错话术："The X tool was called with invalid arguments… Please rewrite the input so it satisfies the expected schema."（一手源码，tool.ts）。这就是工具层最重要的一条自愈回路：**参数错 → 结构化报错 → 模型重写输入**，全靠 input schema 撑着。
+**共性一：输入 schema 是绝对核心，输出结构不进 schema。**
 
-> 启发：设计自己的工具协议时，「输入 schema 严格 + 报错可喂回」远比「把副作用/权限做成声明字段」重要。声明式的 side_effect 字段在真实系统里没出现，因为它是个伪需求——副作用和权限是**行为**，要在执行点用行为控制，不是用元数据标签。
+三家的工具定义里，**输入参数 schema 都是一等公民**，但**没有一家在工具定义里声明"输出 schema"**。OpenCode 的 `ExecuteResult` 里 `output: string` 是运行期产物而非声明期契约；Hermes 的 handler 直接返回 JSON 字符串；CC 的工具结果也是运行时序列化的文本。
+
+> 设计含义：模型不被预先告知工具会返回什么结构，工具自己决定怎么把结果序列化成文本喂回。输出的"约束"不靠 schema 声明，而靠运行时的长度治理（见第三节）。这是三家一致的取舍 —— 输入要严（驱动 function-calling），输出要治（驱动上下文预算），两件事用两套机制。
+
+**共性二：权限不是数据结构里的字段，是执行点的行为。**
+
+三家的工具定义里**都没有 `side_effect` 或 `permission_required` 这类声明字段**。权限分级是在执行时命令式地做的：
+
+- OpenCode：`ctx` 上挂 `ask()`，工具动手前调用。`shell.ts` 执行前 `ctx.ask({ permission: "bash" })`，越权访问外部目录再 `ctx.ask({ permission: "external_directory" })`；`write.ts` / `edit.ts` 各自 ask；纯读工具 `read` / `grep` / `glob` 不 ask（一手源码）。
+- CC：二进制里检出独立的 permission 模式机（`permission_mode`、`ask`/`allow`/`deny` 路径），按工具与参数在调用点决策。
+- Hermes：`handle_function_call` 里走 pre-tool-call hook + 编辑审批链，同样在执行点拦截。
+
+> 设计含义：副作用和权限是**行为属性**，依赖运行时参数（同一个 shell 工具，`ls` 与 `rm -rf` 风险不同），无法在静态 schema 上用一个布尔标签表达。三家都把它下沉到执行点，正是这个原因。而第一节那个 `run_shell` 之所以没法做权限，恰恰因为它没拆细 —— 工具拆得越细，执行点的分级才越精确。
+
+**差异点：只有 Hermes 把"输出上限"做成了结构化字段。**
+
+Hermes 的 `ToolEntry` 有 `max_result_size_chars`，注册时显式声明（`file_tools.py`：`read_file` / `write_file` / `patch` / `search_files` 全部 `max_result_size_chars=100_000`；`web_tools` / `terminal_tool` / `code_execution_tool` 同）。OpenCode 和 CC 则把对应阈值写成模块级常量（OpenCode `MAX_LINES=2000`；CC Read 默认 `25000` tokens）。
+
+> 设计含义：这是三家最有意思的分叉。Hermes 把"每个工具允许多大输出"提升为**可按工具声明、registry 统一查询**的元数据（`registry.get_max_result_size(name)`），代价是多一个字段；OpenCode/CC 把它留在各工具内部作为常量，定义更瘦但阈值分散。没有对错 —— Hermes 选择了"输出预算可集中治理"，另两家选择了"工具定义最小化"。
 
 ---
 
-## 三、权限：命令式 `ctx.ask()`，不是声明式字段（承上）
+## 三、流程分析：一次调用怎么在这套结构上流动
 
-真实工具的权限模型是临场询问。`ctx` 上挂着 `ask()`，工具在真正动手前调用它，由用户/策略决定放行还是拦：
+### 3.1 第一关 —— 输入治理：参数错了能自愈
 
-- `shell.ts:288` —— 执行命令前 `ctx.ask({ permission: "bash" })`；越权访问外部目录还要额外一次 `ctx.ask({ permission: "external_directory" })`（shell.ts:274）。
-- `write.ts:54`、`edit.ts:102 / :145` —— 写文件、改文件各自 `ctx.ask`。
-- 纯读工具（`read` / `grep` / `glob`）**不 ask**——读操作默认放行。
+三家都把"参数不合法"做成了**可喂回模型的结构化纠错**，而不是硬失败：
 
-（以上全部 OpenCode 一手源码。）
+- **OpenCode**：参数不满足 `parameters` schema 抛 `InvalidArgumentsError`，其 message 直接生成喂回话术："The X tool was called with invalid arguments… Please rewrite the input so it satisfies the expected schema."（`tool.ts`，一手）。
+- **Hermes**：先 `coerce_tool_args()` 容错 —— 开源模型常把 `42` 写成 `"42"`、把 `["a"]` 写成 `"a"`，Hermes 按 schema 类型自动强转/包装（`model_tools.py:606`），强转不了才报错；报错经 `_sanitize_tool_error()` 截断到 2000 字符（`_TOOL_ERROR_MAX_LEN=2000`）再喂回。
+- **CC**：二进制里检出输入校验失败的结构化报错路径（`Invalid … request`、schema 不匹配提示）。
 
-这印证了第二节的拆细方向：**正因为工具拆细了，权限才能精确分级**——读自动放行、写要确认、shell 要确认且外溢目录二次确认。如果还是一个 `run_shell`，这套分级根本无处落脚。权限是「行为发生点的一次命令式询问」，而不是「schema 上的一个布尔标签」，这是直觉最容易想反的地方。
+> 流程要点：**参数错 → 结构化报错 → 模型重写输入**，这是工具层最重要的一条自愈回路。它让"模型偶尔传错参"从致命错误降级为一次便宜的重试。稳定性不来自模型更聪明，而来自工具把错误变成了可恢复的结构化反馈。Hermes 比另两家多走一步"先容错强转再报错"，因为它要兼容更多开源模型的脏输出。
 
----
+### 3.2 第二关 —— 执行控制：调用与结果的承载形态
 
-## 四、Tool Call / Observation：真实形态是一个 state 机器，不是两个对象
+工具执行时，"这次调用"和"它的结果"怎么被记录？OpenCode 给了最清晰的答案：**不是两个对象，是一个对象的状态迁移**。
 
-### 4.1 直觉版本
-
-直觉会把"调用"和"观测"拆成两个独立结构：
-
-```
-ToolCall    { id, tool, input, timestamp, status }
-Observation { call_id, summary, raw_output_ref }   // 直觉：原始输出存外部，上下文放引用
-```
-
-### 4.2 真实形态：单个 ToolPart 的 state 机器
-
-OpenCode 把一次工具调用持久化成 message 里的一个 **ToolPart**，调用与结果合在同一个 part 的 `state` 上，随生命周期推进（`message-v2.ts`）：
+OpenCode 把一次调用持久化成 message 里的一个 **ToolPart**（`session/message-v2.ts`，一手）：
 
 ```
 ToolPart {
   callID
   state: {
     status: pending | running | completed | error
-    input              // 调用参数
-    output / metadata  // completed 后才有
-    time               // 时间戳
+    input              // running 时写入
+    output / metadata  // completed 后补上
+    time
   }
 }
 ```
 
-直觉的"两个对象"在真实系统里是**一个对象的状态迁移**：`pending → running → completed/error`。`input` 在 running 时就写入，`output` 在 completed 时补上。好处是调用与结果天然对齐、不会错配，UI 也能实时渲染中间态。
+调用与结果合在同一个 part 的 `state` 上随生命周期推进：`pending → running → completed/error`。好处是调用与结果天然对齐、不会错配，UI 还能实时渲染中间态。Hermes 的 `handle_function_call` 同步返回结果字符串、由上层会话组装成对应的 tool message，CC 二进制里也检出 `tool_use` / `tool_result` 配对校验（id 必须一一对应，否则抛错）—— 三家都保证了"调用-结果"的强配对，只是 OpenCode 把它显式建模成了状态机。
 
-### 4.3 第二处证伪：raw_output 不是"存外部 + 放引用"，而是"截断预览 + 落盘 + 让模型按需再取"
+### 3.3 第三关 —— 输出治理：超限不截断，而是"落盘 + 预览 + 教模型按需取"
 
-直觉里的 `raw_output_ref: "artifact://logs/call_001.txt"`（上下文只放一个引用 URI）听起来优雅，但**真实实现不是引用模型，是截断模型**。`tool/truncate.ts`（OpenCode 一手源码）：
+这是三家投入最多、也最趋同的一关。核心模式完全一致：**小输出直接进上下文，大输出落盘 + 只放预览片段 + 给一句 hint 教模型怎么取回全文**。
+
+**OpenCode**（`tool/truncate.ts`，一手）：
 
 ```ts
 export const MAX_LINES = 2000
@@ -142,64 +124,61 @@ export const MAX_BYTES = 50 * 1024          // 50 KB
 const RETENTION = Duration.days(7)
 ```
 
-`output(text)` 的真实行为：
+- 在限内（≤2000 行且 ≤50KB）→ 原样返回，不落盘。
+- 超限 → 全文写到 TRUNCATION_DIR，上下文放：预览 + `...N lines/bytes truncated...` + hint："Full output saved to: {file}. Use Grep to search the full content or Read with offset/limit to view specific sections."
+- 落盘文件每小时清理、保留 7 天。
 
-1. **在限内**（≤2000 行且 ≤50KB）→ 原样返回，`truncated: false`。小输出根本不落盘，直接进上下文。
-2. **超限** → 把**全文写到 TRUNCATION_DIR**，上下文里只放：`预览（头部或尾部 N 行）` + `...N lines/bytes truncated...` + 一句 **hint**，教模型怎么取回全文：
+**Hermes**（`tools/tool_result_storage.py` + `budget_config.py`，一手）—— 做成了**三层预算**，docstring 原话：
 
-   > "The tool call succeeded but the output was truncated. Full output saved to: {file}. Use Grep to search the full content or Read with offset/limit to view specific sections."
-
-3. 落盘文件每小时清理一次，保留 7 天（`Schedule.spaced(Duration.hours(1))` + `RETENTION`）。
-
-和直觉版的关键差异：
-
-| 直觉（artifact 引用） | 真实（truncate 落盘） |
-|---|---|
-| 上下文放一个 URI，模型看不到任何内容 | 上下文放**预览片段**，模型能看到头/尾，常常够用了 |
-| 取回靠专门的 artifact resolver | 取回靠**复用现成的 Grep / Read offset+limit**，零新机制 |
-| 所有输出都走外部 | **只有超限的才落盘**，小输出直接进上下文，省一次 IO |
-
-更狠的一个细节——**带 task 子代理权限时，hint 会变**（truncate.ts，`hasTaskTool`）：
-
-> "…Use the **Task tool to have explore agent process this file** with Grep and Read (with offset/limit). Do NOT read the full file yourself - delegate to save context."
-
-即：超大输出不仅落盘，还主动引导模型**把读取委托给子代理**，让脏活在隔离的子上下文里发生，主上下文只收摘要。这是"上下文预算"思维渗透到工具输出层的直接证据。
-
-### 4.4 还有一层：历史里的工具输出会被二次截断
-
-即便当时进了上下文，等会话触发 compaction，历史里的工具输出还会再砍一刀（`message-v2.ts` 的 `truncateToolOutput`，一手源码）：
-
-```ts
-function truncateToolOutput(text, maxChars) {
-  if (!maxChars || text.length <= maxChars) return text
-  const omitted = text.length - maxChars
-  return `${text.slice(0, maxChars)}\n[Tool output truncated for compaction: omitted ${omitted} chars]`
-}
+```python
+DEFAULT_RESULT_SIZE_CHARS  = 100_000   # Layer 2：单个结果超此阈值就持久化
+DEFAULT_TURN_BUDGET_CHARS  = 200_000   # Layer 3：整轮所有结果总预算
+DEFAULT_PREVIEW_SIZE_CHARS = 1_500     # 持久化后留在上下文的预览大小
 ```
 
-所以工具输出在生命周期里被治理了**两次**：产出时（truncate.ts，落盘可回取）、压缩时（message-v2.ts，直接砍头不可回取）。前者保护"当下这一轮别爆"，后者保护"历史别拖垮长会话"。
+- Layer 1（工具内）：`search_files` 等工具先自截一道。
+- Layer 2（单结果）：超 `max_result_size_chars`（registry 里按工具声明的那个字段，默认 100K）→ `maybe_persist_tool_result()` 把全文写进 sandbox，上下文换成 `预览(1500字符) + 路径 + "Use the read_file tool with offset and limit to access specific sections."`
+- Layer 3（整轮）：一轮内所有结果加起来超 `MAX_TURN_BUDGET_CHARS`(200K)，`enforce_turn_budget()` 挑最大的几个非持久化结果再压。
+
+**Claude Code**（二进制，一手）：
+
+- Read 工具有 token 上限 `SHO=25000`（可被 `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS` 覆盖），超限抛 `MaxFileReadTokenExceededError`，message 原文教模型："Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file."
+- Bash 工具输出有字符闸，hint 原文："If the output exceeds ${...} characters, output will be truncated before being returned to you."
+- 更进一步，CC 的 `/context` 面板会**主动给省 token 建议**：Bash 结果占用过高 → "Pipe output through head, tail, or grep"；Read 占用过高 → "Use offset and limit parameters to read only the sections you need"；Grep 占用过高 → "Add more specific patterns or use the glob or type parameter"。
+
+> 流程要点：三家都不约而同选了**"截断预览 + 落盘 + 复用现成 Read/Grep 取回"**，而不是"上下文放一个 artifact URI、用专门的 resolver 取回"。原因是后者要发明新机制，而 `Read offset/limit + Grep` 模型已经会用、零学习成本。差异只在分层粒度：CC 按工具设 token 闸、OpenCode 单层行/字节闸、Hermes 三层字符预算。Hermes 分层最细，因为它要同时管"单结果别爆"和"整轮别爆"两件事。
+
+补一个 OpenCode 的精妙细节：带 task 子代理权限时，truncate 的 hint 会变（`truncate.ts` 的 `hasTaskTool`）——"Use the Task tool to have explore agent process this file… Do NOT read the full file yourself - delegate to save context."。即超大输出不仅落盘，还主动引导模型**把读取委托给子代理**，让脏活在隔离的子上下文里发生。这是"上下文预算"思维渗透到工具输出层的直接证据。
+
+### 3.4 第四关 —— 生命周期治理：历史里的旧输出会被二次压缩
+
+即便当时进了上下文，等会话触发 compaction，历史里的工具输出还会再砍一刀：
+
+- **OpenCode**：`message-v2.ts` 的 `truncateToolOutput(text, maxChars)` —— 超限直接 `slice(0, maxChars)` + `[Tool output truncated for compaction: omitted N chars]`，**砍头不可回取**（一手）。
+- **CC**：二进制检出 compaction 期的文件引用降级 —— "Note: {filename} was read before the last conversation was summarized, but the contents are too large to include. Use Read tool if you need to access it."。即压缩时把"曾经读过的大文件内容"替换成一句"要的话自己重读"。
+
+> 流程要点：工具输出在生命周期里被治理了**两次**：产出时（落盘可回取，保护"当下这一轮别爆"）、压缩时（砍头/降级为引用，保护"历史别拖垮长会话"）。两道闸目标不同、可逆性不同，缺一不可。
+
+### 3.5 额外一关 —— 工具太多本身也是上下文负担：延迟加载
+
+当工具数量膨胀（尤其接了一堆 MCP），光是"所有工具的 schema"就能吃掉可观的上下文。CC 和 Hermes 都做了**延迟加载/按需暴露**：
+
+- **CC**：`deferredBuiltinTools` —— 部分内置工具默认不进上下文，`/context` 面板单独列出 "loaded on-demand"，MCP 工具也标 "(loaded on-demand)"。
+- **Hermes**：`tool_search` bridge（`tools/tool_search.py`）—— `tool_search` / `tool_describe` / `tool_call` 三件套，模型先搜目录、再描述、再调用，未召回的工具不占 schema 预算。且 bridge 严格按 session 的 toolset 作用域过滤，受限会话（subagent、kanban worker）无法借 bridge 越权调用。
+
+> 流程要点：这关在 OpenCode 里目前未见对应机制，是 CC / Hermes 在"工具规模化"上多走的一步 —— 工具数量本身就是 context 成本，延迟加载把"工具目录"也纳入了预算治理。
 
 ---
 
-## 五、输出长度的多道闸（read 工具为例）
+## 四、把三段收回到可执行结论
 
-`read.ts`（一手源码）单独又设了三道限制，说明"最大输出长度"不是一个全局常量，而是**每个工具按自己语义分别设闸**：
+1. **输入要严、报错要能喂回；输出不进 schema、靠运行时治理。** 三家一致：function-calling 的稳定来自"输入 schema 严 + 参数错可自愈重试"，而不是声明输出结构。设计自己的工具协议时，把力气花在"输入校验 + 结构化纠错话术"上，回报最大。
 
-```ts
-const DEFAULT_READ_LIMIT = 2000          // 默认读 2000 行
-const MAX_LINE_LENGTH    = 2000          // 单行超 2000 字符就截，附 "(line truncated...)"
-const MAX_BYTES          = 50 * 1024     // 总字节闸
-```
+2. **权限是执行点的行为，不是数据结构里的字段。** 三家都没有 `side_effect` / `permission_required` 声明字段，全部在执行点命令式分级（读放行、写确认、shell 确认且外溢二次确认）。前提是工具拆得够细 —— `run_shell(command)` 没法分级，正因为它没拆。
 
-三道闸正交：行数闸防"文件太长"、单行闸防"某行是压缩过的超长 minified JS"、字节闸防"行数不多但每行巨大"。直觉里"max_output_length 一个数搞定"在真实工具里是分维度的多个常量，因为撑爆上下文的姿势不止一种。
+3. **大输出统一走"落盘 + 预览 + 复用 Read/Grep 按需取回"，且要治理两次。** 别为取回全量输出发明 artifact 协议；产出时落盘可回取、压缩时砍头降级。Hermes 把它做成三层字符预算（单结果 100K / 整轮 200K / 预览 1.5K）、CC 按工具设 token 闸并主动给省 token 建议、OpenCode 单层行字节闸并能引导委托子代理 —— 分层粒度可按自己系统的会话长度需求选。
 
----
-
-## 六、把推导收回到三条可执行结论
-
-1. **工具要窄、输入 schema 要严、报错要能喂回模型**。这是稳定性的真正来源——不是模型更聪明，而是工具把模型的决策空间收窄了、把错误变成了可自愈的结构化反馈。`run_shell(command)` 的不稳定是设计缺陷，不是模型缺陷。
-2. **副作用和权限是行为，不是字段**。别在 schema 上堆 `side_effect / permission_required` 这类声明标签（真实系统里压根没有）；要在执行点用命令式询问做分级——读放行、写确认、shell 确认。
-3. **工具输出要分级治理，且优先复用现成工具取回**。在限内直接进上下文；超限落盘 + 给预览 + 教模型用 Grep/Read 按需取（大到一定程度就引导委托子代理）；历史里再随 compaction 二次截断。不要为"取回全量输出"发明 artifact 协议——`Read offset/limit + Grep` 已经够了。
+4. **工具数量本身是 context 成本。** 工具一多就上延迟加载（CC `deferredBuiltinTools` / Hermes `tool_search` bridge），别让一堆用不到的工具 schema 白占预算。
 
 对我自己手动用 agent 的启发：当某个工具老让 agent 跑偏，先别怪模型，去看这个工具的**输入 schema 是不是太松、输出是不是没设闸**。给工具加约束的杠杆，远大于换个更强的模型。
 
@@ -209,15 +188,25 @@ const MAX_BYTES          = 50 * 1024     // 总字节闸
 
 | 结论 | 来源 | 级别 |
 |---|---|---|
-| Tool.Def 无 output_schema/side_effect/permission_required | `tool/tool.ts` | OpenCode 一手源码 |
-| InvalidArgumentsError 自愈回路 | `tool/tool.ts` | 一手源码 |
-| 权限走命令式 ctx.ask（shell/write/edit 各自 ask，read 不 ask） | `tool/shell.ts:274,288`、`write.ts:54`、`edit.ts:102,145` | 一手源码 |
-| ToolPart state 机器（pending/running/completed/error） | `session/message-v2.ts` | 一手源码 |
-| 输出 truncate：MAX_LINES=2000 / MAX_BYTES=50KB / 7天保留 / 落盘+hint | `tool/truncate.ts` | 一手源码 |
-| 带 task 权限时 hint 引导委托子代理 | `tool/truncate.ts` `hasTaskTool` | 一手源码 |
-| compaction 期二次截断 truncateToolOutput | `session/message-v2.ts` | 一手源码 |
-| read 三道闸（行数/单行/字节） | `tool/read.ts:13-16` | 一手源码 |
-| Claude Code 的对应机制 | v2.1.161 二进制 strings | 二进制取证·待复核（本次未复核） |
+| OpenCode `Tool.Def` 字段 / `ExecuteResult.output` 运行期产物 | `tool/tool.ts` | OpenCode 一手源码 |
+| OpenCode `InvalidArgumentsError` 自愈话术 | `tool/tool.ts` | 一手源码 |
+| OpenCode 权限走命令式 `ctx.ask`（shell/write/edit ask，read 不 ask） | `tool/shell.ts`、`write.ts`、`edit.ts` | 一手源码 |
+| OpenCode `ToolPart` 状态机 pending/running/completed/error | `session/message-v2.ts` | 一手源码 |
+| OpenCode truncate：MAX_LINES=2000 / MAX_BYTES=50KB / 7天保留 + hint | `tool/truncate.ts` | 一手源码 |
+| OpenCode 带 task 权限时引导委托子代理 | `tool/truncate.ts` `hasTaskTool` | 一手源码 |
+| OpenCode compaction 期 `truncateToolOutput` 砍头 | `session/message-v2.ts` | 一手源码 |
+| Hermes `ToolEntry` 字段含 `max_result_size_chars` | `tools/registry.py` | 一手源码 |
+| Hermes `register()` 显式声明 max_result_size_chars=100_000 | `tools/file_tools.py` 等 | 一手源码 |
+| Hermes `coerce_tool_args` 类型容错强转 | `model_tools.py:606` | 一手源码 |
+| Hermes `_sanitize_tool_error` 截断 2000 字符 | `model_tools.py:583` | 一手源码 |
+| Hermes 三层输出预算 100K/200K/1.5K | `tools/tool_result_storage.py`、`budget_config.py` | 一手源码 |
+| Hermes `tool_search` bridge 延迟加载 + toolset 作用域过滤 | `tools/tool_search.py`、`model_tools.py` | 一手源码 |
+| CC Read token 上限 25000 + MaxFileReadTokenExceededError hint | v2.1.161 二进制 strings | 二进制取证·已复核 |
+| CC Bash 字符闸 hint 原文 | v2.1.161 二进制 strings | 二进制取证·已复核 |
+| CC `/context` 省 token 建议（head/tail/grep、offset/limit、glob） | v2.1.161 二进制 strings | 二进制取证·已复核 |
+| CC `deferredBuiltinTools` 延迟加载 | v2.1.161 二进制 strings | 二进制取证·已复核 |
+| CC compaction 期文件引用降级提示 | v2.1.161 二进制 strings | 二进制取证·已复核 |
+| CC tool_use/tool_result id 强配对校验 | v2.1.161 二进制 strings | 二进制取证·已复核 |
 
 ---
 记录日期：2026-06-22
