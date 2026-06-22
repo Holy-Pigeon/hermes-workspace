@@ -32,7 +32,7 @@
 ## Notion 数据库字段
 
 - **Name**（标题）/ **Topic**（主题）
-- **Category**（主题分类，单选）：上下文管理 / Agent Loop / 工具调用 / 记忆系统 / 多智能体 / Prompt 工程 / 模型选型 / 框架配置 / 其他
+- **Category**（主题分类，单选）：**只能从下方 9 类 canonical taxonomy 选一个**，禁止随手新造分类（见「分类 Taxonomy」节）
 - **Tags**（多选标签）：一条经验常跨多个点，自由打标
 - **Maturity**（成熟度，单选）：验证过 / 经验法则 / 待验证 —— 体现实战可信度
 - **Lesson Date**（记录日期）/ **Status** / **Source**（固定 agent-notes）
@@ -57,9 +57,28 @@
 同 ai-teacher：LaTeX 用 `$...$` / `$$...$$`，禁塞代码块，禁 Unicode 上下标。
 （agent 经验里数学少，但偶有复杂度/概率表达式时遵守此约束。）
 
+## 分类 Taxonomy（Category 唯一合法取值）
+
+Category 字段为单选，**只能从以下 9 类选一个**。这是 canonical 命名，禁止随手新造或改写——
+一条经验若跨多类，挑「最核心的机制层」归类，其余维度用 Tags 表达。
+
+| # | Category（canonical） | 覆盖范围 |
+|---|---|---|
+| 1 | **Context Engineering** | 给模型组织上下文：compaction、context rot、注意力预算、prompt 拼装、检索注入、上下文窗口管理 |
+| 2 | **Tool Use** | 让模型调用工具：MCP / Shell / Browser / File / IDE 等所有工具调用机制 |
+| 3 | **Agent Loop** | 控制循环：ReAct 循环、停止条件、错误重试、循环预算 |
+| 4 | **Planning & Reasoning** | 拆任务、规划、反思：todo 分解、计划模式、self-reflection |
+| 5 | **Memory** | 管理记忆：长期/短期记忆、向量库、记忆写回与召回 |
+| 6 | **Multi-Agent** | 多子任务协作：subagent、编排、并行 workstream、上下文隔离 |
+| 7 | **Permissions & Sandbox** | 控制权限、安全、沙箱、回滚 |
+| 8 | **Telemetry & Feedback** | 记录用户反馈和执行轨迹，用来改进产品和训练模型 |
+| 9 | **Product & UX** | 把模型能力变成桌面端用户体验 |
+
+新增第 10+ 类前必须先问用户拍板，不得自行扩充。
+
 ## 条目结构
 
 见 `TEMPLATE.md`。核心七段：一句话结论 → 场景触发 → **机制原理（灵魂）** → 我的做法 → 反直觉/踩坑 → 适用边界 → 关联。
 机制原理段是本栏目区别于普通"操作笔记"的关键：必须讲清「为什么 agent 会这样表现」。
 
-*最后更新：2026-06-22*
+*最后更新：2026-06-22（新增 9 类 canonical taxonomy）*
