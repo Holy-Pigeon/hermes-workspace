@@ -404,8 +404,13 @@
       "topic": "采样策略（Temperature / Top-k / Top-p Sampling）——决定模型下一个词怎么挑的旋钮",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-06-22T08:03:00+08:00"
+    },
+    {
+      "topic": "KV Cache（键值缓存）——别让模型每吐一个字都把前文重算一遍",
+      "category": "类目 18：Decoder-only 模型",
+      "taught_at": "2026-06-22T14:03:00+08:00"
     }
   ],
-  "total_count": 81,
-  "last_updated": "2026-06-22T08:03:00+08:00"
+  "total_count": 82,
+  "last_updated": "2026-06-22T14:03:00+08:00"
 }
