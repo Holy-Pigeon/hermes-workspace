@@ -291,6 +291,19 @@
         "研究复盘"
       ],
       "heartbeat_file": "~/hermes-workspace/call-alpha-tracker"
+    },
+    {
+      "id": "artifact-freshness",
+      "name": "产出物新鲜度看门狗",
+      "icon": "🧊",
+      "desc": "cron-health的产出侧对偶:盯文件型产出是否静默冻结(job绿灯但artifact停更),读projects.json比对mtime和freshness SLA报STALE_OUTPUT",
+      "ports": null,
+      "tags": [
+        "基础设施",
+        "元监控",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/artifact-freshness"
     }
   ]
 }
