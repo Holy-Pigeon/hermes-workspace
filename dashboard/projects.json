@@ -278,6 +278,19 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/valuation-trigger/history.json"
+    },
+    {
+      "id": "call-alpha-tracker",
+      "name": "呼叫Alpha记分卡",
+      "icon": "🎯",
+      "desc": "跟踪每条研究呼叫的基准调整后呼叫alpha,补齐相对收益计分(与ledger事后Brier互补)",
+      "ports": null,
+      "tags": [
+        "计分",
+        "相对收益",
+        "研究复盘"
+      ],
+      "heartbeat_file": "~/hermes-workspace/call-alpha-tracker"
     }
   ]
 }
