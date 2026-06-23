@@ -133,6 +133,9 @@ def main():
 
     if args.json:
         print(json.dumps(out, ensure_ascii=False, indent=2))
+    elif args.quiet and not out["alert_count"]:
+        # watchdog 纪律: --quiet 无冻结时彻底静默(空 stdout), 避免 cron 每轮推噪音
+        pass
     else:
         alerts = out["alerts"]
         if not alerts:
