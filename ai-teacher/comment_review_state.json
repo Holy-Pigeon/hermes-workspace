@@ -82,9 +82,11 @@
     "387d8689-fc19-8120-bc0d-d6a711f6c8c8",
     "386d8689-fc19-812b-8a49-d22872ca12ef",
     "387d8689-fc19-8133-9f2a-dffc819aa7c7",
-    "387d8689-fc19-8103-9d45-d16ac471d01c"
+    "387d8689-fc19-8103-9d45-d16ac471d01c",
+    "388d8689-fc19-81d1-a48a-ebc28aecf104"
   ],
   "page_titles": {
+    "388d8689-fc19-81d1-a48a-ebc28aecf104": "向量投影（Vector Projection）——把一个向量在另一个方向上的影子量出来",
     "387d8689-fc19-8103-9d45-d16ac471d01c": "行列式（Determinant）——一个数字告诉你线性变换把空间撑大还是压扁了多少",
     "387d8689-fc19-8133-9f2a-dffc819aa7c7": "KV Cache（键值缓存）——别让模型每吐一个字都把前文重算一遍",
     "387d8689-fc19-8120-bc0d-d6a711f6c8c8": "采样策略（Temperature / Top-k / Top-p Sampling）——决定模型下一个词怎么挑的旋钮",
@@ -169,7 +171,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 18,
+  "cursor": 71,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -190,6 +192,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-06-22T20:01:54+0800",
-  "last_order_refresh": "2026-06-22T20:03:33+0800"
+  "last_review": "2026-06-23T08:00:40+0800",
+  "last_order_refresh": "2026-06-23T08:03:46+0800"
 }
