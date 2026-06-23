@@ -424,8 +424,13 @@
       "topic": "矩阵的迹（Trace）——一个数字浓缩了对角线，却藏着旋转不变的秘密",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-23T14:03:00+08:00"
+    },
+    {
+      "topic": "线性无关与基（Linear Independence & Basis）——用最少的方向，张出整个空间",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-23T20:03:00+08:00"
     }
   ],
-  "total_count": 85,
-  "last_updated": "2026-06-23T14:03:00+08:00"
+  "total_count": 86,
+  "last_updated": "2026-06-23T20:03:00+08:00"
 }
