@@ -62,15 +62,16 @@ DIRECTION_STANCE = {
     "neutral": 0,
 }
 
-# 标的代码 → 市场 + 基准。HK 用恒生, A 用沪深300, US 暂用纳指(若取得到)
+# 标的代码 → 市场 + 基准。HK 用恒生, A 用沪深300, US 用纳指100(QQQ)
 def market_of(symbol):
-    code = "".join(ch for ch in symbol if ch.isdigit() or ch.isalpha())
-    # 港股: 5位数字(09926/00700) 或含HK
+    # 港股: 5位数字(09926/00700) / A股: 6位数字 / 美股: 无数字(纯字母代码 AAPL/MSFT)
     digits = "".join(ch for ch in symbol if ch.isdigit())
     if len(digits) == 5:
         return "HK"
     if len(digits) == 6:
         return "A"
+    if len(digits) == 0:
+        return "US"   # us-tech-scout 暗区 sleeve 的纯字母代码, 否则会被默认错配到沪深300
     return "A"
 
 
@@ -112,6 +113,12 @@ def fetch_benchmark_series(market):
             col = "close" if "close" in df.columns else df.columns[-1]
             s = {str(d): float(c) for d, c in zip(df["date"], df[col])}
             return s, "恒生指数", "sina:stock_hk_index_daily_sina"
+    if market == "US":
+        # 复用已验证的 marketdata 美股日线通道(stock_us_daily), QQQ=纳指100 ETF 作科技基准
+        from marketdata import get_daily
+        df = get_daily("QQQ", market="US")
+        s = {str(d): float(c) for d, c in zip(df["date"], df["close"]) if c == c}
+        return s, "纳指100(QQQ)", "marketdata:get_daily(US)"
     raise RuntimeError(f"无{market}基准")
 
 
