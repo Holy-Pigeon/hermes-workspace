@@ -434,8 +434,13 @@
       "topic": "哈达玛积（Hadamard Product）——让两个矩阵逐元素相乘的开关运算",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-24T08:03:00+08:00"
+    },
+    {
+      "topic": "Tokenization 与 BPE（子词切分）——把一句话切成模型能吞下的最小单位",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-06-24T14:03:00+08:00"
     }
   ],
-  "total_count": 87,
-  "last_updated": "2026-06-24T08:03:00+08:00"
+  "total_count": 88,
+  "last_updated": "2026-06-24T14:03:00+08:00"
 }
