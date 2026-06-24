@@ -16,7 +16,9 @@
 拉不到的标的明确跳过并告警, 绝不编造。
 
 判定逻辑(非买卖指令, 是候选漏斗):
-  ⭐ 价值成长候选 = PE自身历史分位<35% 且 净利YoY>20% 且 ROE>12%
+  ⭐ 价值成长候选 = PE自身历史分位<35% 且 净利YoY>20% 且 ROE>12% 且 通过质量闸(ROE持久性≥50%)
+     质量闸(alpha-attribution F3便宜陷阱归因落地): 近6年报ROE≥15%占比<50%→降🧱(高ROE不可持续);
+     50~80%→发⭐但叠加质量警示; ≥80%→干净⭐。把「便宜」与「生意够不够好」分离, 防深度价值锚定漏。
   📈 成长但偏贵    = 净利YoY>25% 但 PE分位>70%
   ⚠️ 潜在价值陷阱  = PE分位<25% 但 净利YoY<0 (便宜可能有原因)
   ·  中性
@@ -172,6 +174,21 @@ def get_growth(symbol):
                 out["roe_annual_period"] = c
                 break
     out["roe_annual"] = roe_annual
+    # ---- ROE 持久性(质量闸): alpha-attribution(2026-06-24)首跑坐实系统最痛系统性偏差=
+    # F3「便宜陷阱」(累计呼叫α -16.8pp)——纯低PE分位入口选出真烂生意。归因建议: 低PE分位
+    # 必要非充分, 入池须叠加质量闸。此处算【近6个完整年报里 ROE≥15% 的占比】, 供 classify
+    # 在⭐候选上叠加质量标注(不静默丢弃, 与定价权护栏同范式), 把「便宜」和「生意够不够好」分离。
+    roe_persist = None
+    roe_years_used = 0
+    if roe is not None:
+        annual_cols2 = sorted([c for c in date_cols if c.endswith("1231")], reverse=True)[:6]
+        vals = [_num(roe[c]) for c in annual_cols2]
+        vals = [v for v in vals if v is not None]
+        if vals:
+            roe_years_used = len(vals)
+            roe_persist = sum(1 for v in vals if v >= 15) / len(vals)
+    out["roe_persist"] = roe_persist
+    out["roe_years_used"] = roe_years_used
     gm = row("毛利率")
     out["gross_margin"] = _num(gm[latest]) if gm is not None else None
     # ---- 盈利质量护栏(防一次性收益/投资收益伪装成高增长) ----
@@ -278,6 +295,19 @@ def classify(val, grw):
         if nm is not None and nm < 8:
             return "🧱", (f"条件候选-便宜+高增长但净利率仅{nm:.1f}%(<8%), 高ROE疑为杠杆/周转"
                           "非定价权(薄利代工/大宗周期型), 须先过 moat_scorecard 核护城河本体再定")
+        # ---- 质量闸(alpha-attribution F3便宜陷阱 -16.8pp 的归因落地): 单年ROE>12 过门槛后,
+        # 再用【近6年报 ROE≥15% 持久性】区分「真复利机器」vs「单年高ROE的便宜烂生意」。
+        # 持久性<50% = 高ROE不可持续(周期顶/一次性), 正是F3便宜陷阱的典型画像 → ⭐降级🧱,
+        # 不进自动尽调流水线, 须先过 moat_scorecard 核护城河本体。≥50%但<80% 则发⭐但叠加质量警示。
+        rp = grw.get("roe_persist")
+        if rp is not None and grw.get("roe_years_used", 0) >= 3:
+            if rp < 0.5:
+                return "🧱", (f"条件候选-便宜+高增长但ROE持久性仅{rp*100:.0f}%(近{grw.get('roe_years_used')}年报ROE≥15%占比<50%)"
+                              "=高ROE不可持续疑为周期/一次性(F3便宜陷阱画像), 须先过 moat_scorecard 核护城河本体")
+            if rp < 0.8:
+                return "⭐", (f"价值成长候选(便宜区+高增长+定价权门槛), 但ROE持久性{rp*100:.0f}%偏弱"
+                              "(<80%)=复利质量待 moat_scorecard 核, 防便宜陷阱")
+            return "⭐", f"价值成长候选(便宜区+高增长+净利率达定价权门槛+ROE持久性{rp*100:.0f}%强)"
         return "⭐", "价值成长候选(便宜区+高增长+净利率达定价权门槛)"
     if npy > 25 and pe_pct > 0.70:
         return "📈", "成长但估值偏贵"
