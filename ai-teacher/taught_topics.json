@@ -439,8 +439,13 @@
       "topic": "Tokenization 与 BPE（子词切分）——把一句话切成模型能吞下的最小单位",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-06-24T14:03:00+08:00"
+    },
+    {
+      "topic": "词嵌入（Word Embedding）——把离散的词变成可计算的稠密向量",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-06-24T20:03:00+08:00"
     }
   ],
-  "total_count": 88,
-  "last_updated": "2026-06-24T14:03:00+08:00"
+  "total_count": 89,
+  "last_updated": "2026-06-24T20:03:00+08:00"
 }
