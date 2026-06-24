@@ -429,8 +429,13 @@
       "topic": "线性无关与基（Linear Independence & Basis）——用最少的方向，张出整个空间",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-23T20:03:00+08:00"
+    },
+    {
+      "topic": "哈达玛积（Hadamard Product）——让两个矩阵逐元素相乘的开关运算",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-24T08:03:00+08:00"
     }
   ],
-  "total_count": 86,
-  "last_updated": "2026-06-23T20:03:00+08:00"
+  "total_count": 87,
+  "last_updated": "2026-06-24T08:03:00+08:00"
 }

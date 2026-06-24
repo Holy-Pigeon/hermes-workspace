@@ -84,9 +84,13 @@
     "387d8689-fc19-8133-9f2a-dffc819aa7c7",
     "387d8689-fc19-8103-9d45-d16ac471d01c",
     "388d8689-fc19-81d1-a48a-ebc28aecf104",
-    "388d8689-fc19-815a-9d99-ddbe7f07d025"
+    "388d8689-fc19-815a-9d99-ddbe7f07d025",
+    "388d8689-fc19-811b-8a1f-ed7d6e7b8dfc",
+    "389d8689-fc19-812e-a7dc-dc5e3b64f898"
   ],
   "page_titles": {
+    "389d8689-fc19-812e-a7dc-dc5e3b64f898": "哈达玛积（Hadamard Product）——让两个矩阵逐元素相乘的开关运算",
+    "388d8689-fc19-811b-8a1f-ed7d6e7b8dfc": "线性无关与基（Linear Independence & Basis）——用最少的方向，张出整个空间",
     "388d8689-fc19-815a-9d99-ddbe7f07d025": "矩阵的迹（Trace）——一个数字浓缩了对角线，却藏着旋转不变的秘密",
     "388d8689-fc19-81d1-a48a-ebc28aecf104": "向量投影（Vector Projection）——把一个向量在另一个方向上的影子量出来",
     "387d8689-fc19-8103-9d45-d16ac471d01c": "行列式（Determinant）——一个数字告诉你线性变换把空间撑大还是压扁了多少",
@@ -173,7 +177,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 53,
+  "cursor": 74,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -194,6 +198,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-06-23T14:00:54+0800",
-  "last_order_refresh": "2026-06-23T14:03:14+0800"
+  "last_review": "2026-06-24T08:02:33+0800",
+  "last_order_refresh": "2026-06-24T08:04:58+0800"
 }
