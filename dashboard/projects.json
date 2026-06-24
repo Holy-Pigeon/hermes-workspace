@@ -304,6 +304,19 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/artifact-freshness"
+    },
+    {
+      "id": "alpha-attribution",
+      "name": "呼叫alpha失败模式归因器",
+      "icon": "🔬",
+      "desc": "把负呼叫alpha机械拆成F1方向错/F2时机错/F3便宜陷阱,补归因闭环",
+      "ports": null,
+      "tags": [
+        "归因",
+        "准则诊断",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/alpha-attribution"
     }
   ]
 }
