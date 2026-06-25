@@ -444,8 +444,13 @@
       "topic": "词嵌入（Word Embedding）——把离散的词变成可计算的稠密向量",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-06-24T20:03:00+08:00"
+    },
+    {
+      "topic": "梯度消失与梯度爆炸（Vanishing & Exploding Gradients）——深网络训练的指数级诅咒",
+      "category": "类目 7：反向传播算法",
+      "taught_at": "2026-06-25T08:03:00+08:00"
     }
   ],
-  "total_count": 89,
-  "last_updated": "2026-06-24T20:03:00+08:00"
+  "total_count": 90,
+  "last_updated": "2026-06-25T08:03:00+08:00"
 }
