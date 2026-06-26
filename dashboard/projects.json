@@ -317,6 +317,19 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/alpha-attribution"
+    },
+    {
+      "id": "candidate-deepening",
+      "name": "候选深研待办队列",
+      "icon": "📝",
+      "desc": "补orphaned的深度note authoring环:读dossier候选对照已有note算出待深研队列,喂authoring cron",
+      "ports": null,
+      "tags": [
+        "研究",
+        "产线补位",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/candidate-deepening"
     }
   ]
 }
