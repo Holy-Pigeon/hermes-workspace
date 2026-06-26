@@ -459,8 +459,13 @@
       "topic": "高斯分布（Gaussian / Normal Distribution）——大自然与深度学习里最常出现的钟形曲线",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-06-26T14:03:00+08:00"
+    },
+    {
+      "topic": "雅可比矩阵（Jacobian Matrix）——把一组输出对一组输入的全部变化率装进一张表",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-06-26T20:03:00+08:00"
     }
   ],
-  "total_count": 92,
-  "last_updated": "2026-06-26T14:03:00+08:00"
+  "total_count": 93,
+  "last_updated": "2026-06-26T20:03:00+08:00"
 }
