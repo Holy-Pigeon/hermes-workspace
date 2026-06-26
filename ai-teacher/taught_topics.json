@@ -454,8 +454,13 @@
       "topic": "权重初始化（Xavier / He Initialization）——给深网络一个不偏不倚的起跑姿势",
       "category": "类目 8：优化算法",
       "taught_at": "2026-06-25T14:03:00+08:00"
+    },
+    {
+      "topic": "高斯分布（Gaussian / Normal Distribution）——大自然与深度学习里最常出现的钟形曲线",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-06-26T14:03:00+08:00"
     }
   ],
-  "total_count": 91,
-  "last_updated": "2026-06-25T14:03:00+08:00"
+  "total_count": 92,
+  "last_updated": "2026-06-26T14:03:00+08:00"
 }

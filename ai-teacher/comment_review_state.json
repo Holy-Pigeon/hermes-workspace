@@ -90,9 +90,11 @@
     "389d8689-fc19-8132-8eed-cb56e7c5df76",
     "389d8689-fc19-81ac-b012-f97c366d113d",
     "38ad8689-fc19-81b5-96d7-dc5a101b0a10",
-    "38ad8689-fc19-81fe-897d-e81c61debdf1"
+    "38ad8689-fc19-81fe-897d-e81c61debdf1",
+    "38bd8689-fc19-814f-9ff7-d4ceca5af2ba"
   ],
   "page_titles": {
+    "38bd8689-fc19-814f-9ff7-d4ceca5af2ba": "高斯分布（Gaussian / Normal Distribution）——大自然与深度学习里最常出现的钟形曲线",
     "38ad8689-fc19-81fe-897d-e81c61debdf1": "权重初始化（Xavier / He Initialization）——给深网络一个不偏不倚的起跑姿势",
     "38ad8689-fc19-81b5-96d7-dc5a101b0a10": "梯度消失与梯度爆炸（Vanishing & Exploding Gradients）——深网络训练的指数级诅咒",
     "389d8689-fc19-81ac-b012-f97c366d113d": "词嵌入（Word Embedding）——把离散的词变成可计算的稠密向量",
@@ -185,7 +187,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 24,
+  "cursor": 65,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -206,6 +208,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-06-26T03:01:22+0800",
-  "last_order_refresh": "2026-06-25T14:03:44+0800"
+  "last_review": "2026-06-26T14:00:24+0800",
+  "last_order_refresh": "2026-06-26T14:03:18+0800"
 }
