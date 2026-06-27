@@ -79,8 +79,7 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/moat-durability",
-      "freshness_hours": 192
+      "heartbeat_file": "~/hermes-workspace/moat-durability"
     },
     {
       "id": "prediction-ledger",
@@ -204,8 +203,7 @@
         "只读",
         "纪律"
       ],
-      "heartbeat_file": "~/hermes-workspace/allocation-discipline",
-      "freshness_hours": 192
+      "heartbeat_file": "~/hermes-workspace/allocation-discipline"
     },
     {
       "id": "polymarket-monitor",
@@ -231,8 +229,7 @@
         "准则诊断",
         "只读"
       ],
-      "heartbeat_file": "~/hermes-workspace/signal-orthogonality",
-      "freshness_hours": 192
+      "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
     },
     {
       "id": "feishu-notify",
