@@ -464,8 +464,13 @@
       "topic": "雅可比矩阵（Jacobian Matrix）——把一组输出对一组输入的全部变化率装进一张表",
       "category": "类目 2：微积分基础",
       "taught_at": "2026-06-26T20:03:00+08:00"
+    },
+    {
+      "topic": "海森矩阵（Hessian Matrix）——把\"弯曲方式\"装进一张二阶导数表",
+      "category": "类目 2：微积分基础",
+      "taught_at": "2026-06-27T08:03:00+08:00"
     }
   ],
-  "total_count": 93,
-  "last_updated": "2026-06-26T20:03:00+08:00"
+  "total_count": 94,
+  "last_updated": "2026-06-27T08:03:00+08:00"
 }
