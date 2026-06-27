@@ -43,6 +43,7 @@ SELF_SIGNAL_SCRIPTS = {
     "prediction_ledger_due_reminder.sh",  # 逾期 rc=1 硬信号
     "portfolio_watchdog.sh",     # watchdog 模式, 有红旗 exit 1
     "portfolio_watchdog_full.sh",
+    "artifact_freshness.sh",     # 产出冻结 STALE_OUTPUT → by-design exit 1
 }
 
 
