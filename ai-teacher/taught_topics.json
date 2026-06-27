@@ -474,8 +474,13 @@
       "topic": "梯度裁剪（Gradient Clipping）——给暴冲的更新踩一脚刹车",
       "category": "类目 8：优化算法",
       "taught_at": "2026-06-27T14:03:00+08:00"
+    },
+    {
+      "topic": "Grouped-Query Attention（分组查询注意力，GQA）——在每头一套钥匙和全员共用之间找平衡",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-06-27T20:03:00+08:00"
     }
   ],
-  "total_count": 95,
-  "last_updated": "2026-06-27T14:03:00+08:00"
+  "total_count": 96,
+  "last_updated": "2026-06-27T20:03:00+08:00"
 }
