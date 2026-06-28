@@ -38,6 +38,8 @@
       "desc": "深度研究 note · 反向DCF/证伪/护城河 · INDEX 自动索引",
       "ports": null,
       "heartbeat_file": "~/hermes-workspace/research",
+      "freshness_hours": 240,
+      "artifact_glob": "note_*.md",
       "tags": [
         "研究",
         "脚本"
