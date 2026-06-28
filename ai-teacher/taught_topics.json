@@ -479,8 +479,13 @@
       "topic": "Grouped-Query Attention（分组查询注意力，GQA）——在每头一套钥匙和全员共用之间找平衡",
       "category": "类目 19：高效注意力",
       "taught_at": "2026-06-27T20:03:00+08:00"
+    },
+    {
+      "topic": "标签平滑（Label Smoothing）——别让模型对答案太自信",
+      "category": "类目 9：正则化技术",
+      "taught_at": "2026-06-28T08:03:00+08:00"
     }
   ],
-  "total_count": 96,
-  "last_updated": "2026-06-27T20:03:00+08:00"
+  "total_count": 97,
+  "last_updated": "2026-06-28T08:03:00+08:00"
 }
