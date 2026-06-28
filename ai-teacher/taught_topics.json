@@ -489,8 +489,13 @@
       "topic": "正定矩阵与半正定矩阵（Positive Definite Matrix）——给\"碗朝上还是朝下\"一个可计算的判据",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-28T14:03:00+08:00"
+    },
+    {
+      "topic": "外积（Outer Product）——把两个向量撑成一整张矩阵",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-06-28T20:03:00+08:00"
     }
   ],
-  "total_count": 98,
-  "last_updated": "2026-06-28T14:03:00+08:00"
+  "total_count": 99,
+  "last_updated": "2026-06-28T20:03:00+08:00"
 }
