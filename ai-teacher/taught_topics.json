@@ -504,8 +504,13 @@
       "topic": "RMSNorm（均方根归一化）——把 LayerNorm 砍掉一半，反而跑得更快更稳",
       "category": "类目 13：Transformer 架构",
       "taught_at": "2026-06-29T14:11:00+08:00"
+    },
+    {
+      "topic": "协方差与相关系数（Covariance & Correlation）——衡量两个变量是否一起动的尺子",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-06-29T20:03:00+08:00"
     }
   ],
-  "total_count": 101,
-  "last_updated": "2026-06-29T14:11:00+08:00"
+  "total_count": 102,
+  "last_updated": "2026-06-29T20:03:00+08:00"
 }

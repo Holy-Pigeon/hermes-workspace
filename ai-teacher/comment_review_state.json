@@ -100,9 +100,11 @@
     "38dd8689-fc19-81d7-aef7-cf7521ca6499",
     "38dd8689-fc19-8100-b340-dbccf0a12bf0",
     "38ed8689-fc19-812d-a9ef-f99c89272a8f",
-    "38ed8689-fc19-81e7-8e8b-eb871abe7dd1"
+    "38ed8689-fc19-81e7-8e8b-eb871abe7dd1",
+    "38ed8689-fc19-81e4-9e26-ee224c627a73"
   ],
   "page_titles": {
+    "38ed8689-fc19-81e4-9e26-ee224c627a73": "协方差与相关系数（Covariance & Correlation）——衡量两个变量是否一起动的尺子",
     "38ed8689-fc19-81e7-8e8b-eb871abe7dd1": "RMSNorm（均方根归一化）——把 LayerNorm 砍掉一半，反而跑得更快更稳",
     "38ed8689-fc19-812d-a9ef-f99c89272a8f": "Beam Search（束搜索）——在贪心和穷举之间走一条聪明的中间路",
     "38dd8689-fc19-8100-b340-dbccf0a12bf0": "外积（Outer Product）——把两个向量撑成一整张矩阵",
@@ -205,7 +207,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 3,
+  "cursor": 69,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -226,6 +228,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-06-29T14:10:39+0800",
-  "last_order_refresh": "2026-06-29T14:13:26+0800"
+  "last_review": "2026-06-29T20:01:54+0800",
+  "last_order_refresh": "2026-06-29T20:14:37+0800"
 }
