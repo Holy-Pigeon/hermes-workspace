@@ -1,9 +1,9 @@
 {
   "海康威视(002415)": {
     "last_in_zone": true,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 36.4,
-    "g_req15x": 16.3
+    "g_req15x": 17.0
   },
   "宁德时代(300750)": {
     "last_in_zone": true,
@@ -13,46 +13,46 @@
   },
   "AAPL": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 19.5,
-    "g_req15x": 33.7
+    "g_req15x": 32.4
   },
   "MA": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 16.3,
-    "g_req15x": 26.0
+    "g_req15x": 26.5
   },
   "ASML": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": null,
     "g_req15x": null,
     "ccy_conflict": true
   },
   "TSM": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": null,
     "g_req15x": null,
     "ccy_conflict": true
   },
   "GOOGL": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 32.0,
-    "g_req15x": 29.4
+    "g_req15x": 27.1
   },
   "NVDA": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 64.7,
-    "g_req15x": 35.6
+    "g_req15x": 33.2
   },
   "MSFT": {
     "last_in_zone": false,
-    "last_seen": "2026-06-21",
+    "last_seen": "2026-06-28",
     "g_now": 15.5,
-    "g_req15x": 24.4
+    "g_req15x": 23.9
   }
 }

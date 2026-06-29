@@ -38,11 +38,11 @@ spot = get_spot("301013")                       # {price, date, source}，market
 
 这些脚本目前各自取数，应逐步改为调本模块。**不一次性大改**，每改一个单独验证：
 
-- [ ] paper-trading/daily_mark.py（盯市，最高频，优先级最高）
-- [ ] paper-trading/correlation_check.py
-- [ ] paper-trading/valuation_percentile.py
-- [ ] paper-trading/alpha_check.py
-- [ ] paper-trading/pt.py（建仓价护栏）
+- [x] paper-trading/daily_mark.py（盯市，最高频，优先级最高）✅ 已收口(get_last_close_batch)
+- [x] paper-trading/correlation_check.py ✅ 已收口(get_daily, 2026-06-29 实测4只全过)
+- [ ] paper-trading/valuation_percentile.py（估值分位，低频接口，marketdata 暂未覆盖 stock_value_em/eniu，需先扩展统一层）
+- [ ] paper-trading/alpha_check.py（指数日线，marketdata 暂未覆盖指数接口）
+- [ ] paper-trading/pt.py（建仓价护栏，写路径，谨慎）
 - [ ] paper-trading/holder_concentration.py
 - [ ] paper-trading/southbound_flow.py
 - [ ] stock-discovery/tech_screener.py

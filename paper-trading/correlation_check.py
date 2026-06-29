@@ -68,23 +68,27 @@ def market_kind(market):
 
 
 def get_hist(symbol, kind, days):
-    """返回 {date_str: close} 一手日线. 拉不到返回 None."""
-    import akshare as ak
-    start = (datetime.now() - timedelta(days=days * 2 + 20)).strftime("%Y%m%d")
-    end = datetime.now().strftime("%Y%m%d")
+    """返回 {date_str: close} 一手日线. 拉不到返回 None.
+
+    已收口到 marketdata 统一层(新浪→东财自动降级), 取代旧版裸 akshare 单源
+    stock_hk_hist/stock_zh_a_hist (东财一断就崩的历史病根)。窗口截断在调用方
+    pct_returns 之前由本函数返回全量日线, 上游按 days 自行取相关区间。
+    """
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _root not in sys.path:
+        sys.path.insert(0, _root)
+    from marketdata import get_daily, MarketDataError
+    market = "HK" if kind == "hk" else "A"
     try:
-        if kind == "hk":
-            df = ak.stock_hk_hist(symbol=symbol, period="daily",
-                                  start_date=start, end_date=end, adjust="qfq")
-        else:
-            df = ak.stock_zh_a_hist(symbol=symbol, period="daily",
-                                    start_date=start, end_date=end, adjust="qfq")
+        df = get_daily(symbol, market=market)
         if df is None or len(df) == 0:
             return None
         d = {}
         for _, r in df.iterrows():
-            d[str(r["日期"])] = float(r["收盘"])
+            d[str(r["date"])] = float(r["close"])
         return d
+    except MarketDataError as e:
+        return {"__error__": str(e)}
     except Exception as e:
         return {"__error__": str(e)}
 
