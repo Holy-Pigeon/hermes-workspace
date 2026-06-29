@@ -40,6 +40,7 @@
       "heartbeat_file": "~/hermes-workspace/research",
       "freshness_hours": 240,
       "artifact_glob": "note_*.md",
+      "date_stamped": true,
       "tags": [
         "研究",
         "脚本"
