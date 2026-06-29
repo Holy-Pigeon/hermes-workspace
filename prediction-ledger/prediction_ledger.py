@@ -179,9 +179,17 @@ def cmd_add(data, kw):
         return 1
     # 日期格式校验
     try:
-        datetime.strptime(kw["verify-by"], "%Y-%m-%d")
+        vb_date = datetime.strptime(kw["verify-by"], "%Y-%m-%d").date()
     except ValueError:
         print("--verify-by 须为 YYYY-MM-DD")
+        return 1
+    # ── 过期截止护栏(登记时拦, 治 P015 式'生而逾期') ──
+    # verify_by 必须严格晚于今天: 否则这条预测一登记就 pending+逾期, 永远无法在窗口内被证伪,
+    # 却会让周度看门狗每次 rc=1 反复报'逾期', 训练操作者忽视该告警(alert fatigue),
+    # 进而把真正到窗口需结算的 P 也一起淹没。截止<=今天 = 数据录入错误, 直接拒。
+    if vb_date <= date.today():
+        print(f"❌ --verify-by {kw['verify-by']} 不晚于今天({date.today().isoformat()}) = 生而逾期, 永远无法在窗口内证伪。")
+        print("   预测必须留出未来的结算窗口。请改用未来日期; 若是结算历史论点, 用 add 后立即 resolve, 而非登记一条过期 pending。")
         return 1
     # ── 信心压缩护栏(登记时拦截, 非事后) ──
     if 0.45 <= conf <= 0.65 and "force-mushy" not in kw:

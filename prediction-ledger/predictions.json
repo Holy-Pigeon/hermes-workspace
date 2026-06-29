@@ -211,9 +211,9 @@
       "confidence": 0.74,
       "verify_by": "2026-05-15",
       "source_note": "note_2026-06-29_apple_premium_valuation_gap.md",
-      "outcome": "pending",
-      "resolved_value": null,
-      "resolved_date": null
+      "outcome": "void",
+      "resolved_value": "born-overdue: created 6/29 but verify_by 5/15 in past; also duplicates P014 same-Apple-bearish; voided to clear permanent overdue noise; guardrail added to cmd_add",
+      "resolved_date": "2026-06-30"
     }
   ]
 }
