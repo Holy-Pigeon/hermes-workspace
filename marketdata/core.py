@@ -9,6 +9,10 @@ marketdata.core — 多源取数核心实现
 每个 (市场, 数据类型) 配一条按可靠性排序的源链，逐个尝试，
 任一成功即返回；全失败抛 MarketDataError 并附所有源的失败原因。
 """
+# PEP 604 写法 (str | None) 在 Python 3.9 运行期求值会崩；本地 /usr/bin/python3
+# 是 3.9.6, cron 经此解释器调用本模块会整体 import 失败(静默拖垮所有取数消费方)。
+# 延迟注解求值即可让 X | None 注解在 3.9 下安全(注解变字符串, 不在运行期 eval)。
+from __future__ import annotations
 import time
 import sys
 import io
