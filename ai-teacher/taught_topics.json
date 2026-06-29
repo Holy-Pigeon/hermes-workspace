@@ -499,8 +499,13 @@
       "topic": "Beam Search（束搜索）——在贪心和穷举之间走一条聪明的中间路",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-06-29T08:03:00+08:00"
+    },
+    {
+      "topic": "RMSNorm（均方根归一化）——把 LayerNorm 砍掉一半，反而跑得更快更稳",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-06-29T14:11:00+08:00"
     }
   ],
-  "total_count": 100,
-  "last_updated": "2026-06-29T08:03:00+08:00"
+  "total_count": 101,
+  "last_updated": "2026-06-29T14:11:00+08:00"
 }
