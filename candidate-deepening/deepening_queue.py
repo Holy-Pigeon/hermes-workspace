@@ -82,21 +82,35 @@ def parse_candidates(path):
     return uniq
 
 
+def _header_zone(txt):
+    """取 note 的标的识别区 = 第一个 '---' 分隔线之前的 frontmatter(标题行+元数据块);
+    无分隔线则退回前 12 行。conviction note 的真实主语(标题 + '标的:' 字段)只住在
+    这一区, 正文里出现的代码/ticker 多是同业/供应链/对比的顺带提及, 不代表该 note
+    是为它写的。只匹配 header zone = 兑现 docstring 承诺的'宁可漏报不误报已深研'。"""
+    idx = txt.find("\n---")
+    if idx != -1:
+        return txt[:idx]
+    return "\n".join(txt.splitlines()[:12])
+
+
 def note_index():
-    """返回 {token_lower: [note_files]}, token=出现在任何 note 正文里的代码/ticker"""
+    """返回 {note_file: header_zone_text}; 只保留标的识别区(标题+元数据), 不留全文,
+    从机制上杜绝正文顺带提及被误判成'已深研'。"""
     notes = glob.glob(os.path.join(RESEARCH_DIR, "note_*.md"))
     blobs = {}
     for n in notes:
         try:
             with open(n, encoding="utf-8") as f:
-                blobs[os.path.basename(n)] = f.read()
+                blobs[os.path.basename(n)] = _header_zone(f.read())
         except Exception:
             blobs[os.path.basename(n)] = ""
     return blobs
 
 
 def has_note(key, kind, blobs):
-    """候选是否已有 conviction note: 按代码/ticker 字面命中正文"""
+    """候选是否已有专属 conviction note: 按代码/ticker 命中 note 的标的识别区(header zone)。
+    只认 header 不认正文, 避免一篇 NVDA note 顺带提 ASML/TSM 就把它们误标已深研、
+    永久踢出深研队列(这正是 docstring 承诺要避免的'误报已深研')。"""
     hits = []
     for fn, txt in blobs.items():
         if kind == "US":
