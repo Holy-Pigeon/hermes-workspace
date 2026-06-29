@@ -494,8 +494,13 @@
       "topic": "外积（Outer Product）——把两个向量撑成一整张矩阵",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-06-28T20:03:00+08:00"
+    },
+    {
+      "topic": "Beam Search（束搜索）——在贪心和穷举之间走一条聪明的中间路",
+      "category": "类目 18：Decoder-only 模型",
+      "taught_at": "2026-06-29T08:03:00+08:00"
     }
   ],
-  "total_count": 99,
-  "last_updated": "2026-06-28T20:03:00+08:00"
+  "total_count": 100,
+  "last_updated": "2026-06-29T08:03:00+08:00"
 }

@@ -98,9 +98,11 @@
     "38cd8689-fc19-8194-9cbc-f2e2cb6b3698",
     "38dd8689-fc19-81d1-8cd7-e8a25b382c18",
     "38dd8689-fc19-81d7-aef7-cf7521ca6499",
-    "38dd8689-fc19-8100-b340-dbccf0a12bf0"
+    "38dd8689-fc19-8100-b340-dbccf0a12bf0",
+    "38ed8689-fc19-812d-a9ef-f99c89272a8f"
   ],
   "page_titles": {
+    "38ed8689-fc19-812d-a9ef-f99c89272a8f": "Beam Search（束搜索）——在贪心和穷举之间走一条聪明的中间路",
     "38dd8689-fc19-8100-b340-dbccf0a12bf0": "外积（Outer Product）——把两个向量撑成一整张矩阵",
     "38dd8689-fc19-81d7-aef7-cf7521ca6499": "正定矩阵与半正定矩阵（Positive Definite Matrix）——给\"碗朝上还是朝下\"一个可计算的判据",
     "38dd8689-fc19-81d1-8cd7-e8a25b382c18": "标签平滑（Label Smoothing）——别让模型对答案太自信",
@@ -201,7 +203,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 2,
+  "cursor": 35,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -222,6 +224,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-06-28T20:01:24+0800",
-  "last_order_refresh": "2026-06-28T20:04:41+0800"
+  "last_review": "2026-06-29T08:02:15+0800",
+  "last_order_refresh": "2026-06-29T08:03:54+0800"
 }
