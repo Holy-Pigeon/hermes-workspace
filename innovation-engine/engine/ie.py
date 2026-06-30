@@ -358,6 +358,38 @@ def cmd_register_project(args):
     return 0
 
 
+# ─────────────────────────── deregister-project ───────────────────────────
+def cmd_deregister_project(args):
+    """从驾驶舱 projects.json 移除一个项目卡片（退场/下线/被拒项目的治理出口）。
+    根因修复：register-project 让注册表只增不减，被拒/退场项目的卡片只能靠手改 json 清，
+    与『所有登记走脚本、禁止手改』的纪律自相矛盾。本动作让退场也有确定性脚本路径。
+    幂等：id 不存在则报 not_found（退出码非0），存在则移除。只动 projects.json，不碰项目目录文件。
+    """
+    pid = args.id.strip()
+    if not pid:
+        print("错误：--id 必填", file=sys.stderr)
+        return 2
+    if not os.path.exists(PROJECTS_JSON):
+        print(f"错误：找不到 {PROJECTS_JSON}", file=sys.stderr)
+        return 3
+    with open(PROJECTS_JSON, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
+    projects = cfg.setdefault("projects", [])
+    idx = next((i for i, x in enumerate(projects) if x.get("id") == pid), None)
+    if idx is None:
+        print(json.dumps({"ok": False, "result": "NOT_FOUND", "id": pid,
+                          "total_projects": len(projects)}, ensure_ascii=False), file=sys.stderr)
+        return 4
+    removed = projects.pop(idx)
+    with open(PROJECTS_JSON, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    print(json.dumps({"ok": True, "action": "removed", "id": pid,
+                      "name": removed.get("name", ""), "total_projects": len(projects)},
+                     ensure_ascii=False))
+    return 0
+
+
 def build_parser():
     p = argparse.ArgumentParser(prog="ie.py", description="创新引擎 idea 登记唯一入口")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -406,6 +438,10 @@ def build_parser():
     rp.add_argument("--local-port", dest="local_port", type=int, default=None)
     rp.add_argument("--remote-port", dest="remote_port", type=int, default=None)
     rp.set_defaults(func=cmd_register_project)
+
+    dp = sub.add_parser("deregister-project", help="从驾驶舱移除项目卡片（退场/被拒项目治理出口）")
+    dp.add_argument("--id", required=True, help="要移除的项目 id")
+    dp.set_defaults(func=cmd_deregister_project)
     return p
 
 
