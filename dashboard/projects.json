@@ -330,6 +330,19 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/candidate-deepening"
+    },
+    {
+      "id": "marketdata-canary",
+      "name": "取数层契约金丝雀",
+      "icon": "🐦",
+      "desc": "盯共享取数层marketdata在两解释器(3.9/3.14)下可import+API契约完整,补6-30事故暴露的import崩监控盲区",
+      "ports": null,
+      "tags": [
+        "基础设施",
+        "元监控",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/marketdata-canary"
     }
   ]
 }
