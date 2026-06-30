@@ -1,0 +1,6 @@
+# C++ 编译产物（benchmark 可执行文件，源码已入库，二进制不入库）
+scripts/bench_fs
+scripts/bench_spike
+scripts/bench_stl
+scripts/bench_ts
+scripts/probe_cl
