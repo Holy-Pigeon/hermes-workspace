@@ -37,6 +37,8 @@ from .core import (
     reporting_currency_registry,
     trading_currency,
     is_reporting_currency_mismatch,
+    fx_rate,
+    eps_to_trading_currency,
 )
 
 __all__ = [
@@ -53,4 +55,6 @@ __all__ = [
     "reporting_currency_registry",
     "trading_currency",
     "is_reporting_currency_mismatch",
+    "fx_rate",
+    "eps_to_trading_currency",
 ]

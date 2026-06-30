@@ -645,6 +645,101 @@ def is_reporting_currency_mismatch(symbol: str, market: str | None = None) -> bo
     return rc != trading_currency(symbol, market)
 
 
+# ---------------------------------------------------------------------------
+# 汇率原语 (FX rate) —— 收口在 marketdata，让「报告币种≠交易币种」可被真正换算
+# ---------------------------------------------------------------------------
+# 为什么在这里：币种登记表(_REPORTING_CURRENCY)已收口于本层，是「一只票财报用什么
+# 币种计」的单一事实源。但此前只有 is_reporting_currency_mismatch() 这个布尔，消费方
+# (research-pipeline)只能据此【永久跳过】估值层 —— 后果是 ASML/TSM 这类被 scout 标
+# 🏰宽护城河的世界级半导体标的，每个周期都因「财报EUR/TWD vs 现价USD」被丢在估值漏斗
+# 外，系统结构性地永远回答不了「它贵不贵」。诚实拒绝编造是对的，但「拒绝」不该等于
+# 「永远放弃」——补一个真实FX源即可把诚实跳过升级为诚实换算。
+#
+# 数据诚实铁律：仅当能从一手FX源取到真实牌价才返回换算因子；取不到(如新台币TWD当前
+# 无免费可靠源)一律返回 None，让消费方继续显式跳过+标注，绝不用陈旧/估算汇率填空。
+# 返回值定义 fx_rate(base, quote) = 1 单位 base 值多少 quote。
+
+# akshare 新浪中行牌价 symbol 名(人民币牌价, 单位: 100外币兑人民币的中间价)。
+# 仅登记有真实免费源覆盖的币种; 未登记币种(如 TWD) → fx_rate 返回 None = 诚实无源。
+_BOC_SYMBOL = {
+    "USD": "美元", "EUR": "欧元", "HKD": "港币", "GBP": "英镑",
+    "JPY": "日元", "SGD": "新加坡元", "CHF": "瑞士法郎", "CAD": "加拿大元",
+    "AUD": "澳大利亚元", "THB": "泰国铢", "KRW": "韩国元",
+}
+
+
+def _ccy_per_cny(ccy: str):
+    """返回 1 CNY = ? 单位 ccy(经中行人民币牌价中间价反推)。取不到返回 None。
+    中行牌价口径: 100 外币 = N 人民币(中间价) → 1 ccy = N/100 CNY → 1 CNY = 100/N ccy。"""
+    ccy = ccy.upper()
+    if ccy == "CNY":
+        return 1.0
+    sym = _BOC_SYMBOL.get(ccy)
+    if not sym:
+        return None
+    ak = _lazy_ak()
+    import datetime as _dt
+    end = _dt.date.today()
+    start = end - _dt.timedelta(days=10)
+
+    def _fetch():
+        return ak.currency_boc_sina(
+            symbol=sym,
+            start_date=start.strftime("%Y%m%d"),
+            end_date=end.strftime("%Y%m%d"),
+        )
+    df, err = _retry(_fetch, attempts=3, base_delay=1.0, label=f"boc:{ccy}")
+    if df is None or len(df) == 0:
+        return None
+    try:
+        mid = float(df.iloc[-1]["央行中间价"])  # 100 外币 = mid 人民币
+        if mid <= 0:
+            return None
+        return 100.0 / mid  # 1 CNY = (100/mid) ccy
+    except Exception:
+        return None
+
+
+def fx_rate(base: str, quote: str):
+    """1 单位 base 币种 = ? 单位 quote 币种。经 CNY 作中介交叉换算。
+    任一腿无一手源(如 TWD)即返回 None —— 消费方据此显式跳过, 绝不编造换算(数据真实性铁律)。
+
+    用法(把 EUR 计的每股盈利换成 USD 再跑 reverse_dcf):
+        from marketdata import fx_rate
+        r = fx_rate("EUR", "USD")            # 1 EUR = r USD
+        eps_usd = eps_eur * r if r else None # None → 继续诚实跳过
+    """
+    base, quote = base.upper(), quote.upper()
+    if base == quote:
+        return 1.0
+    b = _ccy_per_cny(base)   # 1 CNY = b base
+    q = _ccy_per_cny(quote)  # 1 CNY = q quote
+    if not b or not q:
+        return None
+    # 1 base = (1/b) CNY = (q/b) quote
+    return q / b
+
+
+def eps_to_trading_currency(symbol: str, eps_reported: float, market: str = None):
+    """把以「报告币种」披露的每股盈利换算成「交易币种」(现价币种),
+    让 PE/反向DCF 不再币种错配。返回 (eps_converted, note):
+      - 无错配               → (eps_reported, None)         直接可用
+      - 有错配且FX源可用     → (eps_reported*rate, "EUR→USD@rate")  真实换算
+      - 有错配但FX无源(TWD等)→ (None, "TWD→USD 无一手汇率源, 跳过")  诚实跳过
+    消费方: 拿到 eps_converted 非 None 就能用现价(交易币种)直接跑 reverse_dcf。
+    """
+    rc = reporting_currency(symbol)
+    if rc is None:
+        return eps_reported, None
+    tc = trading_currency(symbol, market)
+    if rc == tc:
+        return eps_reported, None
+    rate = fx_rate(rc, tc)
+    if rate is None:
+        return None, f"{rc}→{tc} 无一手汇率源, 跳过(绝不编造换算)"
+    return eps_reported * rate, f"{rc}→{tc}@{rate:.5f}"
+
+
 def _spot_from_bidask(df):
     """从 stock_bid_ask_em 的字段表里抽最新价。"""
     if df is None or len(df) == 0:
