@@ -224,14 +224,6 @@
     "processed": true
   },
   {
-    "idea_id": "2026-06-13 22:30::501f24fdfcc4",
-    "action": "approve",
-    "comment": "",
-    "stage": "initial",
-    "ts": "2026-06-29 20:32:24",
-    "processed": true
-  },
-  {
     "idea_id": "2026-06-15 01:41::1596f025399e",
     "action": "approve",
     "comment": "",
@@ -253,6 +245,22 @@
     "comment": "",
     "stage": "initial",
     "ts": "2026-06-30 10:19:44",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-13 22:30::501f24fdfcc4",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-30 19:56:44",
+    "processed": true
+  },
+  {
+    "idea_id": "2026-06-30 15:16::bde52e2caac1",
+    "action": "approve",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-30 19:56:45",
     "processed": true
   }
 ]

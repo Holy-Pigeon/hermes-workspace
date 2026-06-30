@@ -34,32 +34,24 @@ def conn():
 
 
 def _live_price_quiet(symbol, currency, market):
-    """尽力取当日实时价用于建仓价护栏；任何失败都安静返回 None（护栏不阻断主流程）。"""
-    try:
-        import akshare as ak
-    except Exception:
-        return None
+    """尽力取当日实时价用于建仓价护栏；任何失败都安静返回 None（护栏不阻断主流程）。
+    收口到 marketdata.get_spot 统一层：多源(新浪/东财)自动降级+快照不可用时回退日线末收，
+    彻底取代旧版逐市场各自裸调 akshare(stock_hk_spot/stock_zh_a_minute/stock_us_spot_em)。"""
     mk = "A"
     if currency == "HKD" or "HK" in (market or "").upper():
         mk = "HK"
     elif currency == "USD" or "US" in (market or "").upper() or "NASDAQ" in (market or "").upper():
         mk = "US"
     try:
-        if mk == "HK":
-            df = ak.stock_hk_spot()
-            m = dict(zip(df["代码"].astype(str), df["最新价"]))
-            return float(m.get(str(symbol).zfill(5)) or m.get(str(symbol)) or 0) or None
-        if mk == "A":
-            prefix = "sh" if str(symbol).startswith(("6", "9")) else "sz"
-            d = ak.stock_zh_a_minute(symbol=f"{prefix}{symbol}", period="1", adjust="")
-            return float(d.iloc[-1]["close"]) if len(d) else None
-        if mk == "US":
-            df = ak.stock_us_spot_em()
-            m = dict(zip(df["代码"].astype(str), df["最新价"]))
-            return float(m.get(str(symbol)) or 0) or None
+        _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _root not in sys.path:
+            sys.path.insert(0, _root)
+        from marketdata import get_spot
+        r = get_spot(str(symbol), mk)
+        px = (r or {}).get("price")
+        return float(px) if px else None
     except Exception:
         return None
-    return None
 
 
 def _acct_id(c, name_or_id):

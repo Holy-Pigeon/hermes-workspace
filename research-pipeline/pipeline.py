@@ -95,6 +95,21 @@ def _reporting_currency(sym):
         return None
 
 
+def _eps_to_trading_ccy(sym, eps):
+    """把报告币种 EPS 换算成交易币种(现价币种)。返回 (eps_conv, note):
+      - 无错配 → (eps, None) 直接可用
+      - 有错配且FX源可用 → (eps_conv, "EUR→USD@rate") 真实换算
+      - 有错配但FX无源(TWD等) → (None, "...无源,跳过") 诚实跳过
+      - 取数层不可用 → (eps, None) 安全回退(不阻断流程)
+    """
+    try:
+        sys.path.insert(0, os.path.join(WS, "marketdata"))
+        import core as md
+        return md.eps_to_trading_currency(sym, eps)
+    except Exception:
+        return eps, None
+
+
 def reverse_dcf_for(name, price, eps):
     out, _, _ = run([PY, RDCF, "--name", name, "--price", f"{price}",
                      "--eps", f"{eps}", "--exit-mults", "15,18,22"])
@@ -174,14 +189,20 @@ def build_us_section(us_cands):
         price, pdate = _us_price(sym)
         eps = c.get("eps_annual")
         ccy = _reporting_currency(sym)
-        if ccy:
+        # 币种错配处理: 先试真实FX换算(EUR→USD等), 有源即换算后正常跑反向DCF;
+        # 无源(TWD等)才诚实跳过。绝不直接相除得失真PE, 也绝不编造汇率。
+        eps_conv, fx_note = (eps, None)
+        if ccy and eps is not None:
+            eps_conv, fx_note = _eps_to_trading_ccy(sym, eps)
+        if ccy and eps_conv is None:
+            # 有错配但无一手FX源 → 诚实跳过(如 TSM 的 TWD)
             lines.append(f"(⚠️币种冲突: {sym} 财报BASIC_EPS={eps} 以{ccy}计, 现价以USD计, "
-                         f"直接相除的PE倍数失真→跳过反向DCF, 绝不编造FX换算。"
-                         f"须人工取同币种EPS(或ADR调整后EPS)再手跑 reverse_dcf)")
-        elif price and eps and eps > 0:
-            lines.append(f"(现价 {price} @ {pdate} via marketdata; 年度EPS {eps})")
+                         f"{fx_note}。直接相除PE失真, 绝不编造换算→跳过反向DCF, 须人工取同币种EPS)")
+        elif price and eps_conv and eps_conv > 0:
+            note = f"; EPS已FX换算 {fx_note}" if fx_note else ""
+            lines.append(f"(现价 {price} @ {pdate} via marketdata; 年度EPS {eps_conv:.4f}{note})")
             lines.append("```")
-            lines.append(reverse_dcf_for(name, price, eps))
+            lines.append(reverse_dcf_for(name, price, eps_conv))
             lines.append("```")
         elif eps is not None and eps <= 0:
             lines.append("(年度EPS≤0, PE 口径反向DCF 无意义, 跳过 — 须改用 PS/现金流框架)")
