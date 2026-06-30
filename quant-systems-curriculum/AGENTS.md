@@ -66,6 +66,17 @@
 同 ai-teacher：LaTeX 用 `$...$` / `$$...$$`，禁塞代码块，禁 Unicode 上下标。
 代码块语言用全名（`cpp`/`bash`/`python`），引擎已带 alias 映射但仍建议用全名。
 
+## 图文并茂（图片直传 Notion，2026-06-30 新增）
+
+课时**必须图文并茂**——读者按「懂数据结构与算法的大一新生」对待，讲透机制、少做类比、关键结构都配图。
+
+- **写法**：markdown 里正常用 `![图说明](../assets/xxx.png)` 引用本地图，**路径相对该 .md 文件所在目录**（notes/ 下的课时引用 `../assets/`）。
+- **同步引擎已支持**：`sync_to_notion.py` 解析到独立成行的 `![](...)` 会自动走 Notion **File Upload API** 上传图片，转成真 image block，由 Notion 自家 S3 托管——**不依赖外部图床、不会过期、不暴露本机路径**。alt 文本作为图注 caption。
+- **画图**：用 `/opt/homebrew/bin/python3` + matplotlib（已装，中文字体用 `Hiragino Sans GB` / `Songti SC`，`axes.unicode_minus=False`）。画图脚本放 `scripts/draw_*.py`，输出到 `assets/`。**避免 µ/✓/✗ 等 Hiragino 缺字形字符**（用 us / [好] / [坏] 替代），否则出豆腐块。
+- **画原理本身，不画拟人类比**：环形结构、指针推进快照、cache line 布局、happens-before 时序——直接把数据结构和机制画出来。范例见 `scripts/draw_spsc.py`（5 张图）。
+- **assets/ 纳入 git**（已确认不被 gitignore），图和课时一起版本化。
+- 验证：同步后回读页面 `blocks/{pid}/children`，确认 `type==image` 的块数等于课时图数，且 url 含 `prod-files-secure`（= Notion 自托管成功）。
+
 ## 数据/证据纪律
 
 - 技术知识点本身用官方一手技术文档核验，出处写进课时页脚 + `证据_一手出处核验.md`。

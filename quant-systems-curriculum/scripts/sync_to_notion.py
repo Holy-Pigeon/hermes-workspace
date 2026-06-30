@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import mimetypes
 import os
 import re
 import ssl
@@ -109,6 +110,79 @@ def notion_request(method: str, path: str, token: str, payload: dict[str, Any] |
             time.sleep(2.0 * (attempt + 1))
 
     raise RuntimeError(last_error or f"Notion API {method} {path} failed with unknown network error")
+
+
+def upload_image_file(token: str, file_path: Path) -> str:
+    """Upload a local image to Notion via the File Upload API. Returns the file_upload id.
+
+    两步:① POST /file_uploads 建 upload object 拿 upload_url;② multipart POST 文件到 upload_url。
+    成功后该 id 可直接用于 image block 的 {"type":"file_upload","file_upload":{"id":...}}。
+    """
+    import uuid
+    up = notion_request("POST", "file_uploads", token, {})
+    uid = up["id"]
+    upload_url = up["upload_url"]
+
+    data = file_path.read_bytes()
+    mime, _ = mimetypes.guess_type(str(file_path))
+    mime = mime or "image/png"
+    boundary = "----notion" + uuid.uuid4().hex
+    body = b""
+    body += f"--{boundary}\r\n".encode()
+    body += (
+        f'Content-Disposition: form-data; name="file"; '
+        f'filename="{file_path.name}"\r\n'
+    ).encode()
+    body += f"Content-Type: {mime}\r\n\r\n".encode()
+    body += data + b"\r\n"
+    body += f"--{boundary}--\r\n".encode()
+
+    req = urllib.request.Request(upload_url, data=body, method="POST")
+    req.add_header("Authorization", f"Bearer {token}")
+    req.add_header("Notion-Version", NOTION_VERSION)
+    req.add_header("Content-Type", f"multipart/form-data; boundary={boundary}")
+
+    last_error: Exception | None = None
+    for attempt in range(5):
+        try:
+            with _opener.open(req, timeout=60) as resp:
+                result = json.loads(resp.read().decode("utf-8"))
+                if result.get("status") != "uploaded":
+                    raise RuntimeError(f"Upload status != uploaded: {result.get('status')}")
+                return uid
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            if exc.code in (429, 500, 502, 503, 504) and attempt < 4:
+                last_error = exc
+                time.sleep(2.0 * (attempt + 1))
+                continue
+            raise RuntimeError(f"Image upload failed: HTTP {exc.code} {detail}") from exc
+        except (urllib.error.URLError, ssl.SSLError, EOFError, ConnectionError, OSError) as exc:
+            last_error = exc
+            if attempt == 4:
+                break
+            time.sleep(2.0 * (attempt + 1))
+    raise RuntimeError(last_error or "Image upload failed with unknown network error")
+
+
+def resolve_local_images(blocks: list[dict[str, Any]], token: str, base_dir: Path) -> None:
+    """In-place: 把 markdown_to_blocks 产出的 _local_image 占位块上传并替换成真 image block。"""
+    for blk in blocks:
+        if blk.get("type") != "_local_image":
+            continue
+        rel = blk["_local_image"]["path"]
+        caption = blk["_local_image"].get("caption", "")
+        img_path = (base_dir / rel).resolve()
+        if not img_path.exists():
+            raise RuntimeError(f"图片不存在: {img_path} (markdown 里写的是 {rel})")
+        uid = upload_image_file(token, img_path)
+        blk.clear()
+        image_obj: dict[str, Any] = {"type": "file_upload", "file_upload": {"id": uid}}
+        if caption:
+            image_obj["caption"] = [{"type": "text", "text": {"content": caption[:2000]}}]
+        blk["object"] = "block"
+        blk["type"] = "image"
+        blk["image"] = image_obj
 
 
 def load_config() -> dict[str, Any]:
@@ -390,6 +464,19 @@ def markdown_to_blocks(markdown: str) -> list[dict[str, Any]]:
             blocks.append(heading(len(heading_match.group(1)), heading_match.group(2).strip()))
             continue
 
+        # Standalone local image: ![caption](relative/path.png)
+        img_match = re.match(r"^!\[(.*?)\]\(([^)]+)\)\s*$", line.strip())
+        if img_match:
+            flush_para()
+            blocks.append({
+                "type": "_local_image",
+                "_local_image": {
+                    "caption": img_match.group(1).strip(),
+                    "path": img_match.group(2).strip(),
+                },
+            })
+            continue
+
         bullet_match = re.match(r"^[-*]\s+(.+)$", line)
         if bullet_match:
             flush_para()
@@ -450,6 +537,8 @@ def create_lesson_page(args: argparse.Namespace) -> dict[str, Any]:
     database = ensure_database(token, config)
     markdown = Path(args.file).read_text()
     blocks = markdown_to_blocks(markdown)
+    # 上传本地图片 -> 转 image block（base_dir = markdown 所在目录，相对路径据此解析）
+    resolve_local_images(blocks, token, Path(args.file).resolve().parent)
 
     archived = 0
     if not getattr(args, "no_upsert", False):
