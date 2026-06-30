@@ -34,22 +34,34 @@ def _save(fig, name):
 
 # ── 图1：mutex 队列 vs 无锁 SPSC 的延迟分布（为什么要无锁）──────────────
 def fig1_latency():
-    fig, ax = plt.subplots(figsize=(8, 3.6))
+    fig, ax = plt.subplots(figsize=(8.4, 3.8))
     np.random.seed(7)
-    # mutex: 均值低但有长尾尖峰
+    # mutex: 均值低但有长尾尖峰（尖峰更集中、样本更多，让对数轴下的柱子真正长出来）
     base = np.random.normal(0.8, 0.15, 2000)
-    spikes = np.concatenate([base, np.random.normal(6, 1.2, 60)])
-    ax.hist(spikes, bins=80, color="#d62728", alpha=0.55, label="mutex + queue（有锁）")
+    spikes = np.concatenate([base, np.random.normal(6, 0.55, 180)])
     lockfree = np.random.normal(0.25, 0.05, 2000)
-    ax.hist(lockfree, bins=80, color="#4C78A8", alpha=0.7, label="SPSC 无锁队列")
-    ax.axvline(6, color="#d62728", ls="--", lw=1)
-    ax.annotate("锁竞争尖峰\n（P99.9 在这里）", xy=(6, 40), xytext=(7, 120),
-                fontsize=11, color="#d62728",
-                arrowprops=dict(arrowstyle="->", color="#d62728"))
+    bins = np.linspace(0, 11, 70)
+    ax.hist(spikes, bins=bins, color="#d62728", alpha=0.55, label="mutex + queue（有锁）")
+    ax.hist(lockfree, bins=bins, color="#4C78A8", alpha=0.7, label="SPSC 无锁队列")
+    # 对数 Y 轴：让尾部尖峰真正可见（线性轴会把它压没）
+    ax.set_yscale("log")
+    ax.set_ylim(0.7, 1500)
+    # P99.9 竖线，量化"最坏几次"
+    p999 = np.percentile(spikes, 99.9)
+    ax.axvline(p999, color="#d62728", ls="--", lw=1.5)
+    ax.text(p999 + 0.15, 120, f"P99.9 ≈ {p999:.1f} us", color="#d62728", fontsize=9.5, weight="bold")
+    ax.annotate("锁竞争尖峰\n（最坏的上百次，吃单/滑点就发生在这）",
+                xy=(6, 60), xytext=(4.0, 400),
+                fontsize=10, color="#d62728", ha="center", weight="bold",
+                arrowprops=dict(arrowstyle="->", color="#d62728", lw=1.8))
+    ax.annotate("绝大多数都很快\n（只看均值发现不了问题）",
+                xy=(0.85, 500), xytext=(1.8, 30),
+                fontsize=10, color="#333", ha="center",
+                arrowprops=dict(arrowstyle="->", color="#888", lw=1.2))
     ax.set_xlabel("入队→出队延迟（微秒 us）", fontsize=11)
-    ax.set_ylabel("出现次数", fontsize=11)
+    ax.set_ylabel("出现次数（对数刻度）", fontsize=11)
     ax.set_title("为什么热路径不用锁：均值不重要，最坏的几次才致命", fontsize=12.5, weight="bold")
-    ax.legend(fontsize=10)
+    ax.legend(fontsize=10, loc="upper right")
     ax.set_xlim(0, 11)
     _save(fig, "spsc-1-latency.png")
 
