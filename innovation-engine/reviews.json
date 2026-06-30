@@ -246,5 +246,13 @@
     "stage": "initial",
     "ts": "2026-06-29 20:32:48",
     "processed": true
+  },
+  {
+    "idea_id": "2026-06-30 09:13::86c3a65ba62a",
+    "action": "reject",
+    "comment": "",
+    "stage": "initial",
+    "ts": "2026-06-30 10:19:44",
+    "processed": true
   }
 ]
