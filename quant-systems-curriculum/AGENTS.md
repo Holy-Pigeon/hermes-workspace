@@ -75,7 +75,7 @@
 - **画图**：用 `/opt/homebrew/bin/python3` + matplotlib（已装，中文字体用 `Hiragino Sans GB` / `Songti SC`，`axes.unicode_minus=False`）。画图脚本放 `scripts/draw_*.py`，输出到 `assets/`。**避免 µ/✓/✗ 等 Hiragino 缺字形字符**（用 us / [好] / [坏] 替代），否则出豆腐块。
 - **画原理本身，不画拟人类比**：环形结构、指针推进快照、cache line 布局、happens-before 时序——直接把数据结构和机制画出来。范例见 `scripts/draw_spsc.py`（5 张图）。
 - **长尾/尖峰类分布图必须用对数 Y 轴**（`ax.set_yscale("log")`）。线性轴下主峰会把仅占百分之几的尾部尖峰压到贴地、箭头指向空白处，反而把要证明的论点藏起来（曾犯：延迟分布图线性轴致尖峰不可见被用户当场指出）。尖峰要让它真正成簇可见，配 P99/P99.9 量化竖线。
-- **画完必须用 vision_analyze 自检**：柱子/箭头/标注/图例有无重叠、箭头是否指向真实存在的元素、是否直观表达了论点——不能只看"生成成功"就交付。
+- **画完按 SOUL「对自己的每一项输出负责」用 vision_analyze 自检**（通用纪律在 SOUL，此处只列项目检查清单）：柱子/箭头/标注/图例有无重叠、箭头是否指向真实存在的元素、图是否和课时正文描述一致、是否直观表达了论点——不能只看"生成成功"就交付。
 - **assets/ 纳入 git**（已确认不被 gitignore），图和课时一起版本化。
 - 验证：同步后回读页面 `blocks/{pid}/children`，确认 `type==image` 的块数等于课时图数，且 url 含 `prod-files-secure`（= Notion 自托管成功）。
 
