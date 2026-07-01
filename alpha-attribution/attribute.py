@@ -135,6 +135,8 @@ def classify(row):
         return "F4", family          # 看多『证伪trap/成长』的低估票却跑输=好生意买早/需时间(非陷阱)
     if family == "cheap_trap":
         return "F3", family          # 看多纯低估票却跑输=真便宜陷阱
+    if family == "neutral":
+        return None, family          # 低相关分散器跑输≠失败(它本就不追涨), 不污染F2桶
     if stance == "看多":
         return "F2", family          # 未归类看多默认归时机/质量侧
     return None, family
