@@ -4,3 +4,7 @@ scripts/bench_spike
 scripts/bench_stl
 scripts/bench_ts
 scripts/probe_cl
+scripts/bench_ctxsw
+scripts/bench_locality
+scripts/bench_pf
+scripts/bench_busypoll
