@@ -92,6 +92,7 @@ MODE_LABEL = {
     "F2": "时机错(好生意买在price-in满)",
     "F3": "选择错(便宜陷阱)",
     "F4": "耐心错(证伪trap的好生意买早/需时间)",
+    "M0": "未成熟(持有期<50%窗口, 浮动噪声, 勿据此改规则)",
 }
 MODE_FIX = {
     "F1": "改规则: 别把『贵』当『该空』——贵的票可以更贵。StockChoose/入池门槛"
@@ -104,7 +105,16 @@ MODE_FIX = {
           "真问题是【好生意买早/耐心不足】：低估锚成立但价值兑现需时间(证伪trap≠立即跑赢)。"
           "对症=延长评估窗口至论点证伪日(多为中报8/31)再计分，且入场分批而非一次性满仓，"
           "而非把它误报成F3去加质量闸——加了也拦不住(它过闸)，只会误伤真正的好生意候选。",
+    "M0": "⛔不要据此改任何规则。这些呼叫持有期<50%论点窗口(多在中报8/31才闭合)，"
+          "当前负α是mark-to-market浮动噪声不是已实现失败。用建仓2-3周的浮动读数去改"
+          "选股规则=在时间维度犯确认偏误(拿早期噪声当结论)。正确动作=登记观察、"
+          "等成熟度≥50%或论点证伪日再归因。归因处方只对已成熟(≥50%)的负α开。",
 }
+
+# 成熟度门: 持有期占论点窗口比例低于此值的负α, 视为未成熟浮动噪声,
+# 隔离进 M0 观察桶, 不开 F1/F2/F3/F4 改规则处方。逆向价值呼叫论点窗口
+# 多在中报8/31才闭合, 建仓2-3周的浮动α不足以驱动改规则。
+MATURITY_GATE = 50
 
 
 def get_call_alpha_rows():
@@ -125,6 +135,11 @@ def classify(row):
     ca = row.get("call_alpha", 0)
     if ca >= 0:
         return None, family  # 正α=没失败，不归因
+    # 成熟度门: 持有期<窗口50%的负α=未成熟浮动噪声, 隔离进M0观察桶,
+    # 不开改规则处方(用早期噪声改规则=时间维度的确认偏误)。
+    mat = row.get("maturity_pct")
+    if mat is not None and mat < MATURITY_GATE:
+        return "M0", family
     # 负α：按 stance/family 分类
     stance = row.get("stance")
     if family == "short" or stance == "看空":
@@ -179,30 +194,44 @@ def main():
     from collections import Counter
     dist = Counter(c["mode"] for c in classified)
 
+    # M0(未成熟)与已成熟失败模式分开: M0 不参与「最痛偏差」评选与改规则处方,
+    # 只登记观察。改规则只能由已成熟(≥50%窗口)的负α驱动。
+    mature = [c for c in classified if c["mode"] != "M0"]
+    immature = [c for c in classified if c["mode"] == "M0"]
+
     print("=" * 66)
     print("呼叫α负读数 · 失败模式归因   (机械分类, 至今浮动非结算)")
-    print(f"  进行中呼叫 {len(ok_rows)} 条 | 负α {len(losers)} 条 | 已归因 {len(classified)} 条")
+    print(f"  进行中呼叫 {len(ok_rows)} 条 | 负α {len(losers)} 条 | "
+          f"已成熟归因 {len(mature)} 条 | 未成熟观察 {len(immature)} 条")
     print("=" * 66)
-    if not classified:
-        print("  当前无负α呼叫可归因——发现+尽调机器暂未在总量上亏相对钱。")
+    if immature:
+        imm_tot = sum(c["call_alpha"] for c in immature)
+        print(f"  ⛔ 未成熟观察桶(M0): {len(immature)}条 / {imm_tot:+.1f}pp "
+              f"— 持有期<{MATURITY_GATE}%论点窗口, 浮动噪声, 勿据此改规则")
+        for c in sorted(immature, key=lambda x: x["call_alpha"]):
+            print(f"     · {c['id']} {c['subject'][:16]:<16} 成熟度{c.get('maturity_pct')}% "
+                  f"呼叫α {c['call_alpha']:+.1f}pp (等成熟或证伪日再归因)")
+        print("-" * 66)
+    if not mature:
+        print("  当前无【已成熟】负α呼叫可归因——不足以改规则(全部负α尚在窗口<50%)。")
     else:
-        # 哪一类失败模式最痛（条数 + 累计负α）
+        # 哪一类失败模式最痛（条数 + 累计负α）——仅计已成熟
         burden = {}
-        for c in classified:
+        for c in mature:
             burden.setdefault(c["mode"], [0, 0.0])
             burden[c["mode"]][0] += 1
             burden[c["mode"]][1] += c["call_alpha"]
-        print("  失败模式分布（条数 / 累计呼叫α）:")
+        print("  已成熟失败模式分布（条数 / 累计呼叫α）:")
         for m in sorted(burden, key=lambda x: burden[x][1]):
             n, tot = burden[m]
             print(f"    {m} {MODE_LABEL[m]:<22} {n}条 / {tot:+.1f}pp")
         worst = min(burden, key=lambda x: burden[x][1])
         print("-" * 66)
-        print(f"  ⚠ 最痛系统性偏差: {worst} {MODE_LABEL[worst]}")
+        print(f"  ⚠ 最痛系统性偏差(已成熟): {worst} {MODE_LABEL[worst]}")
         print(f"    {MODE_FIX[worst]}")
         print("-" * 66)
-        print("  逐条:")
-        for c in sorted(classified, key=lambda x: x["call_alpha"]):
+        print("  逐条(已成熟):")
+        for c in sorted(mature, key=lambda x: x["call_alpha"]):
             print(f"    {c['mode']} {c['id']} {c['subject'][:16]:<16} "
                   f"[{c['stance']}] 呼叫α {c['call_alpha']:+.1f}pp "
                   f"({c['direction']})")

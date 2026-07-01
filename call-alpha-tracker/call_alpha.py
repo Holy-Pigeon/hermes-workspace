@@ -189,13 +189,30 @@ def main():
         br = (b1 / b0 - 1) * 100
         excess = sr - br
         call_alpha = stance * excess  # 看空时跑输基准=正贡献
+        # 持有成熟度: 从建仓日至今占「建仓→论点证伪窗口」的比例。
+        # 逆向价值呼叫的论点窗口多在中报8/31才闭合, 建仓仅2-3周时的浮动α
+        # 是未成熟噪声, 不足以驱动改规则。下游(attribute)据此隔离未成熟负α。
+        held_days = window_days = maturity_pct = None
+        vb = p.get("verify_by")
+        try:
+            fd = datetime.date.fromisoformat(s0d[:10])
+            today = datetime.date.today()
+            held_days = (today - fd).days
+            if vb:
+                vd = datetime.date.fromisoformat(vb[:10])
+                window_days = (vd - fd).days
+                if window_days and window_days > 0:
+                    maturity_pct = round(100 * held_days / window_days)
+        except Exception:
+            pass
         rows.append({
             "id": pid, "subject": subj, "direction": direction,
             "stance": "看多" if stance > 0 else "看空",
             "from": s0d, "stock_ret": round(sr, 2), "bench": bname,
             "bench_ret": round(br, 2), "excess": round(excess, 2),
             "call_alpha": round(call_alpha, 2), "status": "OK",
-            "verify_by": p.get("verify_by"),
+            "verify_by": vb, "held_days": held_days,
+            "window_days": window_days, "maturity_pct": maturity_pct,
         })
 
     if as_json:
