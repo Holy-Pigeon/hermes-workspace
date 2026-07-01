@@ -49,17 +49,27 @@ WS = os.path.dirname(HERE)
 CALL_ALPHA = os.path.join(WS, "call-alpha-tracker", "call_alpha.py")
 PY = "/opt/homebrew/bin/python3"
 
-# direction → 派系：cheap=便宜/低估派(F3靶) / quality=质量护城河成长派(F2靶)
-#                    short=看空派(F1由stance+excess判) / neutral=不计
+# direction → 派系（三分而非二分，2026-07-01 元层修复归因误标）
+#   cheap_trap : 纯低估锚、无质量/证伪trap背书 → 跑输=F3 真便宜陷阱(叠ROE质量闸对症)
+#   cheap_qual : 低估锚但direction自带『证伪trap』或『成长/复苏拐点』背书(证据词_not_trap/_growth/
+#                _inflection) → 跑输≠便宜陷阱，是【好生意等价/择时】问题，ROE质量闸对它无效(它本就高ROE)
+#   quality    : 质量护城河成长派(F2靶) / short: 看空派(F1) / neutral: 不计
+#
+# 根因(为何拆)：原映射把 *_not_trap / *_growth / *_inflection 一律塞进 cheap→F3，于是
+# 茅台/宁德/迈瑞(系统自己研究note已逐项证伪trap、皆高ROE)被机械贴『便宜陷阱』，
+# 处方开出『叠ROE质量闸』——但这些票本就过质量闸，处方无效。这正是 StockChoose F3 veto
+# 连卡3轮的上游病根：归因层把 F2/时机问题误报成 F3/选择问题，enforcement 打错靶。
 FAMILY = {
-    # 便宜/低估派（看多，锚=估值便宜）→ 跑输=F3 选择错(便宜陷阱)
-    "real_cheap_not_trap": "cheap",
-    "real_cheap_growth": "cheap",
-    "mispriced_trough_not_trap": "cheap",
-    "recovery_inflection_not_trap": "cheap",
-    "bullish_on_recovery": "cheap",
-    "undervalued": "cheap",
-    "reasonably_undervalued_growth": "cheap",
+    # 低估锚 + 自带『非陷阱/成长/复苏拐点』背书 → 跑输属择时/耐心问题，非选烂生意
+    "real_cheap_not_trap": "cheap_qual",
+    "real_cheap_growth": "cheap_qual",
+    "mispriced_trough_not_trap": "cheap_qual",
+    "recovery_inflection_not_trap": "cheap_qual",
+    "bullish_on_recovery": "cheap_qual",
+    "reasonably_undervalued_growth": "cheap_qual",
+    # 纯低估锚、无质量背书 → 跑输=F3 真便宜陷阱(低分位锚定选出真烂生意)
+    "undervalued": "cheap_trap",
+    "cheap": "cheap_trap",
     # 质量/护城河/成长派（看多，锚=生意质量）→ 跑输=F2 时机错(好生意买贵了)
     "moat_understated": "quality",
     "organic_ramp_intact": "quality",
@@ -81,6 +91,7 @@ MODE_LABEL = {
     "F1": "方向错(看空强势/看多弱势)",
     "F2": "时机错(好生意买在price-in满)",
     "F3": "选择错(便宜陷阱)",
+    "F4": "耐心错(证伪trap的好生意买早/需时间)",
 }
 MODE_FIX = {
     "F1": "改规则: 别把『贵』当『该空』——贵的票可以更贵。StockChoose/入池门槛"
@@ -89,6 +100,10 @@ MODE_FIX = {
           "增速若已 price-in 满（要求增速≈已兑现增速），即便护城河强也应延后进池。",
     "F3": "改规则: 杀便宜陷阱。低 PE 分位是必要非充分条件，入池须叠加质量闸"
           "（ROE 持久性/毛利/现金含量），避免低分位锚定选出真烂生意。",
+    "F4": "⚠不是选择错，别开ROE质量闸(这些票本就高ROE、note已逐项证伪trap)。"
+          "真问题是【好生意买早/耐心不足】：低估锚成立但价值兑现需时间(证伪trap≠立即跑赢)。"
+          "对症=延长评估窗口至论点证伪日(多为中报8/31)再计分，且入场分批而非一次性满仓，"
+          "而非把它误报成F3去加质量闸——加了也拦不住(它过闸)，只会误伤真正的好生意候选。",
 }
 
 
@@ -116,8 +131,10 @@ def classify(row):
         return "F1", family          # 看空却负α=标的跑赢基准=空在强势股
     if family == "quality":
         return "F2", family          # 看多好生意却跑输=买贵了
-    if family == "cheap":
-        return "F3", family          # 看多便宜票却跑输=便宜陷阱
+    if family == "cheap_qual":
+        return "F4", family          # 看多『证伪trap/成长』的低估票却跑输=好生意买早/需时间(非陷阱)
+    if family == "cheap_trap":
+        return "F3", family          # 看多纯低估票却跑输=真便宜陷阱
     if stance == "看多":
         return "F2", family          # 未归类看多默认归时机/质量侧
     return None, family
