@@ -534,8 +534,13 @@
       "topic": "交叉注意力（Cross-Attention）——让解码器一边写，一边回头看原文",
       "category": "类目 13：Transformer 架构",
       "taught_at": "2026-07-01T14:03:00+08:00"
+    },
+    {
+      "topic": "混合专家模型（Mixture of Experts, MoE）——让每个词只唤醒一小撮专家，把参数量和计算量解绑",
+      "category": "类目 16：前馈神经网络",
+      "taught_at": "2026-07-01T20:03:00+08:00"
     }
   ],
-  "total_count": 107,
-  "last_updated": "2026-07-01T14:03:00+08:00"
+  "total_count": 108,
+  "last_updated": "2026-07-01T20:03:00+08:00"
 }
