@@ -214,6 +214,48 @@
       "outcome": "void",
       "resolved_value": "born-overdue: created 6/29 but verify_by 5/15 in past; also duplicates P014 same-Apple-bearish; voided to clear permanent overdue noise; guardrail added to cmd_add",
       "resolved_date": "2026-06-30"
+    },
+    {
+      "id": "P016",
+      "created": "2026-07-01",
+      "subject": "Mastercard(MA)",
+      "claim": "MA 净收入(除汇)增速在 FY2026 上半年(Q1+Q2)维持 ≥10% 双位数,增值服务+跨境驱动的复利未熄火",
+      "falsification": "MA 连续两个季度(Q1'26 & Q2'26)净收入除汇增速跌破 10% 即证伪",
+      "direction": "bullish_on_growth",
+      "confidence": 0.72,
+      "verify_by": "2026-08-15",
+      "source_note": "research/note_2026-07-01_mastercard_toll_road.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P017",
+      "created": "2026-07-01",
+      "subject": "Mastercard(MA)",
+      "claim": "MA 定价力+mix 无侵蚀,FY2026 上半年营业利润率维持 ≥54%(FY25 已达 57.6%,留 3.6pct 缓冲)",
+      "falsification": "任一季度(Q1 或 Q2'26)营业利润率跌破 54% 即证伪护城河定价力假设",
+      "direction": "bullish_on_margin",
+      "confidence": 0.75,
+      "verify_by": "2026-08-31",
+      "source_note": "research/note_2026-07-01_mastercard_toll_road.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P018",
+      "created": "2026-07-01",
+      "subject": "Mastercard(MA)",
+      "claim": "当前 13.6 无安全边际:反向DCF显示市场price-in仅~10.5%十年FCF增速,若2026高利率(Polymarket无降息78%/加息54.5%)兑现杀倍数,MA 12个月内相对标普500不产生超额收益",
+      "falsification": "至2027-06-30,若 MA 总回报跑赢 SPY >5pct 则本'估值端逆风压制超额'判断被证伪",
+      "direction": "bearish_on_valuation",
+      "confidence": 0.7,
+      "verify_by": "2027-06-30",
+      "source_note": "research/note_2026-07-01_mastercard_toll_road.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
