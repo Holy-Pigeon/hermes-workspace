@@ -390,6 +390,107 @@ def cmd_deregister_project(args):
     return 0
 
 
+# ─────────────────────────── audit-cards ───────────────────────────
+def cmd_audit_cards(args):
+    """驾驶舱卡片『活性对账』——治理盲区的确定性检查。
+
+    根因：驾驶舱把 projects.json 每张卡片展示成『在跑的项目』，但一张卡片的活性
+    可以由三种独立机制之一支撑：① enabled 的 cron ② 被别的项目脚本编排调用
+    ③ 声明了 freshness_hours（artifact-freshness 会盯）。现有元监控各有结构盲区：
+      · cron-health 明确 `if not enabled: continue`——对 disabled cron 结构性失明；
+      · artifact-freshness 只盯声明了 freshness_hours 的卡片。
+    于是一张『既无 enabled cron、又无 SLA、又没被任何脚本编排』的卡片=驾驶舱亮着
+    但无任何自动检测器盯它的活性=L18/L39 反复自警的『虚假的都在跑观感』僵尸卡，
+    此前只能靠人手把 jobs.json × projects.json × 调用方 grep 三表交叉才能发现。
+    本命令把那次手工交叉固化成可复跑的对账。纯只读，不改任何文件、不动 cron。
+
+    每张卡片报其活性支撑来源；PHANTOM=三种支撑全无 → 治理红旗，需人判定
+    （补 cron / 补 SLA / 或 deregister-project 退场）。
+    """
+    if not os.path.exists(PROJECTS_JSON):
+        print(f"错误：找不到 {PROJECTS_JSON}", file=sys.stderr)
+        return 3
+    with open(PROJECTS_JSON, "r", encoding="utf-8") as f:
+        projects = json.load(f).get("projects", [])
+
+    # ① 读 cron jobs：建立 id→enabled 映射，并把 prompt/script 拼成可搜文本
+    jobs_path = os.path.expanduser("~/.hermes/cron/jobs.json")
+    enabled_blob = ""   # 所有 enabled cron 的 prompt+script 文本，用于判『卡片被 cron 驱动』
+    have_jobs = os.path.exists(jobs_path)
+    if have_jobs:
+        with open(jobs_path, "r", encoding="utf-8") as f:
+            jobs = json.load(f).get("jobs", [])
+        for j in jobs:
+            if j.get("enabled", True):
+                enabled_blob += " " + str(j.get("prompt") or "") + " " + str(j.get("script") or "") + " " + str(j.get("name") or "") + " " + str(j.get("workdir") or "")
+
+    # ② 读所有项目 py 源，建立『被其它脚本编排调用』的证据库（一次性拼串，粗匹配 id）
+    ws = WORKSPACE
+    orchestration_blob = ""
+    for root, dirs, files in os.walk(ws):
+        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", ".pw_chrome", "node_modules")]
+        for fn in files:
+            if fn.endswith(".py"):
+                try:
+                    with open(os.path.join(root, fn), "r", encoding="utf-8", errors="ignore") as f:
+                        orchestration_blob += " " + f.read()
+                except OSError:
+                    pass
+
+    rows, phantoms = [], []
+    for p in projects:
+        pid = p.get("id", "?")
+        supports = []
+        # 支撑①：enabled cron 的 prompt/script/name/workdir 提到该项目
+        # 归一化连字符/下划线：cron 脚本名常用下划线(valuation_trigger_weekly.sh)，
+        # 而 projects.json id 用连字符(valuation-trigger)，不归一会漏判成 PHANTOM 假阳。
+        norm = lambda s: s.replace("-", "").replace("_", "")
+        pid_norm = norm(pid)
+        if have_jobs and pid_norm and pid_norm in norm(enabled_blob):
+            supports.append("enabled_cron")
+        # 支撑②：声明了 freshness_hours（artifact-freshness 盯）
+        if p.get("freshness_hours") is not None:
+            supports.append("sla")
+        # 支撑③：被别的项目脚本编排调用（源码里出现 该项目目录路径）
+        # 用『项目目录名/』做锚，避免 pid 子串误配（如 research 命中 research-pipeline）
+        if (pid + "/") in orchestration_blob or (pid + '",') in orchestration_blob:
+            supports.append("orchestrated")
+        # 支撑④：有 web 服务（health_path/ports）——常驻服务型，活性由服务本身体现
+        if p.get("health_path") or p.get("ports"):
+            supports.append("web_service")
+        row = {"id": pid, "name": p.get("name", pid), "supports": supports}
+        rows.append(row)
+        if not supports:
+            phantoms.append(row)
+
+    out = {
+        "checked_at": datetime.datetime.now().isoformat(timespec="seconds"),
+        "total_cards": len(projects),
+        "phantom_count": len(phantoms),
+        "phantoms": phantoms,
+        "all": rows if args.verbose else None,
+        "note": "PHANTOM=既无enabled_cron又无sla又无orchestrated又非web_service的卡片=无任何自动检测器盯其活性，需人判定：补cron/补freshness_hours SLA/或deregister-project退场",
+    }
+    if args.json:
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+    elif args.quiet and not phantoms:
+        pass
+    else:
+        if not phantoms:
+            print(f"✅ 卡片活性对账通过：{len(projects)} 张卡片全部有活性支撑（cron/SLA/编排/web）")
+        else:
+            print(f"⚠️ 检出 {len(phantoms)} 张 PHANTOM 卡片（驾驶舱亮着但无任何自动检测器盯活性）：")
+            for r in phantoms:
+                print(f"  [PHANTOM] {r['name']} ({r['id']}) → 补cron / 补freshness_hours / 或 deregister-project 退场")
+        if args.verbose:
+            print("--- 全部卡片支撑来源 ---")
+            for r in rows:
+                print(f"  {r['id']}: {','.join(r['supports']) or '（无）'}")
+    if args.quiet:
+        return 1 if phantoms else 0
+    return 0
+
+
 def build_parser():
     p = argparse.ArgumentParser(prog="ie.py", description="创新引擎 idea 登记唯一入口")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -442,6 +543,12 @@ def build_parser():
     dp = sub.add_parser("deregister-project", help="从驾驶舱移除项目卡片（退场/被拒项目治理出口）")
     dp.add_argument("--id", required=True, help="要移除的项目 id")
     dp.set_defaults(func=cmd_deregister_project)
+
+    ac = sub.add_parser("audit-cards", help="驾驶舱卡片活性对账（查 PHANTOM 僵尸卡，纯只读）")
+    ac.add_argument("--json", action="store_true", help="输出完整 JSON")
+    ac.add_argument("--quiet", action="store_true", help="无 PHANTOM exit0 静默；有则 exit1")
+    ac.add_argument("--verbose", action="store_true", help="打印每张卡片的活性支撑来源")
+    ac.set_defaults(func=cmd_audit_cards)
     return p
 
 
