@@ -529,8 +529,13 @@
       "topic": "困惑度（Perplexity）——衡量语言模型\"有多懵\"的黄金标尺",
       "category": "类目 4：信息论基础",
       "taught_at": "2026-07-01T08:03:00+08:00"
+    },
+    {
+      "topic": "交叉注意力（Cross-Attention）——让解码器一边写，一边回头看原文",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-07-01T14:03:00+08:00"
     }
   ],
-  "total_count": 106,
-  "last_updated": "2026-07-01T08:03:00+08:00"
+  "total_count": 107,
+  "last_updated": "2026-07-01T14:03:00+08:00"
 }
