@@ -309,6 +309,46 @@ def main():
         return cmd_resolve(data, args[1], args[2], val)
     elif args[0] == "score":
         return cmd_score(preds)
+    elif args[0] == "resolve-queue":
+        # 结算侧机读输出: 吐出所有已到期/临近到期(<=window天)的 pending 预测,
+        # 附结算 agent 需要的全部字段(claim/falsification/source_note), 供无人值守
+        # settlement cron 消费——去拉一手中报数字后调 resolve。纯只读, 不改任何数据。
+        window = 7
+        if "--window" in args:
+            wi = args.index("--window") + 1
+            if wi < len(args) and args[wi].lstrip("-").isdigit():
+                window = int(args[wi])
+        queue = []
+        for p in preds:
+            if p["outcome"] != "pending":
+                continue
+            dd = days_to(p["verify_by"])
+            if dd > window:
+                continue
+            queue.append({
+                "id": p["id"], "subject": p["subject"],
+                "days_to_verify": dd, "overdue": dd < 0,
+                "confidence": p["confidence"], "verify_by": p["verify_by"],
+                "claim": p["claim"], "falsification": p["falsification"],
+                "source_note": p.get("source_note"),
+            })
+        queue.sort(key=lambda x: x["days_to_verify"])
+        if "--json" in args:
+            print(json.dumps({"window_days": window, "pending_total":
+                sum(1 for p in preds if p["outcome"] == "pending"),
+                "due_count": len(queue), "queue": queue}, ensure_ascii=False, indent=1))
+        else:
+            if not queue:
+                if not quiet:
+                    print(f"结算队列: {window}天窗口内无到期待结算预测。")
+                return 0
+            print(f"=== 结算队列 ({len(queue)}条 in {window}d) ===")
+            for q in queue:
+                tag = f"逾期{-q['days_to_verify']}天" if q["overdue"] else f"{q['days_to_verify']}天后"
+                print(f"[{q['id']}] {q['subject']} 截止{q['verify_by']}({tag}) 信心{q['confidence']:.0%}")
+                print(f"      证伪条件: {q['falsification'][:100]}")
+        # quiet 模式: 队列非空 exit1 供 cron 触发结算, 空则静默 exit0
+        return 1 if queue else 0
     elif args[0] == "calib":
         # watchdog 专用: 只跑 ex-ante 校准健康诊断(信心压缩/到期挤堆)。
         # 有红旗→打印+exit1(cron 推送); 无红旗→静默 exit0。
