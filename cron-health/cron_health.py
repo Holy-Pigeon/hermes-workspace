@@ -15,6 +15,8 @@ cron-health · 定时任务交付健康度看门狗
   2) DELIVERY_FAIL: last_delivery_error 非空 (产出了但没送达=最隐蔽)
   3) STALE        : enabled 但 last_run_at 距今超过「该 cadence 应跑次数」过久
                     (说明调度根本没触发, 比报错更隐蔽)
+  4) PAUSED_STALE : enabled=false 但暂停超过 PAUSED_STALE_DAYS 天仍未处理
+                    (被静默关掉的僵尸 job; 其驾驶舱卡片仍显示为『活着』=治理盲区)
 
 输出 JSON, 供它自己的 cron 判断要不要 ping 用户。
 绝不修改 jobs.json, 绝不动 cron, 完全只读。
@@ -26,6 +28,9 @@ import argparse
 from datetime import datetime, timezone, timedelta
 
 JOBS_PATH = os.path.expanduser("~/.hermes/cron/jobs.json")
+# 一个 cron 被暂停超过这么多天仍未处理(重开或删除) → 视为僵尸, 报 PAUSED_STALE。
+# 阈值给足冗余(临时暂停几天很正常), 只抓「忘了它」的长期僵尸。
+PAUSED_STALE_DAYS = 7
 # 交付/运行失败累积台账(JSONL, 每行一条去重后的失败事件)。
 # *.log 已被 .gitignore 覆盖=运行时状态不入库, 删文件即回滚。
 LEDGER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -125,6 +130,24 @@ def analyze(now=None):
     alerts = []
     for j in data.get("jobs", []):
         if not j.get("enabled", True):
+            # 4) PAUSED_STALE: enabled=false 但已暂停超过 PAUSED_STALE_DAYS 天 =
+            #    「被静默关掉却没人处理」的僵尸 job。根因盲区(2026-07-02 创新引擎实测):
+            #    本看门狗此前对所有 disabled job 直接 continue → 一个项目的 cron 被暂停后
+            #    永远不会被任何机制提醒, 而它的驾驶舱卡片仍显示为『活着的项目』(如
+            #    quality-compounder 暂停 11d / call-alpha-tracker 暂停 9d, 卡片照常在线)。
+            #    快速的临时暂停(几天内会重开)不该报; 只抓「忘了处理」的长期暂停。
+            paused_at = parse_dt(j.get("paused_at"))
+            if paused_at is not None:
+                pa = paused_at if paused_at.tzinfo else paused_at.replace(tzinfo=timezone.utc)
+                paused_days = (now - pa).total_seconds() / 86400
+                if paused_days > PAUSED_STALE_DAYS:
+                    alerts.append({
+                        "type": "PAUSED_STALE",
+                        "job": j.get("name", "?"), "id": j.get("id", "?"),
+                        "paused_at": j.get("paused_at"),
+                        "paused_days": round(paused_days, 1),
+                        "detail": "cron 已长期暂停但未处理(重开或删除); 若驾驶舱仍有其项目卡片则显示为『活着』=僵尸",
+                    })
             continue
         name = j.get("name", "?")
         jid = j.get("id", "?")
@@ -312,6 +335,8 @@ def main():
                     line += f" → {a.get('detail')}"
                 elif a["type"] == "STALE":
                     line += f" → 已 {a.get('overdue_hours')}h 未跑 (期望每 {a.get('expected_interval_hours')}h)"
+                elif a["type"] == "PAUSED_STALE":
+                    line = f"  [PAUSED_STALE] {a['job']} → 已暂停 {a.get('paused_days')}天未处理 (paused_at={a.get('paused_at')})"
                 print(line)
         # flapping 可见性: 即便本快照干净, 近 7d 有过失败 run 也要提示(防『已恢复』误判)
         flap = out["flapping_7d"]
