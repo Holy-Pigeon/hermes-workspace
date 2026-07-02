@@ -330,6 +330,20 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/candidate-deepening"
+    },
+    {
+      "id": "exit-sentinel",
+      "name": "持仓论点破裂哨兵",
+      "icon": "🚪",
+      "desc": "卖出纪律自动化:盯4持仓论点破裂,ORPHAN裸持/WINDOW窗口临近/ADVERSE价格背离三红旗,valuation-trigger的卖出侧镜像",
+      "ports": null,
+      "tags": [
+        "配置层",
+        "风控",
+        "卖出纪律",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/exit-sentinel"
     }
   ]
 }
