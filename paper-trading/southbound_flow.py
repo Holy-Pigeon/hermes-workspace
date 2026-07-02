@@ -33,8 +33,14 @@ PRICE_MOVE_TRIG = 8.0 # 同期股价变化 >=8% 视为显著
 
 
 def fetch(symbol):
+    import os
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _root not in sys.path:
+        sys.path.insert(0, _root)
     import akshare as ak
-    df = ak.stock_hsgt_individual_em(symbol=symbol)
+    from marketdata import safe_call
+    df = safe_call(lambda: ak.stock_hsgt_individual_em(symbol=symbol),
+                   label=f"southbound:{symbol}")
     if df is None or df.empty:
         return None
     df["持股日期"] = pd.to_datetime(df["持股日期"])

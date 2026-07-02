@@ -75,12 +75,18 @@ def classify(d_pct, price_chg):
 
 def scan_one(code, name):
     try:
+        import os
+        _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _root not in sys.path:
+            sys.path.insert(0, _root)
         import akshare as ak
+        from marketdata import safe_call
     except Exception as e:
         print(f"[错误] 无 akshare: {e}", file=sys.stderr)
         return None
     try:
-        df = ak.stock_zh_a_gdhs_detail_em(symbol=code)
+        df = safe_call(lambda: ak.stock_zh_a_gdhs_detail_em(symbol=code),
+                       label=f"gdhs:{code}")
     except Exception as e:
         print(f"[跳过] {name}({code}) 拉股东户数失败(端口异常,绝不编造): {repr(e)[:80]}", file=sys.stderr)
         return None

@@ -56,8 +56,14 @@ def load_positions():
 
 def fetch_a_share(symbol):
     """返回 dict: {'PE':[(date,val)...],'PB':..,'PS':..} 日频升序。"""
+    import os
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if _root not in sys.path:
+        sys.path.insert(0, _root)
     import akshare as ak
-    df = ak.stock_value_em(symbol=symbol)
+    from marketdata import safe_call
+    df = safe_call(lambda: ak.stock_value_em(symbol=symbol),
+                   label=f"value_em:{symbol}")
     if df is None or df.empty:
         return None
     out = {}
