@@ -544,8 +544,13 @@
       "topic": "广播机制（Broadcasting）——让不同形状的张量也能逐元素运算",
       "category": "类目 5：Python 与 PyTorch",
       "taught_at": "2026-07-02T08:03:00+08:00"
+    },
+    {
+      "topic": "Teacher Forcing（教师强制）——训练时喂标准答案，加速序列模型的收敛",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-07-02T14:03:00+08:00"
     }
   ],
-  "total_count": 109,
-  "last_updated": "2026-07-02T08:03:00+08:00"
+  "total_count": 110,
+  "last_updated": "2026-07-02T14:03:00+08:00"
 }
