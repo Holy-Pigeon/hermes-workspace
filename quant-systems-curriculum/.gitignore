@@ -8,3 +8,5 @@ scripts/bench_ctxsw
 scripts/bench_locality
 scripts/bench_pf
 scripts/bench_busypoll
+scripts/bench_tlb
+*.o
