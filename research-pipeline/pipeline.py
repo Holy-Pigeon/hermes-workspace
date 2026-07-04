@@ -266,7 +266,7 @@ def build_quality_section(q_cands, value_codes):
         lines.append("")
         lines.append("### 护城河层 (moat_scorecard 一手, 8年年报)")
         mv = moat_for(code, name)
-        if mv:
+        if mv and mv.get("verdict") is not None and mv.get("roe_median") is not None:
             lines.append(f"- **verdict**: {mv.get('verdict')}  (rank {mv.get('rank')})")
             lines.append(f"- ROE中位 {mv.get('roe_median')}% / ROE持久性 {mv.get('roe_persistence')} "
                          f"/ 净利率均值 {mv.get('npm_mean')}% / CV {mv.get('npm_cv')} "
@@ -275,7 +275,7 @@ def build_quality_section(q_cands, value_codes):
                 for f in mv["flags"]:
                     lines.append(f"- ⚑ {f}")
         else:
-            lines.append("(moat 端口无数据/港股无此端口, 跳过)")
+            lines.append("⚠️ (moat 端口取数失败/无数据, 本次未算出护城河 verdict——非'无护城河', 是数据缺口, 须人工手跑 moat_scorecard 复核, 绝不据此下结论)")
         lines.append("")
         lines.append("### 待人工/后续研究 cron 深挖 (TODO)")
         lines.append("- [ ] 取现价+EPS-TTM 手跑 reverse_dcf: 现价 price-in 多高增速? 好公司是否好价格?")
@@ -345,7 +345,7 @@ def build_dossier(cands):
         lines.append("")
         lines.append("### 护城河层 (moat_scorecard 一手, 8年年报)")
         mv = moat_for(c["code"], c["name"])
-        if mv:
+        if mv and mv.get("verdict") is not None and mv.get("roe_median") is not None:
             lines.append(f"- **verdict**: {mv.get('verdict')}  (rank {mv.get('rank')})")
             lines.append(f"- ROE中位 {mv.get('roe_median')}% / ROE持久性 {mv.get('roe_persistence')} "
                          f"/ 净利率均值 {mv.get('npm_mean')}% / CV {mv.get('npm_cv')} "
@@ -354,7 +354,7 @@ def build_dossier(cands):
                 for f in mv["flags"]:
                     lines.append(f"- ⚑ {f}")
         else:
-            lines.append("(moat 端口无数据/港股无此端口, 跳过)")
+            lines.append("⚠️ (moat 端口取数失败/无数据, 本次未算出护城河 verdict——非'无护城河', 是数据缺口, 须人工手跑 moat_scorecard 复核, 绝不据此下结论)")
         # TODO 钩子
         lines.append("")
         lines.append("### 待人工/后续研究 cron 深挖 (TODO)")
