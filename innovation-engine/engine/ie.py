@@ -455,9 +455,27 @@ def cmd_audit_cards(args):
     if have_jobs:
         with open(jobs_path, "r", encoding="utf-8") as f:
             jobs = json.load(f).get("jobs", [])
+        # cron 的 script 字段常只是文件名(如 sunday_audit_suite.sh)，真正 fan-out 到
+        # 各项目脚本的调用写在该 shell 文件『正文』里。只搜 script 文件名会漏判被 shell
+        # 编排器驱动的项目(如 valuation-trigger/alpha-attribution 被 sunday_audit_suite.sh
+        # 的 line22/24 调用)为 PHANTOM 假阳——这是本工具第 3 次同类假阳(前两次靠被 .py
+        # 编排侥幸命中)。修复：把 enabled cron 的 script 文件正文一并读进 enabled_blob。
+        script_dirs = [os.path.expanduser("~/.hermes/scripts"), os.path.expanduser("~/.hermes/cron")]
         for j in jobs:
             if j.get("enabled", True):
                 enabled_blob += " " + str(j.get("prompt") or "") + " " + str(j.get("script") or "") + " " + str(j.get("name") or "") + " " + str(j.get("workdir") or "")
+                sc = str(j.get("script") or "").strip()
+                if sc:
+                    # 解析 script 的真实路径：绝对路径直接用，否则在常见脚本目录里找
+                    cands = [sc] if os.path.isabs(sc) else [os.path.join(d, sc) for d in script_dirs]
+                    for cand in cands:
+                        if os.path.isfile(cand):
+                            try:
+                                with open(cand, "r", encoding="utf-8", errors="ignore") as sf:
+                                    enabled_blob += " " + sf.read()
+                            except OSError:
+                                pass
+                            break
 
     # ② 读所有项目 py 源，建立『被其它脚本编排调用』的证据库（一次性拼串，粗匹配 id）
     ws = WORKSPACE
