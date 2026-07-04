@@ -564,8 +564,13 @@
       "topic": "权重绑定（Weight Tying）——让输入嵌入表和输出投影共用同一张词表",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-07-04T14:03:00+08:00"
+    },
+    {
+      "topic": "缩放定律（Scaling Laws）——用一条幂律预测模型多大、数据多少、算力多少",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-07-04T20:03:00+08:00"
     }
   ],
-  "total_count": 113,
-  "last_updated": "2026-07-04T14:03:00+08:00"
+  "total_count": 114,
+  "last_updated": "2026-07-04T20:03:00+08:00"
 }
