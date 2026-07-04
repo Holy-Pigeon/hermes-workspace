@@ -344,6 +344,39 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/exit-sentinel"
+    },
+    {
+      "id": "quant-systems-curriculum",
+      "name": "量化系统底层修炼",
+      "icon": "⚙️",
+      "desc": "OS & C++ 低延迟/HPC 学习专栏，沉淀到 Notion",
+      "external_url": "https://app.notion.com/p/38fd8689fc1981f8a78bd867a22736b5",
+      "external_label": "Notion 笔记",
+      "ports": null,
+      "tags": [
+        "学习",
+        "量化",
+        "C++",
+        "OS"
+      ],
+      "heartbeat_file": "~/hermes-workspace/quant-systems-curriculum/notes",
+      "manual": true
+    },
+    {
+      "id": "agent-notes",
+      "name": "Agent 经验沉淀",
+      "icon": "🤖",
+      "desc": "个人 agent 实战经验库，机制层认知沉淀到 Notion",
+      "external_url": "https://app.notion.com/p/387d8689fc19819194e9cc2ad595d91b",
+      "external_label": "Notion 笔记",
+      "ports": null,
+      "tags": [
+        "学习",
+        "agent",
+        "经验"
+      ],
+      "heartbeat_file": "~/hermes-workspace/agent-notes/notes",
+      "manual": true
     }
   ]
 }

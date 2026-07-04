@@ -315,6 +315,41 @@ def cmd_list(args):
     return 0
 
 
+# ─────────────────────────── mark-manual ───────────────────────────
+def cmd_mark_manual(args):
+    """给驾驶舱卡片打/去『manual』标记（人驱动学习/研究专栏的合法 opt-out）。
+    根因：audit-cards 的四种活性支撑（cron/SLA/编排/web）都假设卡片『该被自动盯』，
+    但有些卡片（Notion 笔记列/学习专栏）本就该纯人工驱动、不该有任何自动检测器——
+    它们会在 PHANTOM 里永久误报=狼来了，淹没真正的僵尸卡。此动词给它们一个诚实标记，
+    仍走脚本不手改 json（对齐『所有登记走脚本』铁律）。幂等。
+    """
+    pid = args.id.strip()
+    if not pid:
+        print("错误：--id 必填", file=sys.stderr)
+        return 2
+    if not os.path.exists(PROJECTS_JSON):
+        print(f"错误：找不到 {PROJECTS_JSON}", file=sys.stderr)
+        return 3
+    with open(PROJECTS_JSON, "r", encoding="utf-8") as f:
+        cfg = json.load(f)
+    projects = cfg.get("projects", [])
+    card = next((x for x in projects if x.get("id") == pid), None)
+    if card is None:
+        print(json.dumps({"ok": False, "error": "not_found", "id": pid}, ensure_ascii=False))
+        return 4
+    if args.unset:
+        card.pop("manual", None)
+        new_val = None
+    else:
+        card["manual"] = True
+        new_val = True
+    with open(PROJECTS_JSON, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    print(json.dumps({"ok": True, "id": pid, "manual": new_val}, ensure_ascii=False))
+    return 0
+
+
 # ─────────────────────────── register-project ───────────────────────────
 def cmd_register_project(args):
     """把新建项目同步到驾驶舱 projects.json，否则监控平台看不到。
@@ -458,6 +493,12 @@ def cmd_audit_cards(args):
         # 支撑④：有 web 服务（health_path/ports）——常驻服务型，活性由服务本身体现
         if p.get("health_path") or p.get("ports"):
             supports.append("web_service")
+        # 支撑⑤：manual=true——人驱动的学习/研究专栏（如 Notion 笔记列），
+        # 明确声明『不靠任何自动检测器盯活性、活性由人工更新体现』的合法退出口。
+        # 与 artifact-freshness『纯库不声明 SLA 进 unmonitored』同范式：给『本就该手工驱动』
+        # 的卡片一个诚实 opt-out，避免它们在 PHANTOM 里永久误报=狼来了淹没真僵尸卡。
+        if p.get("manual") is True:
+            supports.append("manual")
         row = {"id": pid, "name": p.get("name", pid), "supports": supports}
         rows.append(row)
         if not supports:
@@ -469,7 +510,7 @@ def cmd_audit_cards(args):
         "phantom_count": len(phantoms),
         "phantoms": phantoms,
         "all": rows if args.verbose else None,
-        "note": "PHANTOM=既无enabled_cron又无sla又无orchestrated又非web_service的卡片=无任何自动检测器盯其活性，需人判定：补cron/补freshness_hours SLA/或deregister-project退场",
+        "note": "PHANTOM=既无enabled_cron又无sla又无orchestrated又非web_service又非manual的卡片=无任何自动检测器盯其活性，需人判定：补cron/补freshness_hours SLA/mark-manual标人驱动专栏/或deregister-project退场",
     }
     if args.json:
         print(json.dumps(out, ensure_ascii=False, indent=2))
@@ -543,6 +584,11 @@ def build_parser():
     dp = sub.add_parser("deregister-project", help="从驾驶舱移除项目卡片（退场/被拒项目治理出口）")
     dp.add_argument("--id", required=True, help="要移除的项目 id")
     dp.set_defaults(func=cmd_deregister_project)
+
+    mm = sub.add_parser("mark-manual", help="给卡片打/去 manual 标记（人驱动学习专栏 opt-out，免 PHANTOM 误报）")
+    mm.add_argument("--id", required=True, help="项目 id")
+    mm.add_argument("--unset", action="store_true", help="去掉 manual 标记")
+    mm.set_defaults(func=cmd_mark_manual)
 
     ac = sub.add_parser("audit-cards", help="驾驶舱卡片活性对账（查 PHANTOM 僵尸卡，纯只读）")
     ac.add_argument("--json", action="store_true", help="输出完整 JSON")
