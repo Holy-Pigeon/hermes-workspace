@@ -148,6 +148,13 @@ def main():
             # 结构层(与估值分位同 cadence), 收口这个 built-but-unwired 缺口。
             ("资本配置纪律", lambda: check_quiet(
                 "资本配置", "../allocation-discipline/allocate.py", ["--all"], timeout=120), None),
+            # 卖出纪律哨兵(exit-sentinel): built-but-unwired 缺口——脚本已建成自测、卡片已注册,
+            # 但独立 cron 被用户 07-03 否决, 从建成起从未被任何调度器盯活性=PHANTOM卡片。
+            # 它是 valuation-trigger(买入侧) 的卖出侧镜像, 盯4持仓论点破裂(ORPHAN/WINDOW/ADVERSE),
+            # 论点漂移慢(证伪窗口多为季报级)且 --quiet 退码0/1合约与 check_quiet 对齐,
+            # 收口进 --full 周度复审=无需新 cron 即让卖出侧监控有调度器盯活性(与配置纪律同 cadence)。
+            ("持仓论点破裂哨兵", lambda: check_quiet(
+                "卖出哨兵", "../exit-sentinel/exit_sentinel.py", timeout=120), None),
         ]
 
     any_flag = False
