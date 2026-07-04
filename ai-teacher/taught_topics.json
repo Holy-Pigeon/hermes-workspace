@@ -554,8 +554,13 @@
       "topic": "Pre-LN vs Post-LN（归一化放前面还是后面）——决定深层 Transformer 能不能训得动的一个位置选择",
       "category": "类目 13：Transformer 架构",
       "taught_at": "2026-07-03T08:03:00+08:00"
+    },
+    {
+      "topic": "最大后验估计（MAP）——给'让数据投票'这件事加上先验的一票",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-04T08:03:00+08:00"
     }
   ],
-  "total_count": 111,
-  "last_updated": "2026-07-03T08:03:00+08:00"
+  "total_count": 112,
+  "last_updated": "2026-07-04T08:03:00+08:00"
 }
