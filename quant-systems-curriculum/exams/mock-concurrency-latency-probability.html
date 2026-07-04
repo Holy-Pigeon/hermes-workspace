@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量化系统模拟卷 · 高并发/低延迟 + 概率论</title>
+<style>
+  :root{
+    --bg:#0d1117; --card:#161b22; --card2:#1c2230; --border:#30363d;
+    --text:#e6edf3; --dim:#8b949e; --accent:#58a6ff; --green:#3fb950;
+    --amber:#d29922; --red:#f85149; --purple:#bc8cff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;padding:0 0 80px}
+  header{background:linear-gradient(135deg,#1a2332,#0d1117);
+    border-bottom:1px solid var(--border);padding:28px 20px;text-align:center}
+  h1{margin:0 0 6px;font-size:22px}
+  header .sub{color:var(--dim);font-size:13px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 16px}
+  .toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    margin:18px 0 8px}
+  .btn{background:var(--card2);border:1px solid var(--border);color:var(--text);
+    padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;transition:.15s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .section-title{margin:34px 0 14px;font-size:16px;color:var(--accent);
+    border-left:3px solid var(--accent);padding-left:10px}
+  .section-title small{color:var(--dim);font-weight:normal;margin-left:8px;font-size:12px}
+  .q{background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:16px 18px;margin:12px 0}
+  .q-head{display:flex;gap:10px;align-items:flex-start}
+  .q-no{background:var(--card2);color:var(--accent);font-weight:700;
+    border-radius:6px;padding:2px 9px;font-size:13px;flex-shrink:0;margin-top:2px}
+  .q-type{font-size:11px;color:var(--dim);border:1px solid var(--border);
+    border-radius:5px;padding:1px 7px;flex-shrink:0;margin-top:3px}
+  .q-body{font-size:15px}
+  .opts{list-style:none;padding:0;margin:12px 0 0}
+  .opts li{background:var(--card2);border:1px solid transparent;border-radius:8px;
+    padding:9px 12px;margin:6px 0;font-size:14px}
+  .opts li.correct{border-color:var(--green);background:rgba(63,185,80,.10)}
+  .opt-key{font-weight:700;color:var(--dim);margin-right:8px}
+  li.correct .opt-key{color:var(--green)}
+  .opt-exp{display:block;color:var(--dim);font-size:12.5px;margin-top:5px;
+    padding-left:22px;border-left:2px solid var(--border);line-height:1.5}
+  li.correct .opt-exp{color:#a6d9b0;border-color:var(--green)}
+  .reveal{margin-top:14px}
+  details{margin-top:12px}
+  summary{cursor:pointer;color:var(--accent);font-size:13px;user-select:none;
+    padding:6px 0;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸ ";color:var(--accent)}
+  details[open] summary::before{content:"▾ "}
+  .answer-box{background:var(--card2);border-radius:8px;padding:12px 14px;margin-top:8px}
+  .kp{margin-top:12px;font-size:12.5px;color:var(--purple);
+    background:rgba(188,140,255,.08);border-radius:6px;padding:8px 10px}
+  .kp b{color:var(--purple)}
+  .ans-tag{display:inline-block;background:var(--green);color:#04170a;
+    font-weight:700;border-radius:5px;padding:1px 9px;font-size:13px;margin-bottom:6px}
+  .formula{background:#0b1020;border:1px solid var(--border);border-radius:8px;
+    padding:10px 13px;margin:9px 0;font-family:"SF Mono",Menlo,Consolas,monospace;
+    font-size:13px;color:#cdd9e5;overflow-x:auto;white-space:pre-wrap}
+  .step{margin:8px 0;font-size:14px}
+  .final{color:var(--green);font-weight:700}
+  .warn{color:var(--amber);font-size:12.5px;margin-top:6px}
+  .disc{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.3);
+    border-radius:8px;padding:12px 14px;margin:16px 0;font-size:12.5px;color:#e3c07b}
+  footer{text-align:center;color:var(--dim);font-size:12px;margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>量化系统模拟卷</h1>
+  <div class="sub">高并发 · 低延迟工程 &nbsp;+&nbsp; 概率论核心 &nbsp;|&nbsp; 20 选择 + 10 计算/填空</div>
+</header>
+
+<div class="wrap">
+  <div class="disc">
+    ⚠️ <b>数据透明声明</b>：本卷考点由 AI 基于典型量化开发/研究笔试高频内容<b>推断编排</b>，非你原始考卷题目。
+    所有计算题答案均已逐题手算复核。用作专项复习，非押题。
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" onclick="toggleAll(true)">展开全部解析</button>
+    <button class="btn" onclick="toggleAll(false)">收起全部</button>
+  </div>
+
+  <!-- ============ 单选 ============ -->
+  <div class="section-title">一、单选题 <small>12 题 · 点开每题查看逐项解析</small></div>
+  <div id="single"></div>
+
+  <!-- ============ 多选 ============ -->
+  <div class="section-title">二、多选题 <small>5 题 · 少选/多选均不得分</small></div>
+  <div id="multi"></div>
+
+  <!-- ============ 计算/填空 ============ -->
+  <div class="section-title">三、计算 &amp; 填空题 <small>10 题 · 原理公式 + 推导过程</small></div>
+  <div id="calc"></div>
+
+  <footer>quant-systems-curriculum · 模拟卷 v1 · 生成于本地</footer>
+</div>
+
+<script>
+/* ---------- 选择题数据 ---------- */
+// correct: 正确选项 key 数组; opts: [key, 文本, 该选项解析]
+const singleQs = [
+  {no:"Q1", type:"单选", stem:"False sharing（伪共享）的根本原因是？",
+   correct:["B"],
+   opts:[
+     ["A","多线程访问同一个变量","这是真共享，不是伪共享。伪共享的坑在于变量“看起来”不相关。"],
+     ["B","不同线程频繁修改位于同一缓存行的不同变量","✔ 两个逻辑上独立的变量落在同一条 64B 缓存行，一个核写就令另一个核的整行失效，缓存一致性协议（MESI）反复来回同步。"],
+     ["C","缓存行设置得太大","缓存行大小由硬件固定（通常 64B），不是程序可调的“设置”。"],
+     ["D","CPU 核心数量过多","核多会放大伪共享的代价，但不是根因。"]],
+   kp:"缓存一致性 / 伪共享：解法是缓存行填充（padding）把热点变量对齐到独立缓存行，或用 @Contended（JVM）/ alignas(64)（C++）。"},
+
+  {no:"Q2", type:"单选", stem:"现代 x86-64 CPU 的缓存行（cache line）大小通常是？",
+   correct:["C"],
+   opts:[
+     ["A","16 字节","过小，非主流架构值。"],
+     ["B","32 字节","部分老架构/嵌入式有，x86 主流不是。"],
+     ["C","64 字节","✔ x86-64、ARM64 主流均为 64B，是 padding 对齐与预取的基准单位。"],
+     ["D","256 字节","部分 CPU 的预取粒度或 L2 spatial prefetch 会到 128B，但单条缓存行不是 256B。"]],
+   kp:"内存层级：缓存以“行”为最小传输单位，64B ≈ 8 个 double / 16 个 int。设计数据结构要按 64B 对齐思考。"},
+
+  {no:"Q3", type:"单选", stem:"低延迟交易系统对小报文通常关闭 Nagle 算法（设 TCP_NODELAY），原因是？",
+   correct:["B"],
+   opts:[
+     ["A","Nagle 会加密数据增加开销","Nagle 与加密无关。"],
+     ["B","Nagle 会缓冲/合并小包，等待 ACK，引入额外延迟","✔ Nagle 为省带宽会攒小包，未收到前一包 ACK 前不发下一个小包，最坏引入几十 ms 延迟——对报单是致命的。"],
+     ["C","Nagle 只在 UDP 下有效","Nagle 是 TCP 机制，UDP 无此算法。"],
+     ["D","关闭后能提高吞吐量","关闭是为降延迟，反而可能增加小包数量、降低带宽效率。"]],
+   kp:"网络延迟：TCP_NODELAY 关 Nagle。常与关闭 delayed ACK 搭配，避免 Nagle+delayed-ACK 死锁式 40ms 卡顿。"},
+
+  {no:"Q4", type:"单选", stem:"内核旁路（kernel bypass，如 DPDK / Solarflare OpenOnload）主要消除哪部分延迟？",
+   correct:["C"],
+   opts:[
+     ["A","磁盘 I/O 延迟","与磁盘无关。"],
+     ["B","CPU 浮点计算延迟","与计算无关。"],
+     ["C","系统调用、内核协议栈、中断与数据拷贝开销","✔ 用户态直接操作网卡（poll-mode driver），数据零拷贝进用户空间，绕过内核 TCP/IP 栈与上下文切换。"],
+     ["D","GC 停顿","GC 是语言运行时问题，kernel bypass 不解决。"]],
+   kp:"低延迟网络栈：DPDK/OpenOnload/RDMA 把收发包从内核搬到用户态，省掉 syscall + 中断 + 拷贝，延迟可从 μs 级降到几百 ns。"},
+
+  {no:"Q5", type:"单选", stem:"LMAX Disruptor 能达到极低延迟的核心机制是？",
+   correct:["B"],
+   opts:[
+     ["A","用互斥锁精细保护队列每个节点","恰恰相反，Disruptor 的卖点是无锁。"],
+     ["B","预分配环形缓冲 + 序号栅栏 + 缓存行填充，避免锁与伪共享","✔ RingBuffer 预分配对象（零运行时分配）、用 sequence 递增 + memory barrier 协调生产者消费者、对 sequence 做 padding 防伪共享。"],
+     ["C","每个事件动态 new 一个对象再入队","动态分配会触发 GC，正是 Disruptor 极力避免的。"],
+     ["D","依赖 JVM GC 自动回收降低延迟","GC 是延迟敌人，Disruptor 通过对象复用规避 GC。"]],
+   kp:"无锁队列范式：环形缓冲 + 单写者原则 + CAS/内存屏障 + padding，是低延迟中间件的经典组合。"},
+
+  {no:"Q6", type:"单选", stem:"CAS（Compare-And-Swap）最准确的描述是？",
+   correct:["B"],
+   opts:[
+     ["A","一种操作系统级别的互斥锁","CAS 是硬件指令，不是 OS 锁；它恰恰用于实现无锁。"],
+     ["B","一条原子指令，是无锁数据结构的基础","✔ CAS(addr, expected, new)：当内存值等于 expected 时原子替换为 new，否则失败重试。x86 为 CMPXCHG。"],
+     ["C","一种垃圾回收算法","无关。"],
+     ["D","一种网络拥塞控制协议","无关。"]],
+   kp:"原子操作：CAS 是 lock-free 基石，但要防 ABA 问题（值被改回原样导致误判），用版本号/tagged pointer 解决。"},
+
+  {no:"Q7", type:"单选", stem:"关于 busy-polling（忙轮询）与中断驱动，在低延迟场景下的取舍，正确的是？",
+   correct:["A"],
+   opts:[
+     ["A","忙轮询延迟更低但持续占满 CPU","✔ 忙轮询用一个核死循环查数据，省掉中断唤醒/上下文切换，延迟最低，代价是该核 100% 占用、耗电高。HFT 常见做法。"],
+     ["B","中断驱动延迟更低且更省 CPU","中断省 CPU 但有唤醒延迟，延迟更高。"],
+     ["C","两者延迟相同","不同，忙轮询显著更低。"],
+     ["D","忙轮询更省电","忙轮询最费电。"]],
+   kp:"延迟 vs 资源权衡：忙轮询以 CPU/功耗换极限延迟，配合线程绑核 + 隔离核（isolcpus）使用。"},
+
+  {no:"Q8", type:"单选", stem:"尾延迟 P99 / P99.9 主要被下列哪类因素放大？",
+   correct:["B"],
+   opts:[
+     ["A","平均 CPU 主频","影响平均延迟，不是尾部抖动的主因。"],
+     ["B","GC 停顿、锁竞争、上下文切换、系统抖动（jitter）","✔ 尾延迟本质是“偶发的长停顿”，由这些不确定事件贡献，均值看不出来，必须看分位数。"],
+     ["C","硬盘容量","无关。"],
+     ["D","显示器刷新率","无关。"]],
+   kp:"尾延迟治理：优化 P99 要消灭抖动源——无 GC 设计、无锁、绑核隔核、关中断合并、Huge Page 减 TLB miss。"},
+
+  {no:"Q9", type:"单选", stem:"NUMA 架构下降低内存访问延迟最有效的手段是？",
+   correct:["B"],
+   opts:[
+     ["A","关闭超线程","可能减少争抢，但不解决跨节点访问。"],
+     ["B","线程绑核 + 就近的本地节点内存分配","✔ NUMA 下访问远端节点内存延迟高很多；把线程钉在某 socket 并用本地内存（numactl --localalloc / first-touch）避免远程访问。"],
+     ["C","增大页表","无直接帮助。"],
+     ["D","提高时钟中断频率","反而增加抖动。"]],
+   kp:"NUMA 亲和性：绑核 + 本地内存 + first-touch 初始化，避免跨 QPI/UPI 的远程内存访问惩罚。"},
+
+  {no:"Q10", type:"单选", stem:"Little's Law（L=系统内平均请求数，λ=到达率，W=平均驻留时间）的正确表达式是？",
+   correct:["C"],
+   opts:[
+     ["A","L = λ / W","量纲错误。"],
+     ["B","W = λ · L","错误变形。"],
+     ["C","L = λ · W","✔ 队列/系统的普适稳态关系：在制品 = 吞吐率 × 停留时间。与到达分布无关，极其通用。"],
+     ["D","λ = L · W","错误变形。"]],
+   kp:"排队论基石：L=λW。已知任意两个可反推第三个，容量规划/延迟估算必用。"},
+
+  {no:"Q11", type:"单选", stem:"掷两枚公平骰子，点数之和为 7 的概率是？",
+   correct:["A"],
+   opts:[
+     ["A","1/6","✔ 和为 7 有 (1,6)(2,5)(3,4)(4,3)(5,2)(6,1) 共 6 种，6/36=1/6。7 是最可能的和。"],
+     ["B","1/8","错误。"],
+     ["C","5/36","这是和为 6 或 8 的概率。"],
+     ["D","1/12","错误。"]],
+   kp:"古典概型：样本空间 36，按有利事件计数。和的分布呈三角形，7 为峰值。"},
+
+  {no:"Q12", type:"单选", stem:"泊松分布 Poisson(λ) 的均值和方差分别是？",
+   correct:["B"],
+   opts:[
+     ["A","λ 和 λ²","方差错。"],
+     ["B","λ 和 λ","✔ 泊松分布均值=方差=λ，这是其标志性性质（可用来检验数据是否泊松：方差/均值≈1）。"],
+     ["C","λ² 和 λ","均值错。"],
+     ["D","√λ 和 λ","错误。"]],
+   kp:"泊松分布：描述单位时间独立事件计数（订单到达、报文到达）。均值=方差=λ 是判定泊松的经验法则。"}
+];
+
+const multiQs = [
+  {no:"Q13", type:"多选", stem:"以下哪些手段能有效降低尾延迟（P99）？",
+   correct:["A","B","C","E"],
+   opts:[
+     ["A","内存预分配 / 对象池，避免运行时分配","✔ 消除分配抖动与 GC 触发。"],
+     ["B","线程绑核（CPU affinity）","✔ 减少核间迁移与缓存失效、上下文切换。"],
+     ["C","使用无锁数据结构减少锁竞争","✔ 锁竞争是尾延迟主要抖动源之一。"],
+     ["D","提高 GC 触发频率","✗ 更频繁 GC = 更多停顿，直接恶化尾延迟。"],
+     ["E","使用 Huge Pages 减少 TLB miss","✔ 大页降低页表遍历与 TLB miss 抖动。"]],
+   kp:"尾延迟优化组合拳：无分配 + 绑核 + 无锁 + 大页。核心是消灭一切“偶发长停顿”。"},
+
+  {no:"Q14", type:"多选", stem:"关于无锁（lock-free）编程，正确的有？",
+   correct:["A","B","D"],
+   opts:[
+     ["A","Lock-free 不等于 wait-free","✔ Lock-free 保证整体有进展（至少一个线程前进），wait-free 更强（每个线程有限步完成）。"],
+     ["B","ABA 问题可用版本号 / tagged pointer 解决","✔ 给指针附加版本计数，值改回原样也能被 CAS 识别。"],
+     ["C","无锁结构在任何场景下都一定比有锁快","✗ 高竞争下 CAS 反复失败重试，可能比加锁更慢、更耗 CPU。"],
+     ["D","内存屏障（memory barrier）用于保证可见性与内存顺序","✔ 防止编译器/CPU 重排导致的可见性错误。"]],
+   kp:"无锁语义层级：wait-free ⊂ lock-free ⊂ obstruction-free。无锁不是银弹，要看竞争程度。"},
+
+  {no:"Q15", type:"多选", stem:"以下哪些属于降低网络传输延迟的手段？",
+   correct:["A","B","C"],
+   opts:[
+     ["A","设置 TCP_NODELAY","✔ 关 Nagle，小包立即发。"],
+     ["B","在交易所机房 co-location 就近托管","✔ 物理距离决定光速下限，co-lo 把 RTT 压到最低。"],
+     ["C","内核旁路（kernel bypass）","✔ 绕过内核协议栈，省 syscall/中断/拷贝。"],
+     ["D","单纯把 TCP 发送缓冲区调到最大","✗ 大缓冲提升的是吞吐，反而可能因排队增加延迟（bufferbloat）。"]],
+   kp:"网络延迟三板斧：物理就近（co-lo）+ 协议优化（NODELAY）+ 栈旁路（DPDK/RDMA）。"},
+
+  {no:"Q16", type:"多选", stem:"以下哪些做法对缓存友好（cache locality）有正面作用？",
+   correct:["A","B","C"],
+   opts:[
+     ["A","用 SoA 替代 AoS 提升批处理访问局部性","✔ 只遍历某字段时，SoA（数组的结构体）让该字段连续，缓存利用率高。"],
+     ["B","顺序访问内存而非随机跳转","✔ 顺序访问命中硬件预取器，随机访问频繁 cache miss。"],
+     ["C","软件预取（prefetch）提前加载数据","✔ __builtin_prefetch 在真正用到前把数据拉进缓存。"],
+     ["D","把频繁一起访问的字段刻意分散到不同缓存行","✗ 这是反局部性；分散到不同行只用于“防伪共享”的特定写热点字段。"]],
+   kp:"缓存局部性：时间局部性 + 空间局部性。数据布局（SoA/AoS）、访问模式、预取共同决定 cache 命中率。"},
+
+  {no:"Q17", type:"多选", stem:"下列哪些会增加上下文切换（context switch）成本？",
+   correct:["A","B","C"],
+   opts:[
+     ["A","线程数远超物理核心数，频繁抢占","✔ 超订阅导致调度器频繁换出换入。"],
+     ["B","频繁的阻塞式系统调用","✔ 阻塞 syscall 触发线程让出 CPU，产生切换。"],
+     ["C","大量锁竞争导致线程反复挂起/唤醒","✔ 争锁失败→睡眠→被唤醒，每轮都是切换。"],
+     ["D","线程全程绑核且忙轮询不阻塞","✗ 这正是避免切换的做法，不产生切换成本。"]],
+   kp:"上下文切换代价：保存/恢复寄存器 + TLB/缓存冷启动，约几 μs。低延迟系统追求“一线程一核、不阻塞、不切换”。"}
+];
+
+/* ---------- 计算/填空题数据 ---------- */
+const calcQs = [
+  {no:"填18", type:"填空·概率", stem:"从一副标准 52 张扑克不放回连抽 2 张，两张都是红桃的概率是？",
+   ans:"1/17 ≈ 5.88%",
+   principle:"不放回抽样 → 用乘法公式 P(A∩B)=P(A)·P(B|A)。红桃 13 张。",
+   steps:["P(第1张红桃)=13/52=1/4","P(第2张红桃 | 第1张已是红桃)=12/51=4/17","相乘：1/4 × 4/17 = 4/68 = 1/17 ≈ 5.88%"]},
+
+  {no:"填19", type:"填空·概率", stem:"连续抛公平硬币，直到首次出现正面为止，期望抛几次？",
+   ans:"2 次",
+   principle:"几何分布 Geometric(p)：首次成功所需试验次数，期望 E=1/p。",
+   steps:["每次出正面概率 p=1/2","E[次数]=1/p=1/0.5=2 次"]},
+
+  {no:"填20", type:"填空·概率", stem:"抛两次公平硬币，已知至少一次正面，则两次都是正面的条件概率是？",
+   ans:"1/3",
+   principle:"条件概率 P(A|B)=P(A∩B)/P(B)。样本空间 {正正,正反,反正,反反}。",
+   steps:["B=至少一次正面={正正,正反,反正}，P(B)=3/4","A∩B=两次都正={正正}，P=1/4","P(A|B)=(1/4)/(3/4)=1/3","直觉陷阱：不是 1/2！“至少一次正面”已排除反反，剩 3 种等可能情形。"]},
+
+  {no:"C1", type:"计算·贝叶斯", stem:"患病率 2%，检测灵敏度（真阳率）98%，特异度（真阴率）90%。检测呈阳性，真患病概率？",
+   ans:"≈ 16.67%",
+   principle:"贝叶斯定理：P(病|阳)=P(阳|病)P(病) / [P(阳|病)P(病)+P(阳|健)P(健)]。假阳率=1-特异度=10%。",
+   steps:["分子（真阳）：0.98 × 0.02 = 0.0196","假阳：0.10 × 0.98 = 0.0980","分母（全部阳性）：0.0196 + 0.0980 = 0.1176","P(病|阳)=0.0196 / 0.1176 = 16.67%"],
+   warn:"考点直觉冲击：灵敏度高达 98%，但因患病率极低，阳性者真患病仅约 1/6——假阳性淹没真阳性。"},
+
+  {no:"C2", type:"计算·Little's Law", stem:"撮合引擎稳态吞吐 λ=50,000 条/秒，系统内平均驻留 L=100 条。求平均处理延迟 W。",
+   ans:"2 ms",
+   principle:"Little's Law：L = λ·W  →  W = L/λ。",
+   steps:["W = L/λ = 100 / 50000 = 0.002 秒","= 2 ms"]},
+
+  {no:"C3", type:"计算·排队论 M/M/1", stem:"到达率 λ=900 req/s，服务率 μ=1000 req/s。求 ①利用率 ρ ②平均响应时间 W ③平均排队长度 Lq。",
+   ans:"ρ=0.9；W=10 ms；Lq=8.1",
+   principle:"M/M/1 稳态公式：ρ=λ/μ；W=1/(μ−λ)；Lq=ρ²/(1−ρ)。",
+   steps:["① ρ = λ/μ = 900/1000 = 0.9","② W = 1/(μ−λ) = 1/(1000−900) = 1/100 = 10 ms","③ Lq = ρ²/(1−ρ) = 0.81/0.1 = 8.1"],
+   warn:"考点：利用率 0.9 时已排队 8 个、响应 10ms；ρ→1 延迟非线性爆炸——这就是“系统别跑满”的数学原因。"},
+
+  {no:"C4", type:"计算·AMAT", stem:"L1 命中时间 1 ns，未命中率 5%，miss penalty 100 ns。求平均访存延迟 AMAT。",
+   ans:"6 ns",
+   principle:"AMAT = 命中时间 + 未命中率 × miss penalty。",
+   steps:["AMAT = 1 + 0.05 × 100","= 1 + 5 = 6 ns"],
+   warn:"考点：仅 5% 未命中就把访存从 1ns 拉到 6ns（6 倍）——缓存命中率对性能是杠杆效应。"},
+
+  {no:"C5", type:"计算·Amdahl 定律", stem:"程序可并行部分占 95%，16 核运行，理论最大加速比？",
+   ans:"≈ 9.14×",
+   principle:"Amdahl：Speedup = 1 / [(1−p) + p/N]，p=并行比例，N=核数。",
+   steps:["串行部分 1−p = 0.05","Speedup = 1 / (0.05 + 0.95/16)","= 1 / (0.05 + 0.059375)","= 1 / 0.109375 ≈ 9.14×"],
+   warn:"考点：5% 串行把 16 核压到 ~9×（效率仅 57%）。串行瓶颈是并行扩展的天花板。"},
+
+  {no:"C6", type:"计算·泊松分布", stem:"订单到达服从泊松过程，平均 λ=4 笔/秒。求 1 秒内恰好到 2 笔的概率。",
+   ans:"≈ 14.65%",
+   principle:"泊松概率质量函数：P(X=k) = e^(−λ) · λ^k / k!。",
+   steps:["P(X=2) = e^(−4) · 4² / 2!","= 0.018316 × 16 / 2","= 0.018316 × 8","≈ 0.1465 = 14.65%"]},
+
+  {no:"C7", type:"计算·期望·序统计", stem:"掷两枚公平骰子，求较大点数的期望 E[max]。",
+   ans:"≈ 4.472（=161/36）",
+   principle:"先求分布：P(max=k)=(2k−1)/36（k=1..6），再 E=Σ k·P(max=k)。",
+   steps:["P(max=k): k=1→1/36, 2→3/36, 3→5/36, 4→7/36, 5→9/36, 6→11/36","Σ k·(2k−1): 1·1+2·3+3·5+4·7+5·9+6·11","= 1+6+15+28+45+66 = 161","E[max] = 161/36 ≈ 4.472"],
+   warn:"对照：单枚骰子期望 3.5；取 max 后升到 4.47，符合“取较大值抬高期望”的直觉。"},
+
+  {no:"C8", type:"计算·几何分布", stem:"套利信号每次独立触发成功概率 p=0.2，求首次成功所需触发次数的期望。",
+   ans:"5 次",
+   principle:"几何分布期望 E = 1/p。",
+   steps:["E = 1/p = 1/0.2 = 5 次"]},
+
+  {no:"C9", type:"计算·组合方差", stem:"两资产等权，σ₁=σ₂=20%，相关系数 ρ=0.5。求组合年化波动率。",
+   ans:"≈ 17.32%",
+   principle:"两资产组合方差：σ_p² = w₁²σ₁² + w₂²σ₂² + 2w₁w₂ρσ₁σ₂。等权 w=0.5。",
+   steps:["w₁²σ₁² = 0.25 × 0.04 = 0.01","w₂²σ₂² = 0.25 × 0.04 = 0.01","协方差项 2·0.5·0.5·0.5·0.2·0.2 = 0.01","σ_p² = 0.01+0.01+0.01 = 0.03","σ_p = √0.03 ≈ 17.32%"],
+   warn:"考点：ρ=0.5<1，组合波动 17.32% < 单资产 20%——分散化降低风险的数学体现。ρ=1 时组合恰为 20%（无分散效应）。"},
+
+  {no:"C10", type:"计算·参数化 VaR", stem:"组合 1 亿元，日收益 ~ N(0, σ=2%)。求 95% 与 99% 单日 VaR（z₉₅=1.645, z₉₉=2.326）。",
+   ans:"VaR₉₅≈329 万；VaR₉₉≈465.2 万",
+   principle:"参数化（方差-协方差）VaR = z · σ · 组合市值（均值取 0）。",
+   steps:["VaR₉₅ = 1.645 × 0.02 × 1e8 = 1.645 × 200万 = 329 万元","VaR₉₉ = 2.326 × 0.02 × 1e8 = 2.326 × 200万 = 465.2 万元"],
+   warn:"含义：正常市况下，95% 的交易日单日亏损不超过 329 万；但有 5% 的日子会更糟。VaR 不度量尾部“有多糟”，那是 CVaR 的活。"}
+];
+
+/* ---------- 渲染 ---------- */
+function renderChoice(q){
+  const opts = q.opts.map(o=>{
+    const isC = q.correct.includes(o[0]);
+    return `<li class="${isC?'correct':''}">
+      <span class="opt-key">${o[0]}.</span>${o[1]}
+      <span class="opt-exp">${o[2]}</span></li>`;
+  }).join("");
+  return `<div class="q">
+    <div class="q-head">
+      <span class="q-no">${q.no}</span>
+      <span class="q-type">${q.type}</span>
+      <span class="q-body">${q.stem}</span>
+    </div>
+    <details>
+      <summary>查看答案与逐项解析</summary>
+      <div class="reveal">
+        <div class="ans-tag">正确答案：${q.correct.join(" ")}</div>
+        <ul class="opts">${opts}</ul>
+        <div class="kp"><b>📚 知识点：</b>${q.kp}</div>
+      </div>
+    </details>
+  </div>`;
+}
+
+function renderCalc(q){
+  const steps = q.steps.map(s=>`<div class="step">• ${s}</div>`).join("");
+  const warn = q.warn ? `<div class="warn">💡 ${q.warn}</div>` : "";
+  return `<div class="q">
+    <div class="q-head">
+      <span class="q-no">${q.no}</span>
+      <span class="q-type">${q.type}</span>
+      <span class="q-body">${q.stem}</span>
+    </div>
+    <details>
+      <summary>查看原理公式与推导过程</summary>
+      <div class="reveal">
+        <div class="answer-box">
+          <div class="ans-tag">答案：${q.ans}</div>
+          <div class="formula">原理 / 公式：\n${q.principle}</div>
+          <div style="margin-top:8px"><b>推导过程：</b></div>
+          ${steps}
+          ${warn}
+        </div>
+      </div>
+    </details>
+  </div>`;
+}
+
+document.getElementById("single").innerHTML = singleQs.map(renderChoice).join("");
+document.getElementById("multi").innerHTML  = multiQs.map(renderChoice).join("");
+document.getElementById("calc").innerHTML   = calcQs.map(renderCalc).join("");
+
+function toggleAll(open){
+  document.querySelectorAll("details").forEach(d=>d.open=open);
+}
+</script>
+</body>
+</html>
