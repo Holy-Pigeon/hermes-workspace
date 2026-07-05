@@ -256,6 +256,34 @@
       "outcome": "pending",
       "resolved_value": null,
       "resolved_date": null
+    },
+    {
+      "id": "P019",
+      "created": "2026-07-05",
+      "subject": "ASML Holding (ASML)",
+      "claim": "现价 $1769 隐含10年净利18%复利,估值无安全边际;12个月内不及18%所需的加速兑现,估值双杀概率高",
+      "falsification": "2026全年营收指引上修至€38B+且毛利率站上54%,或High-NA进入双位数台年出货放量拐点 → 看空被证伪",
+      "direction": "看空估值(非看空生意):现价高估,等回调",
+      "confidence": 0.72,
+      "verify_by": "2027-02-28",
+      "source_note": "note_2026-07-05_asml_monopoly_priced_in.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P020",
+      "created": "2026-07-05",
+      "subject": "ASML Holding (ASML)",
+      "claim": "ASML 2026 H1增长温和而非加速:上半年营收YoY低于25%,不支撑当前价隐含的18%十年复利",
+      "falsification": "2026 H1(至Q2财报)营收YoY≥25% → 加速证据成立,子论点被证伪",
+      "direction": "看空:增长温和非加速",
+      "confidence": 0.7,
+      "verify_by": "2026-08-15",
+      "source_note": "note_2026-07-05_asml_monopoly_priced_in.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
