@@ -38,6 +38,19 @@ try:
 except Exception as e:
     print(f"[FATAL] akshare import 失败: {e}", file=sys.stderr); sys.exit(2)
 
+# 收口到 marketdata.safe_call: 财务端口(financial_abstract/analysis_indicator)会
+# 「挂起不抛异常」, 裸调用一旦撞上会把 research-pipeline 周度 cron 拖死到被墙杀。
+# safe_call 给任意 endpoint 套指数退避重试+12s hang 硬墙, 全失败抛错绝不填充。
+_md_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _md_root not in sys.path:
+    sys.path.insert(0, _md_root)
+try:
+    from marketdata import safe_call
+except Exception:
+    # 降级: marketdata 不可用时退回裸调用(至少不崩), 但失去 hang 硬墙保护
+    def safe_call(fn, label="", **kw):
+        return fn()
+
 # 组合持仓 + 发现管线真候选 (A股, 港股无此端口)
 DEFAULT_UNIVERSE = {
     "002415": "海康威视",
@@ -60,7 +73,8 @@ def f(x):
 def fetch_gross_margin_annual(code):
     """毛利率年报序列, 从 financial_abstract 兜底 (analysis_indicator 常 NaN)."""
     try:
-        df = ak.stock_financial_abstract(symbol=code)
+        df = safe_call(lambda: ak.stock_financial_abstract(symbol=code),
+                       label=f"abstract:{code}")
     except Exception:
         return {}
     # financial_abstract: 行=指标, 列=报告期(YYYYMMDD)
@@ -79,7 +93,8 @@ def fetch_gross_margin_annual(code):
 
 def analyze(code, name):
     try:
-        df = ak.stock_financial_analysis_indicator(symbol=code, start_year='2017')
+        df = safe_call(lambda: ak.stock_financial_analysis_indicator(symbol=code, start_year='2017'),
+                       label=f"analysis_indicator:{code}")
     except Exception as e:
         return {"code": code, "name": name, "error": str(e)[:80]}
     ann = df[df['日期'].astype(str).str.endswith('12-31')].copy()
