@@ -579,8 +579,13 @@
       "topic": "混合精度训练（Mixed Precision Training）——用一半的位数跑训练，靠一个小技巧不掉精度",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-05T14:03:00+08:00"
+    },
+    {
+      "topic": "注意力掩码（Attention Mask / Padding Mask）——告诉模型哪些位置根本不该看",
+      "category": "类目 12：Self-Attention 详解",
+      "taught_at": "2026-07-05T20:03:00+08:00"
     }
   ],
-  "total_count": 116,
-  "last_updated": "2026-07-05T14:03:00+08:00"
+  "total_count": 117,
+  "last_updated": "2026-07-05T20:03:00+08:00"
 }
