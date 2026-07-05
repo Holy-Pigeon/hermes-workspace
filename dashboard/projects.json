@@ -377,6 +377,20 @@
       ],
       "heartbeat_file": "~/hermes-workspace/agent-notes/notes",
       "manual": true
+    },
+    {
+      "id": "capital-deployment",
+      "name": "资本部署看门狗",
+      "icon": "🏦",
+      "desc": "盯全书资本部署率:大额现金长期零配置无人复盘的机会成本盲区,补allocation-discipline跳过空账户的洞",
+      "ports": null,
+      "tags": [
+        "配置层",
+        "风控",
+        "只读",
+        "元监控"
+      ],
+      "heartbeat_file": "~/hermes-workspace/capital-deployment"
     }
   ]
 }
