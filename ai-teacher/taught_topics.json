@@ -584,8 +584,13 @@
       "topic": "注意力掩码（Attention Mask / Padding Mask）——告诉模型哪些位置根本不该看",
       "category": "类目 12：Self-Attention 详解",
       "taught_at": "2026-07-05T20:03:00+08:00"
+    },
+    {
+      "topic": "Sliding Window Attention（滑动窗口注意力）——不看全文，只盯住身边一小段",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-07-06T08:03:00+08:00"
     }
   ],
-  "total_count": 117,
-  "last_updated": "2026-07-05T20:03:00+08:00"
+  "total_count": 118,
+  "last_updated": "2026-07-06T08:03:00+08:00"
 }
