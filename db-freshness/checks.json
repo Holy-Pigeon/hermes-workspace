@@ -1,0 +1,22 @@
+{
+  "_comment": "db-freshness 配置: 声明要盯的库/表/时序列与容忍窗口。tolerance_trading_days 需留冗余(交易日差不含节假日)。",
+  "databases": [
+    {
+      "path": "~/hermes-workspace/paper-trading/paper_trading.db",
+      "tables": [
+        {"table": "nav_snapshots", "date_col": "snapshot_date", "tolerance_trading_days": 2,
+         "note": "daily_mark 每交易日写盯市 NAV, 最该新鲜"},
+        {"table": "benchmark_levels", "date_col": "date", "tolerance_trading_days": 3,
+         "note": "恒生/沪深基准, 单源东财间歇失效历史高发(06-22 冻结10天)"},
+        {"table": "alpha_snapshots", "date_col": "date", "tolerance_trading_days": 3,
+         "note": "alpha=port_ret-bench_ret, 依赖 benchmark_levels, 上游断则本表停更"}
+      ],
+      "dependencies": [
+        {"upstream": "nav_snapshots", "downstream": "benchmark_levels", "max_lag_trading_days": 2,
+         "note": "基准落后 NAV 说明取基准价失败(nav 照写但 bench 停)"},
+        {"upstream": "nav_snapshots", "downstream": "alpha_snapshots", "max_lag_trading_days": 2,
+         "note": "alpha 落后 NAV 说明 alpha 计算链断(多因基准缺失)"}
+      ]
+    }
+  ]
+}
