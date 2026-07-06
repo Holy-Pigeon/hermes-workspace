@@ -589,8 +589,13 @@
       "topic": "Sliding Window Attention（滑动窗口注意力）——不看全文，只盯住身边一小段",
       "category": "类目 19：高效注意力",
       "taught_at": "2026-07-06T08:03:00+08:00"
+    },
+    {
+      "topic": "投机解码（Speculative Decoding）——让小模型先抢答，大模型只做批改",
+      "category": "类目 18：Decoder-only 模型",
+      "taught_at": "2026-07-06T14:03:00+08:00"
     }
   ],
-  "total_count": 118,
-  "last_updated": "2026-07-06T08:03:00+08:00"
+  "total_count": 119,
+  "last_updated": "2026-07-06T14:03:00+08:00"
 }

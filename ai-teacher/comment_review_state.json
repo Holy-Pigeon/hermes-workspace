@@ -118,9 +118,11 @@
     "394d8689-fc19-8133-a6b8-d253e8958626",
     "394d8689-fc19-8130-8e79-f2e98f3a0c90",
     "394d8689-fc19-81b3-a76d-f70be215e780",
-    "395d8689-fc19-8145-8bcd-f8913929203e"
+    "395d8689-fc19-8145-8bcd-f8913929203e",
+    "395d8689-fc19-815b-9eee-fae12bea1960"
   ],
   "page_titles": {
+    "395d8689-fc19-815b-9eee-fae12bea1960": "投机解码（Speculative Decoding）——让小模型先抢答，大模型只做批改",
     "395d8689-fc19-8145-8bcd-f8913929203e": "Sliding Window Attention（滑动窗口注意力）——不看全文，只盯住身边一小段",
     "394d8689-fc19-81b3-a76d-f70be215e780": "注意力掩码（Attention Mask / Padding Mask）——告诉模型哪些位置根本不该看",
     "394d8689-fc19-8130-8e79-f2e98f3a0c90": "混合精度训练（Mixed Precision Training）——用一半的位数跑训练，靠一个小技巧不掉精度",
@@ -241,7 +243,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 34,
+  "cursor": 106,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -262,6 +264,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-06T08:10:50+0800",
-  "last_order_refresh": "2026-07-06T08:13:25+0800"
+  "last_review": "2026-07-06T14:10:57+0800",
+  "last_order_refresh": "2026-07-06T14:13:50+0800"
 }
