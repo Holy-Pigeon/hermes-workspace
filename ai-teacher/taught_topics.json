@@ -594,8 +594,13 @@
       "topic": "投机解码（Speculative Decoding）——让小模型先抢答，大模型只做批改",
       "category": "类目 18：Decoder-only 模型",
       "taught_at": "2026-07-06T14:03:00+08:00"
+    },
+    {
+      "topic": "DPO（直接偏好优化）——把 RLHF 的强化学习绕开，用一个分类损失直接学人类偏好",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-07-06T20:03:00+08:00"
     }
   ],
-  "total_count": 119,
-  "last_updated": "2026-07-06T14:03:00+08:00"
+  "total_count": 120,
+  "last_updated": "2026-07-06T20:03:00+08:00"
 }
