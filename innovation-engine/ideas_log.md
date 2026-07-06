@@ -10,6 +10,7 @@
 
 ## Idea 列表
 
+2026-07-06 12:04 | 💡proposed | 两个功能完好的元监控看门狗 capital-deployment 资本部署率与 db-freshness 库表级新鲜度, 自建成起从未挂 cron, 是僵尸卡片, 只在手动 invoke 时才跑, 信号无人看。audit-cards 本轮实测把它俩标为 PHANTOM, 既无 cron 又无 freshness SLA, 无任何自动检测器盯活性。证据: jobs.json 里 capital_deployment 与 db_freshness 各 0 条 cron 引用, 而同族看门狗 artifact-freshness 与 cron-health 都各有 1 条 cron 在跑, 同类独漏这俩。本轮实测二者均正常产出。一是 capital-deployment 跑出真实活信号: 全书 9000 万, 现金 6004 万, 已部署仅三成, us-tech-value 25M 与 options-lab 10M 与 futures-macro 10M 与 innovation 5M 四个 sleeve 部署率为零且 24 天零动作, 合计闲置 5000 万即全书过半, 这类机会成本盲区正需要定期点名给出为什么现在不配的理由。二是 db-freshness 跑出 0 告警, nav 与 benchmark 与 alpha 三表 lag 均在容忍内。看门狗价值全在定时自动跑, 不挂 cron 等于白建。建议: 给两者各挂低频 cron, capital-deployment 每日收盘后如 18:30, db-freshness 每日如 19:00, 均 quiet 仅有红旗时推送。或若判定其一冗余则 deregister-project 退场。挂 cron 动调度需拍板 | 治理-僵尸看门狗挂cron或退场 | 创新引擎 | 需拍板 | 
 2026-07-06 09:09 | 💡proposed | 为 db-freshness 挂每日 cron 收盘批处理后跑静默模式, 有表级冻结或依赖链断裂告警才推送。脚本已就绪自测通过 挂 cron 需拍板。建议接在收盘批处理工作日之后每交易日一次 静默 exit1 才推。 | 元监控-挂cron | 创新引擎 | 需拍板 | 
 2026-07-06 09:08 | ✅done | 新建 dbfreshness 数据库表级新鲜度看门狗 填补两个看门狗均失明的表级静默冻结盲区。已建脚本已自测挂 cron 需拍板。 | 新建项目-元监控 | 创新引擎 | 可逆 | 
 2026-07-06 09:07 | ❌rejected | 测试条目占位待删 | 测试 | 创新引擎 | 可逆 | 
