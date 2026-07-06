@@ -365,26 +365,42 @@ def cmd_register_project(args):
     with open(PROJECTS_JSON, "r", encoding="utf-8") as f:
         cfg = json.load(f)
     projects = cfg.setdefault("projects", [])
-    card = {
-        "id": pid,
-        "name": args.name or pid,
-        "icon": args.icon or "🧩",
-        "desc": args.desc or "",
-        "ports": ({"local": args.local_port, "remote": args.remote_port}
-                  if args.local_port else None),
-        "tags": [t.strip() for t in (args.tags or "脚本").split(",") if t.strip()],
-    }
+    existing_idx = next((i for i, x in enumerate(projects) if x.get("id") == pid), None)
+    is_new = existing_idx is None
+    # 只把「本次显式提供的字段」写进 card；对新建项目补默认值。
+    # 关键：update 时若某字段未提供,就不放进 card,merged.update 才不会用空/默认值
+    # 覆盖掉已有的 desc/ports/tags 等(此前 bug:例行 re-register 把 ports/desc 打回默认)。
+    card = {"id": pid}
+    if args.name or is_new:
+        card["name"] = args.name or pid
+    if args.icon or is_new:
+        card["icon"] = args.icon or "🧩"
+    if args.desc or is_new:
+        card["desc"] = args.desc or ""
+    if args.local_port:
+        card["ports"] = {"local": args.local_port, "remote": args.remote_port}
+    elif is_new:
+        card["ports"] = None
+    if args.tags or is_new:
+        card["tags"] = [t.strip() for t in (args.tags or "脚本").split(",") if t.strip()]
     if args.health_path:
         card["health_path"] = args.health_path
     if args.heartbeat_file:
         card["heartbeat_file"] = args.heartbeat_file
-    # 幂等：同 id 更新
-    existing = next((i for i, x in enumerate(projects) if x.get("id") == pid), None)
-    action = "updated" if existing is not None else "added"
-    if existing is not None:
-        projects[existing] = card
-    else:
+    # SLA：声明 freshness_hours 后 artifact-freshness 才会盯该项目产出是否停更
+    if getattr(args, "freshness_hours", None) is not None:
+        card["freshness_hours"] = args.freshness_hours
+    if getattr(args, "artifact_glob", ""):
+        card["artifact_glob"] = args.artifact_glob
+    # 幂等：同 id 更新。**MERGE 而非整卡替换**——只更新本次显式提供的键,其余原样保留,
+    # 杜绝『re-register 静默抹掉 freshness_hours/ports/desc/external_url/manual』致盲看门狗。
+    action = "added" if is_new else "updated"
+    if is_new:
         projects.append(card)
+    else:
+        merged = dict(projects[existing_idx])
+        merged.update(card)
+        projects[existing_idx] = merged
     with open(PROJECTS_JSON, "w", encoding="utf-8") as f:
         json.dump(cfg, f, ensure_ascii=False, indent=2)
         f.write("\n")
@@ -597,6 +613,10 @@ def build_parser():
                     help="有 web 服务时的健康检查路径，如 /api/status")
     rp.add_argument("--local-port", dest="local_port", type=int, default=None)
     rp.add_argument("--remote-port", dest="remote_port", type=int, default=None)
+    rp.add_argument("--freshness-hours", dest="freshness_hours", type=float, default=None,
+                    help="产出SLA(小时):声明后 artifact-freshness 才会盯该项目产出是否停更。cron型项目建议按cadence的~2x设")
+    rp.add_argument("--artifact-glob", dest="artifact_glob", default="",
+                    help="心跳目录内只认哪类产出文件(如 note_*.md),不填则取目录内最新任意文件")
     rp.set_defaults(func=cmd_register_project)
 
     dp = sub.add_parser("deregister-project", help="从驾驶舱移除项目卡片（退场/被拒项目治理出口）")
