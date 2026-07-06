@@ -122,6 +122,102 @@ def expected_interval_seconds(job):
     return None
 
 
+PROJECTS_PATH = os.path.expanduser("~/hermes-workspace/dashboard/projects.json")
+HSCRIPTS_DIR = os.path.expanduser("~/.hermes/scripts")
+# 编排器所在目录: 部分项目不挂自己的 cron, 而是被 paper-trading 下的 watchdog
+# 编排脚本(portfolio_watchdog.py 等)以子进程串联调用。这类算「已接线」不报。
+ORCH_GLOB = os.path.expanduser("~/hermes-workspace/paper-trading/*.py")
+# 核心/库/数据型项目: 天然无需自己的 cron(被 import 的库 / 数据目录 / 元层自身),
+# 即便未在语料中出现也不算「僵尸未接线」, 白名单排除防误报。
+UNWIRED_SKIP_IDS = {
+    "marketdata",       # 统一取数库, 被各脚本 import 而非独立跑
+    "research",         # note 数据目录
+    "innovation-engine",  # 元层自身(本看门狗的调度方)
+    "paper-trading",    # 编排器/DB 宿主
+    "stockchoose",      # 有独立 cron(名称在 jobs.json 里是中文显示名)
+}
+
+
+def _run_corpus():
+    """把「所有会真正触发执行的地方」的文本汇成一个语料串:
+    cron 定义(jobs.json) + 所有 shell 包装脚本 + paper-trading 下的编排器 py。
+    一个项目若在此语料中被引用(id / 目录路径), 说明它有真实执行入口=已接线。
+    纯只读, 取不到的源静默跳过绝不编造。"""
+    import glob as _glob
+    corpus = ""
+    try:
+        with open(JOBS_PATH) as f:
+            corpus += json.dumps(json.load(f), ensure_ascii=False)
+    except Exception:
+        pass
+    for pat in (os.path.join(HSCRIPTS_DIR, "*.sh"), ORCH_GLOB):
+        for fp in _glob.glob(pat):
+            try:
+                with open(fp, encoding="utf-8", errors="ignore") as f:
+                    corpus += " " + f.read()
+            except Exception:
+                continue
+    return corpus
+
+
+def unwired_projects(now=None):
+    """5) UNWIRED_PROJECT: 项目卡片在驾驶舱『活着』且目录里有可跑的 .py 脚本,
+    但它既没有自己的 cron、也没被任何编排器串联调用 → 静默从不执行的僵尸能力。
+
+    根因盲区(2026-07-07 创新引擎实测): 现有两个元看门狗对这一类结构性失明——
+      · cron-health 只读 jobs.json 里『已存在的 job』(这些项目根本没进 jobs.json);
+      · artifact-freshness 只对『声明了 freshness_hours』的项目告警(这些没声明 SLA)。
+    实证代价: capital-deployment(资本部署看门狗)一直未接线, 而它一跑就报出
+      50M(全书 56%)现金闲置 25 天无人复盘——这种该每天盯的信号却从未触发。
+
+    判据(保守, 宁缺毋滥防狼来了): 项目须同时满足
+      有 heartbeat_file + 非 manual + 无 ports(排除 launchd 常驻 web 服务)
+      + 目录内至少一个 .py(有可执行载体) + 不在核心/库白名单
+      + id 未在执行语料(cron/脚本/编排器)中出现。
+    纯只读, 任何异常静默返回空列表, 绝不影响主 cron 健康路径。"""
+    alerts = []
+    try:
+        with open(PROJECTS_PATH) as f:
+            projs = json.load(f).get("projects", [])
+    except Exception:
+        return alerts
+    corpus = _run_corpus()
+    for p in projs:
+        pid = p.get("id", "")
+        if not pid or pid in UNWIRED_SKIP_IDS:
+            continue
+        if p.get("manual"):
+            continue
+        if p.get("ports"):          # 常驻 web 服务(launchd), 非 cron 驱动
+            continue
+        if not p.get("heartbeat_file"):
+            continue
+        pdir = os.path.expanduser("~/hermes-workspace/" + pid)
+        if not os.path.isdir(pdir):
+            continue
+        # 目录内是否有可执行 .py 载体
+        has_py = False
+        try:
+            for fn in os.listdir(pdir):
+                if fn.endswith(".py"):
+                    has_py = True
+                    break
+        except Exception:
+            pass
+        if not has_py:
+            continue
+        # 已接线? id 出现在执行语料即算(cron/脚本/编排器任一引用)
+        if pid in corpus or ("/" + pid + "/") in corpus:
+            continue
+        alerts.append({
+            "type": "UNWIRED_PROJECT",
+            "job": p.get("name", pid), "id": pid,
+            "detail": "驾驶舱卡片在线且有可跑脚本, 但无自己的 cron 也未被任何编排器调用"
+                      "=静默从不执行的僵尸能力(该接线或该下线)",
+        })
+    return alerts
+
+
 def analyze(now=None):
     if now is None:
         now = datetime.now(timezone.utc)
@@ -185,6 +281,11 @@ def analyze(now=None):
                     "overdue_hours": round(overdue / 3600, 1),
                     "expected_interval_hours": round(interval / 3600, 2),
                 })
+    # 5) UNWIRED_PROJECT: 卡片在线+有脚本但无 cron 也无编排器调用=静默僵尸能力
+    try:
+        alerts.extend(unwired_projects(now))
+    except Exception:
+        pass  # 治理型检查异常绝不影响主 cron 健康告警
     return alerts
 
 
@@ -337,6 +438,8 @@ def main():
                     line += f" → 已 {a.get('overdue_hours')}h 未跑 (期望每 {a.get('expected_interval_hours')}h)"
                 elif a["type"] == "PAUSED_STALE":
                     line = f"  [PAUSED_STALE] {a['job']} → 已暂停 {a.get('paused_days')}天未处理 (paused_at={a.get('paused_at')})"
+                elif a["type"] == "UNWIRED_PROJECT":
+                    line = f"  [UNWIRED_PROJECT] {a['job']} (id={a.get('id')}) → {a.get('detail')}"
                 print(line)
         # flapping 可见性: 即便本快照干净, 近 7d 有过失败 run 也要提示(防『已恢复』误判)
         flap = out["flapping_7d"]

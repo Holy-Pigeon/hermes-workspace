@@ -13,10 +13,21 @@
 
 选股日报是 StockChoose 唯一的对外产出,连续静默失败=整条选股链白跑。
 
-## 检测三类失效(纯只读 jobs.json,绝不改 cron)
+## 检测五类失效(纯只读,绝不改 cron / 不下单)
 1. **RUN_ERROR**:`last_status == 'error'`(脚本超时/崩溃)
 2. **DELIVERY_FAIL**:`last_delivery_error` 非空(产出了但没送达=最隐蔽,业务看门狗永远发现不了)
 3. **STALE**:enabled 但 `last_run_at` 距今远超期望 cadence(调度根本没触发,比报错更隐蔽)。容忍 3 个周期 + 至少 2h 冗余,cadence 估不准就不报(宁缺毋滥,防误报)
+4. **PAUSED_STALE**:`enabled=false` 但暂停超过 7 天仍未处理(被静默关掉的僵尸 job,驾驶舱卡片仍显示为『活着』=治理盲区)
+5. **UNWIRED_PROJECT**(2026-07-07 加):项目卡片在驾驶舱『活着』、目录里有可跑 `.py`,**但它既没有自己的 cron、也没被任何编排器串联调用 → 静默从不执行的僵尸能力**。
+
+### UNWIRED_PROJECT 的根因盲区与实证
+现有两个元看门狗对这一类**结构性失明**:
+- cron-health(本体旧版)只读 `jobs.json` 里**已存在的 job**——这些项目根本没进 jobs.json;
+- artifact-freshness 只对**声明了 `freshness_hours`** 的项目告警——这些项目没声明 SLA。
+
+于是「建好了脚本、注册了卡片、却忘了给它挂 cron / 接编排器」的项目会永久无声躺尸。**实证代价(2026-07-07 巡检)**:`capital-deployment`(资本部署看门狗)一直未接线,而它一跑就报出 **50M(全书 56%)现金闲置 25 天无人复盘**——这种该每天盯的机会成本信号却从未触发。同批检出 `quality-compounder`、`db-freshness` 同样未接线。
+
+判据(保守防狼来了):项目须**同时**满足「有 `heartbeat_file` + 非 `manual` + 无 `ports`(排除 launchd 常驻 web 服务) + 目录内有 `.py` + 不在核心/库白名单(marketdata/research/innovation-engine/paper-trading/stockchoose) + id 未在执行语料(jobs.json / `~/.hermes/scripts/*.sh` / `paper-trading/*.py` 编排器)中出现」才告警。任何异常静默返回空,绝不影响主 cron 健康路径。
 
 ## 用法
 ```bash
