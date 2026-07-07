@@ -609,8 +609,13 @@
       "topic": "思维链（Chain-of-Thought, CoT）——让模型把想的过程写出来，答案就变准了",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-07-07T14:03:00+08:00"
+    },
+    {
+      "topic": "In-Context Learning（上下文学习）——不更新任何参数，只靠几个例子就学会新任务",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-07-07T20:03:00+08:00"
     }
   ],
-  "total_count": 122,
-  "last_updated": "2026-07-07T14:03:00+08:00"
+  "total_count": 123,
+  "last_updated": "2026-07-07T20:03:00+08:00"
 }
