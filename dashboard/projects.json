@@ -70,8 +70,7 @@
         "研究",
         "脚本"
       ],
-      "heartbeat_file": "~/hermes-workspace/stock-discovery",
-      "freshness_hours": 192
+      "heartbeat_file": "~/hermes-workspace/stock-discovery"
     },
     {
       "id": "moat-durability",
