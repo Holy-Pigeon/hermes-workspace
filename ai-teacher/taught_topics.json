@@ -604,8 +604,13 @@
       "topic": "知识蒸馏（Knowledge Distillation）——让大模型当老师，把本事教给一个小模型",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-07-07T08:03:00+08:00"
+    },
+    {
+      "topic": "思维链（Chain-of-Thought, CoT）——让模型把想的过程写出来，答案就变准了",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-07-07T14:03:00+08:00"
     }
   ],
-  "total_count": 121,
-  "last_updated": "2026-07-07T08:03:00+08:00"
+  "total_count": 122,
+  "last_updated": "2026-07-07T14:03:00+08:00"
 }
