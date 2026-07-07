@@ -278,5 +278,13 @@
     "stage": "initial",
     "ts": "2026-07-03 20:31:46",
     "processed": true
+  },
+  {
+    "idea_id": "2026-07-08 06:08::3fc75fb46535",
+    "action": "reject",
+    "comment": "测试占位条目, 清理",
+    "stage": "initial",
+    "ts": "2026-07-08 06:10:00",
+    "processed": true
   }
 ]
