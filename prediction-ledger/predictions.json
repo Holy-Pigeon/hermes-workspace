@@ -284,6 +284,48 @@
       "outcome": "pending",
       "resolved_value": null,
       "resolved_date": null
+    },
+    {
+      "id": "P021",
+      "created": "2026-07-07",
+      "subject": "台积电 TSM(ADR)",
+      "claim": "TSM 2026Q2(结算2026-07-16)单季营收(USD)将 >=40B，AI 驱动的营收爬坡兑现",
+      "falsification": "2026-07-16 财报 Q2 营收 <40B USD 即证伪",
+      "direction": "看多近端营收(Polymarket隐含64.5%，我更乐观)",
+      "confidence": 0.72,
+      "verify_by": "2026-07-20",
+      "source_note": "note_2026-07-07_tsm_ai_foundry_priced_for_perfection.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P022",
+      "created": "2026-07-07",
+      "subject": "台积电 TSM(ADR)",
+      "claim": "TSM 现价 451.79 已 price-in 未来10年净利年化13-16%，估值无安全边际，1年内不会因'便宜'而跑赢半导体指数(SOXX)超20个百分点",
+      "falsification": "到2027-07-07，TSM 相对 SOXX 累计超额收益 >20pct 即证伪(说明当时其实被低估)",
+      "direction": "看中性估值(已充分定价，非明显便宜)",
+      "confidence": 0.7,
+      "verify_by": "2027-07-07",
+      "source_note": "note_2026-07-07_tsm_ai_foundry_priced_for_perfection.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P023",
+      "created": "2026-07-07",
+      "subject": "台积电 TSM(ADR)",
+      "claim": "TSM 先进制程(<=5nm)事实垄断到2026年底不松动：Intel 18A/三星SF2 不会拿到英伟达或苹果旗舰SoC/GPU的主力量产订单",
+      "falsification": "2026年底前有确凿一手公告/财报显示 NVIDIA旗舰GPU 或 Apple旗舰A/M系列主力订单转投 Intel/三星 即证伪",
+      "direction": "看多护城河耐久",
+      "confidence": 0.8,
+      "verify_by": "2026-12-31",
+      "source_note": "note_2026-07-07_tsm_ai_foundry_priced_for_perfection.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
