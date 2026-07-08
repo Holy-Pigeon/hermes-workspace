@@ -285,6 +285,74 @@ def main():
     else:
         log("无成对相关 ≥ 0.50, 持仓间分散度尚可。", buf)
 
+    # --- 下行beta: 冲击来时每只是否随"其余组合"一起跌 (回答本工具真正的使命) ---
+    # 全期 Pearson 是"平静期"共振度, 对危机 regime 结构性失明 (相关性在回撤中
+    # 会朝 1 收敛)。docstring 承诺的是"中国宏观/关税冲击会不会同时打穿多只",
+    # 全期相关低是 false comfort。正确度量必须条件在【外生的市场承压信号】上,
+    # 而非条件在这只自己身上 (那会因沿对角线截断诱导虚假相关, 是选择偏误陷阱)。
+    # 做法: 对每只 i, 用"其余持仓"(权重加权, 剔除 i 本身=近似外生) 的日收益为
+    # 承压信号, 只在【其余组合下跌日】上算 i 与其余组合的相关。这直接回答:
+    # "当组合的其余部分在跌时, 这只是跟着一起跌(正相关=集中), 还是逆势抗跌?"
+    log("", buf)
+    log("下行同步性 (其余组合下跌日, 每只与'其余组合'的相关):", buf)
+    down_flagged = []
+    dn_num = 0.0
+    dn_den = 0.0
+    all_dates = None
+    for s in syms:
+        ds = set(rets[s]["ret"].keys())
+        all_dates = ds if all_dates is None else (all_dates & ds)
+    all_dates = sorted(all_dates or [])
+    if len(all_dates) >= MIN_SAMPLE:
+        wsum_all = sum(rets[s]["w"] for s in syms)
+        for si in syms:
+            # 其余组合(剔除 si)的权重加权日收益 = 外生承压信号
+            others = [s for s in syms if s != si]
+            w_oth = sum(rets[s]["w"] for s in others)
+            if w_oth <= 0 or len(others) < 1:
+                continue
+            rest = {d: sum(rets[s]["w"] / w_oth * rets[s]["ret"][d] for s in others)
+                    for d in all_dates}
+            down_days = [d for d in all_dates if rest[d] < 0]
+            if len(down_days) < max(5, MIN_SAMPLE // 3):
+                continue
+            xs = [rets[si]["ret"][d] for d in down_days]
+            ys = [rest[d] for d in down_days]
+            dc = pearson(xs, ys)
+            if dc is None:
+                continue
+            # 全期(全部日)i 与其余组合的相关, 作对照
+            xf = [rets[si]["ret"][d] for d in all_dates]
+            yf = [rest[d] for d in all_dates]
+            full = pearson(xf, yf)
+            wi = rets[si]["w"]
+            dn_num += wi * dc
+            dn_den += wi
+            delta = (dc - full) if full is not None else None
+            log(f"  {rets[si]['name']:<8} 下行r={dc:+.2f} "
+                f"(全期r={full if full is not None else float('nan'):+.2f}, "
+                f"Δ={'+' if delta is not None and delta >= 0 else ''}"
+                f"{delta:.2f}, n下行={len(down_days)})", buf)
+            # regime 不对称: 下行时明显更同步 (相关上升且已跨黄线)
+            if dc >= WARN_CORR and (full is None or dc - full >= 0.15):
+                down_flagged.append((dc, full, si, len(down_days)))
+        if dn_den > 0:
+            dn_wavg = dn_num / dn_den
+            log(f"权重加权下行同步性 {dn_wavg:+.2f}  "
+                f"[高=其余组合跌时各只跟跌=集中赌注; 低/负=有真实抗跌分散]", buf)
+            if dn_wavg >= HOT_CORR:
+                alerts.append(
+                    f"下行高同步: 权重加权下行相关 {dn_wavg:.2f} — 组合其余部分下跌时"
+                    f"各持仓普遍跟跌, 全期相关低估了冲击下的同步性; 名义分散在"
+                    f"回撤 regime 下是假象 (一个中国宏观/关税冲击会同时打穿多只)")
+        for dc, full, si, n in sorted(down_flagged, reverse=True):
+            alerts.append(
+                f"下行同步: {rets[si]['name']} 在其余组合下跌日 r={dc:+.2f} "
+                f"(全期仅 {full if full is not None else float('nan'):+.2f}, n={n}) — "
+                f"平静期看似独立, 冲击来时却跟着组合一起跌, 全期相关低估了它的下行 beta")
+    else:
+        log(f"  共同交易日 {len(all_dates)} < {MIN_SAMPLE}, 下行样本不足, 跳过。", buf)
+
     # --- 分散化比率 (简化: 组合波动率 vs 加权独立波动率) ---
     # 用共同交易日构造等权对齐序列
     all_common = None
