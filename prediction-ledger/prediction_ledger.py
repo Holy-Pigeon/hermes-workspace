@@ -257,7 +257,26 @@ def cmd_score(preds):
     hit_rate = sum(hits) / len(hits)
     print(f"=== 预测计分卡 (n={len(resolved)}已结算) ===")
     print(f"命中率(partial算0.5): {hit_rate:.1%}")
-    print(f"Brier分: {brier:.3f}  (0=完美 / 0.25=随机瞎猜 / 越低越准)")
+    print(f"Brier分(朴素/按n): {brier:.3f}  (0=完美 / 0.25=随机瞎猜 / 越低越准)")
+    # ── 簇折叠 Brier: 同(标的,结算窗口)的多条预测由同一份财报驱动=结果不独立,
+    #    朴素 Brier 按 n 计会高估统计力(伪多重印证)。把每个(标的,窗口)簇内的
+    #    Brier 贡献先取均值折成 1 个有效观测, 再跨簇平均 → 有效独立样本口径。
+    #    这不是臆造数字, 是把 calibration_health 每轮 rc=1 警告的'有效n'真正计进分数。
+    import re as _re2
+    def _subj2(p):
+        m = _re2.search(r"\((\d{4,6})\)", p["subject"])
+        return m.group(1) if m else p["subject"]
+    from collections import defaultdict as _dd
+    cl = _dd(list)
+    for p in resolved:
+        cl[(_subj2(p), p.get("verify_by"))].append(
+            (p["confidence"] - hitmap[p["outcome"]]) ** 2)
+    cluster_briers = [sum(v) / len(v) for v in cl.values()]
+    eff_brier = sum(cluster_briers) / len(cluster_briers)
+    eff_n = len(cl)
+    if eff_n < len(resolved):
+        print(f"Brier分(簇折叠/有效n={eff_n}): {eff_brier:.3f}  "
+              f"← 同标的+同窗口预测折成1个有效观测, 去伪多重印证后的真实校准分(以此为准)")
     print(f"\n按标的:")
     for p in resolved:
         print(f"  [{p['id']}] {p['subject']}: {p['outcome']} (信心{p['confidence']:.0%}) {p.get('resolved_value') or ''}")
