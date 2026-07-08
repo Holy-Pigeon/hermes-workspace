@@ -406,6 +406,20 @@
         "只读"
       ],
       "heartbeat_file": "~/hermes-workspace/db-freshness"
+    },
+    {
+      "id": "martingale-guard",
+      "name": "马丁加仓哨兵",
+      "icon": "🚧",
+      "desc": "盯成交时间序列的向下加仓摊低轨迹，补配置层时间维度盲区，防用户第一自陈的马丁加满仓负偏度爆仓，纯只读",
+      "ports": null,
+      "tags": [
+        "配置层",
+        "风控",
+        "行为纪律",
+        "只读"
+      ],
+      "heartbeat_file": "~/hermes-workspace/martingale-guard"
     }
   ]
 }
