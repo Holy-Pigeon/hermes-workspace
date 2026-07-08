@@ -619,8 +619,13 @@
       "topic": "通用逼近定理（Universal Approximation Theorem）——为什么'一层足够宽的网络'理论上什么函数都能拟合",
       "category": "类目 6：感知机与多层感知机",
       "taught_at": "2026-07-08T08:03:00+08:00"
+    },
+    {
+      "topic": "中心极限定理（Central Limit Theorem）——为什么无数个随机因素加在一起，总会长成一条钟形曲线",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-08T14:03:00+08:00"
     }
   ],
-  "total_count": 124,
-  "last_updated": "2026-07-08T08:03:00+08:00"
+  "total_count": 125,
+  "last_updated": "2026-07-08T14:03:00+08:00"
 }
