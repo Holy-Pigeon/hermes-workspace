@@ -624,8 +624,13 @@
       "topic": "中心极限定理（Central Limit Theorem）——为什么无数个随机因素加在一起，总会长成一条钟形曲线",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-08T14:03:00+08:00"
+    },
+    {
+      "topic": "互信息（Mutual Information）——衡量知道一个变量能减少另一个变量多少不确定性",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-07-08T20:03:00+08:00"
     }
   ],
-  "total_count": 125,
-  "last_updated": "2026-07-08T14:03:00+08:00"
+  "total_count": 126,
+  "last_updated": "2026-07-08T20:03:00+08:00"
 }
