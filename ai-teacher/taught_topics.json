@@ -614,8 +614,13 @@
       "topic": "In-Context Learning（上下文学习）——不更新任何参数，只靠几个例子就学会新任务",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-07-07T20:03:00+08:00"
+    },
+    {
+      "topic": "通用逼近定理（Universal Approximation Theorem）——为什么'一层足够宽的网络'理论上什么函数都能拟合",
+      "category": "类目 6：感知机与多层感知机",
+      "taught_at": "2026-07-08T08:03:00+08:00"
     }
   ],
-  "total_count": 123,
-  "last_updated": "2026-07-07T20:03:00+08:00"
+  "total_count": 124,
+  "last_updated": "2026-07-08T08:03:00+08:00"
 }
