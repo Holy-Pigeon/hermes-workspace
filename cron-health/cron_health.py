@@ -140,23 +140,41 @@ UNWIRED_SKIP_IDS = {
 
 def _run_corpus():
     """把「所有会真正触发执行的地方」的文本汇成一个语料串:
-    cron 定义(jobs.json) + 所有 shell 包装脚本 + paper-trading 下的编排器 py。
+    cron 定义(jobs.json) + 『真正被调度的』shell 包装脚本 + paper-trading 下的编排器 py。
     一个项目若在此语料中被引用(id / 目录路径), 说明它有真实执行入口=已接线。
-    纯只读, 取不到的源静默跳过绝不编造。"""
+    纯只读, 取不到的源静默跳过绝不编造。
+
+    假阴性堵漏(2026-07-09 创新引擎实测): 旧版把 scripts/ 下『所有』*.sh 无差别纳入语料,
+    但一个 wrapper *.sh 若自己从未被 jobs.json 调度(既不在某 job 的 script 字段, 也不在
+    任何 enabled job 的 prompt 里被 `bash .../x.sh` 调用), 它就只是另一个孤儿——读它的内容
+    会把它提到的项目 id 误判成『已接线』。实证代价: call-alpha-tracker 的 call_alpha_tracker.sh
+    存在于 scripts/ 且正文含该 id, 但零 cron 调度 → 旧版据此把这个真僵尸清白放行。
+    修复: 仅当某 *.sh 的 basename 出现在 jobs.json 文本中(=真被调度)才纳入其内容为『已接线』证据。"""
     import glob as _glob
     corpus = ""
+    jobs_text = ""
     try:
         with open(JOBS_PATH) as f:
-            corpus += json.dumps(json.load(f), ensure_ascii=False)
+            jobs_text = json.dumps(json.load(f), ensure_ascii=False)
     except Exception:
-        pass
-    for pat in (os.path.join(HSCRIPTS_DIR, "*.sh"), ORCH_GLOB):
-        for fp in _glob.glob(pat):
-            try:
-                with open(fp, encoding="utf-8", errors="ignore") as f:
-                    corpus += " " + f.read()
-            except Exception:
-                continue
+        jobs_text = ""
+    corpus += jobs_text
+    # 编排器 py 始终纳入(它们被 scheduled 的 wrapper 调用, 是二级接线证据)
+    for fp in _glob.glob(ORCH_GLOB):
+        try:
+            with open(fp, encoding="utf-8", errors="ignore") as f:
+                corpus += " " + f.read()
+        except Exception:
+            continue
+    # wrapper *.sh: 只纳入『真被 jobs.json 调度』的那些, 孤儿 wrapper 不算接线证据
+    for fp in _glob.glob(os.path.join(HSCRIPTS_DIR, "*.sh")):
+        if os.path.basename(fp) not in jobs_text:
+            continue  # 该 wrapper 自己没被任何 cron 调度 → 它提到的 id 不算已接线
+        try:
+            with open(fp, encoding="utf-8", errors="ignore") as f:
+                corpus += " " + f.read()
+        except Exception:
+            continue
     return corpus
 
 
