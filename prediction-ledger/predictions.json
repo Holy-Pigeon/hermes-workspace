@@ -326,6 +326,34 @@
       "outcome": "pending",
       "resolved_value": null,
       "resolved_date": null
+    },
+    {
+      "id": "P024",
+      "created": "2026-07-09",
+      "subject": "Alphabet(GOOGL)",
+      "claim": "GOOGL 2026全年FCF转化仍被AI capex压制:FY2026 FCF不会恢复到营收18%以上(即FCF<年营收*0.18),净利高增长无法同步转化为自由现金流",
+      "falsification": "至2027-03-31(FY2026年报发布后),若FY2026 FCF >= 全年营收*0.18 且FCF YoY恢复双位数增长 → capex转化为ROIC成立,本'军备竞赛吞噬FCF'判断被证伪",
+      "direction": "看空FCF转化(FCF/营收<18%)",
+      "confidence": 0.7,
+      "verify_by": "2027-03-31",
+      "source_note": "note_2026-07-09_googl_ai_capex_fcf_squeeze.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P025",
+      "created": "2026-07-09",
+      "subject": "Alphabet(GOOGL)",
+      "claim": "GOOGL现价61.92在52周89分位、隐含~13%十年净利复利、无安全边际:至2027-06-30总回报不会跑赢SPY超10个百分点",
+      "falsification": "至2027-06-30,若GOOGL总回报相对SPY累计超额收益>10pct → 说明现价其实被低估,'89分位无安全边际、下行保护弱'判断被证伪",
+      "direction": "看空相对超额(GOOGL不跑赢SPY超10pct)",
+      "confidence": 0.68,
+      "verify_by": "2027-06-30",
+      "source_note": "note_2026-07-09_googl_ai_capex_fcf_squeeze.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
