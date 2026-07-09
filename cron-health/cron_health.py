@@ -23,6 +23,7 @@ cron-health · 定时任务交付健康度看门狗
 """
 import json
 import os
+import re
 import sys
 import argparse
 from datetime import datetime, timezone, timedelta
@@ -153,9 +154,21 @@ def _run_corpus():
     import glob as _glob
     corpus = ""
     jobs_text = ""
+    # 假阳性堵漏(2026-07-10 创新引擎实测): 旧版把 *整份* jobs.json dump 进语料, 连同
+    # last_error/last_status/last_delivery_error/paused_reason 等『运行期输出字段』一起纳入。
+    # 致命自指: cron-health 自己上一轮报 UNWIRED 后, 框架把含那 4 个 id 的告警文本写进它的
+    # last_error, 下一轮 corpus 因此『看见』这 4 个 id → 误判已接线 → 0 告警; 再下一轮 last_error
+    # 清空 → 4 个 id 又消失 → 重新告警。=> 检测器的输出污染了自己的输入, 隔轮 fire/silence 翻烧饼,
+    # 正是同 4 项目被反复重议 ~15 次的机制根因。
+    # 修复: 只纳入每个 job 的『定义型字段』(真实接线证据), 剔除一切运行期输出字段。
+    _DEF_FIELDS = ("name", "prompt", "script", "command", "context_from", "skills", "skill")
     try:
         with open(JOBS_PATH) as f:
-            jobs_text = json.dumps(json.load(f), ensure_ascii=False)
+            _jobs = json.load(f).get("jobs", [])
+        _defs = []
+        for _j in _jobs:
+            _defs.append({k: _j.get(k) for k in _DEF_FIELDS if _j.get(k) is not None})
+        jobs_text = json.dumps(_defs, ensure_ascii=False)
     except Exception:
         jobs_text = ""
     corpus += jobs_text
@@ -167,11 +180,40 @@ def _run_corpus():
         except Exception:
             continue
     # wrapper *.sh: 只纳入『真被 jobs.json 调度』的那些, 孤儿 wrapper 不算接线证据
+    _wrapper_text = ""
     for fp in _glob.glob(os.path.join(HSCRIPTS_DIR, "*.sh")):
         if os.path.basename(fp) not in jobs_text:
             continue  # 该 wrapper 自己没被任何 cron 调度 → 它提到的 id 不算已接线
         try:
             with open(fp, encoding="utf-8", errors="ignore") as f:
+                _wrapper_text += " " + f.read()
+        except Exception:
+            continue
+    corpus += _wrapper_text
+    # 接线链追踪(2026-07-10): 一个 scheduled wrapper/prompt 常只点名它直接调的 *.py 路径
+    # (如 research_pipeline_weekly.sh 调 research-pipeline/pipeline.py), 而真正串联下游项目的
+    # 子编排器就是那个 .py——它引用的 quality-compounder/signal-orthogonality 等 id 只写在 .py 里。
+    # 故须顺链把『被 scheduled 语料点名的 .py 文件』内容也纳入, 否则会把经 pipeline.py 编排的
+    # 真已接线项目误报 UNWIRED(此前靠 jobs.json 运行期字段污染意外遮住, 那个 bug 一修就暴露)。
+    # 只跟一层。路径可能是绝对(/Users/.../pipeline.py)或 shell 变量式($WS/alpha-attribution/attribute.py),
+    # 故按 basename 在 workspace 内解析, 兼容两种写法; 排除检测器自身防注释自指污染。
+    _chain_text = jobs_text + " " + _wrapper_text
+    _WS = os.path.expanduser("~/hermes-workspace")
+    _SELF = os.path.abspath(__file__)
+    _self_base = os.path.basename(_SELF)
+    _ws_py = {}  # basename -> 首个匹配的 workspace 内 .py 绝对路径
+    for _fp in _glob.glob(os.path.join(_WS, "**", "*.py"), recursive=True):
+        _ws_py.setdefault(os.path.basename(_fp), _fp)
+    _seen = set()
+    for _bn in re.findall(r"([\w-]+\.py)", _chain_text):
+        if _bn == _self_base or _bn in _seen:
+            continue
+        _seen.add(_bn)
+        _fp = _ws_py.get(_bn)
+        if not _fp or os.path.abspath(_fp) == _SELF:
+            continue
+        try:
+            with open(_fp, encoding="utf-8", errors="ignore") as f:
                 corpus += " " + f.read()
         except Exception:
             continue
