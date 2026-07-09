@@ -155,6 +155,14 @@ def main():
             # 收口进 --full 周度复审=无需新 cron 即让卖出侧监控有调度器盯活性(与配置纪律同 cadence)。
             ("持仓论点破裂哨兵", lambda: check_quiet(
                 "卖出哨兵", "../exit-sentinel/exit_sentinel.py", timeout=120), None),
+            # 马丁加仓哨兵(martingale-guard): built-but-unwired 缺口——脚本已建成自测、卡片已注册,
+            # 但独立 cron 属真金白银风控敏感被留 proposed, 从建成起无任何调度器盯活性=cron-health
+            # 反复告警的 UNWIRED_PROJECT 僵尸卡片。它盯成交时间序列的向下加仓摊低负偏度轨迹(用户
+            # 第一自陈的爆仓机制), 属慢漂移行为纪律信号(轨迹随成交累积演化, 非高频), --quiet 退码
+            # 0/1 + stdout 非空即红旗的合约与 check_quiet 完全对齐。与 exit-sentinel 同类,
+            # 收口进 --full 周度复审=无需新独立 cron 即让此风控有调度器盯活性(同 cadence 结构层)。
+            ("马丁加仓哨兵", lambda: check_quiet(
+                "马丁哨兵", "../martingale-guard/martingale_guard.py", timeout=120), None),
         ]
 
     any_flag = False
