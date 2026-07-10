@@ -649,8 +649,13 @@
       "topic": "偏差-方差权衡（Bias-Variance Tradeoff）——泛化误差为什么总在两头拉扯",
       "category": "类目 9：正则化技术",
       "taught_at": "2026-07-10T08:03:00+08:00"
+    },
+    {
+      "topic": "早停（Early Stopping）——在过拟合开始之前及时收手",
+      "category": "类目 9：正则化技术",
+      "taught_at": "2026-07-10T14:03:00+08:00"
     }
   ],
-  "total_count": 130,
-  "last_updated": "2026-07-10T08:03:00+08:00"
+  "total_count": 131,
+  "last_updated": "2026-07-10T14:03:00+08:00"
 }
