@@ -654,8 +654,13 @@
       "topic": "早停（Early Stopping）——在过拟合开始之前及时收手",
       "category": "类目 9：正则化技术",
       "taught_at": "2026-07-10T14:03:00+08:00"
+    },
+    {
+      "topic": "LogSumExp 技巧（Log-Sum-Exp）——让 Softmax 和交叉熵在电脑里不溢出的稳定器",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-07-10T20:03:00+08:00"
     }
   ],
-  "total_count": 131,
-  "last_updated": "2026-07-10T14:03:00+08:00"
+  "total_count": 132,
+  "last_updated": "2026-07-10T20:03:00+08:00"
 }
