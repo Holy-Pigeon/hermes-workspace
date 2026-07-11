@@ -659,8 +659,13 @@
       "topic": "LogSumExp 技巧（Log-Sum-Exp）——让 Softmax 和交叉熵在电脑里不溢出的稳定器",
       "category": "类目 4：信息论基础",
       "taught_at": "2026-07-10T20:03:00+08:00"
+    },
+    {
+      "topic": "梯度累积（Gradient Accumulation）——显存不够，就把大 batch 拆成几口慢慢咽",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-07-11T08:03:00+08:00"
     }
   ],
-  "total_count": 132,
-  "last_updated": "2026-07-10T20:03:00+08:00"
+  "total_count": 133,
+  "last_updated": "2026-07-11T08:03:00+08:00"
 }

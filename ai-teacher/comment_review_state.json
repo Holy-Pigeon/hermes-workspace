@@ -132,9 +132,11 @@
     "398d8689-fc19-8162-abef-f318ce7d2561",
     "399d8689-fc19-8128-9d72-cc00f1df682d",
     "399d8689-fc19-8126-bf6c-d3fc92343583",
-    "399d8689-fc19-81a7-b7ed-f106465fd8cd"
+    "399d8689-fc19-81a7-b7ed-f106465fd8cd",
+    "39ad8689-fc19-8176-a6a7-fc8958c6af97"
   ],
   "page_titles": {
+    "39ad8689-fc19-8176-a6a7-fc8958c6af97": "梯度累积（Gradient Accumulation）——显存不够，就把大 batch 拆成几口慢慢咽",
     "399d8689-fc19-81a7-b7ed-f106465fd8cd": "LogSumExp 技巧（Log-Sum-Exp）——让 Softmax 和交叉熵在电脑里不溢出的稳定器",
     "399d8689-fc19-8126-bf6c-d3fc92343583": "早停（Early Stopping）——在过拟合开始之前及时收手",
     "399d8689-fc19-8128-9d72-cc00f1df682d": "偏差-方差权衡（Bias-Variance Tradeoff）——泛化误差为什么总在两头拉扯",
@@ -269,7 +271,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 75,
+  "cursor": 86,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -290,6 +292,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-10T20:10:17+0800",
-  "last_order_refresh": "2026-07-10T20:13:43+0800"
+  "last_review": "2026-07-11T08:11:06+0800",
+  "last_order_refresh": "2026-07-11T08:14:01+0800"
 }
