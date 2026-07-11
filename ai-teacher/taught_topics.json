@@ -664,8 +664,13 @@
       "topic": "梯度累积（Gradient Accumulation）——显存不够，就把大 batch 拆成几口慢慢咽",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-11T08:03:00+08:00"
+    },
+    {
+      "topic": "梯度检查点（Gradient Checkpointing）——用时间换显存，训得起更大的模型",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-07-11T14:03:00+08:00"
     }
   ],
-  "total_count": 133,
-  "last_updated": "2026-07-11T08:03:00+08:00"
+  "total_count": 134,
+  "last_updated": "2026-07-11T14:03:00+08:00"
 }
