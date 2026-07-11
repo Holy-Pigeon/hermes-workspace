@@ -55,6 +55,17 @@ NON_SIGNAL_PROJECTS = {
     "allocation-discipline",  # 配置层,消费信号非产信号
     "research", "research-pipeline",  # 编排/库,信号来自被编排的工具
     "stockchoose",
+    # —— 以下为消费/校准/风控/基础设施/学习类项目,均不产出会被『N重独立印证』引用的
+    #    正交发现信号,故列入白名单免误报(2026-07-12 补登,消除 coverage-check 长期假阳性):
+    "valuation-trigger",      # 消费者:纵向盯 reverse_dcf 隐含增速,不产新信号(信号来自 reverse_dcf)
+    "call-alpha-tracker",     # 校准器:事后计分呼叫alpha,与 prediction-ledger 同类,非发现信号
+    "alpha-attribution",      # 归因器:拆负呼叫alpha的失败模式,元层复盘,非发现信号
+    "candidate-deepening",    # 编排:深研note authoring队列,信号来自被深挖的工具
+    "capital-deployment",     # 配置层看门狗:盯资本部署率,消费信号非产信号
+    "exit-sentinel",          # 风控:持仓论点破裂哨兵(卖出纪律),非发现印证信号
+    "martingale-guard",       # 风控:马丁加仓时间序列哨兵,非发现印证信号
+    "artifact-freshness", "db-freshness",  # 基础设施:产出/表新鲜度看门狗,不产信号
+    "quant-systems-curriculum", "agent-notes",  # 学习/经验沉淀,与投研信号无关
 }
 
 
