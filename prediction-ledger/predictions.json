@@ -354,6 +354,34 @@
       "outcome": "pending",
       "resolved_value": null,
       "resolved_date": null
+    },
+    {
+      "id": "P026",
+      "created": "2026-07-11",
+      "subject": "NVIDIA(NVDA)",
+      "claim": "NVDA FY27 数据中心不塌方: 综合毛利率维持≥65%(FY26为71.1%), 且数据中心营收无连续两季非季节性环比负增长",
+      "falsification": "毛利率跌破65%且指引继续下探, 或数据中心营收连续两季非季节性环比负增长",
+      "direction": "看多(护城河/定价权维持)",
+      "confidence": 0.72,
+      "verify_by": "2026-11-30",
+      "source_note": "note_2026-07-11_nvda_priced_below_moat.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P027",
+      "created": "2026-07-11",
+      "subject": "NVIDIA(NVDA)",
+      "claim": "现价10.96只price-in 14%十年净利CAGR(30x退出); NVDA基准情景兑现≥15% CAGR的路径成立, 到期时数据中心需求周期未证伪(未出现>30%增量训练算力被云厂自研ASIC吃下)",
+      "falsification": "云厂自研ASIC合计吃下>30%增量训练算力份额且NVDA数据中心份额年内下滑>10个百分点, 或FY27全年营收同比<+10%",
+      "direction": "看多(现价隐含增速低于护城河实力)",
+      "confidence": 0.68,
+      "verify_by": "2027-03-31",
+      "source_note": "note_2026-07-11_nvda_priced_below_moat.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
