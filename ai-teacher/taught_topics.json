@@ -674,8 +674,13 @@
       "topic": "ELECTRA（替换 token 检测，RTD）——用判别式预训练替代 MLM 提升样本效率",
       "category": "类目 17：Encoder-only 模型",
       "taught_at": "2026-07-11T20:03:00+08:00"
+    },
+    {
+      "topic": "BLEU（双语评估替补）——给机器生成的句子自动打分的第一把尺",
+      "category": "类目 20：大语言模型应用",
+      "taught_at": "2026-07-12T08:03:00+08:00"
     }
   ],
-  "total_count": 135,
-  "last_updated": "2026-07-11T20:03:00+08:00"
+  "total_count": 136,
+  "last_updated": "2026-07-12T08:03:00+08:00"
 }
