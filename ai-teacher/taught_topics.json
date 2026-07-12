@@ -684,8 +684,13 @@
       "topic": "模型量化（Quantization）——用更少的比特装下同一个大模型",
       "category": "类目 20：大语言模型应用",
       "taught_at": "2026-07-12T14:03:00+08:00"
+    },
+    {
+      "topic": "einsum（爱因斯坦求和约定）——用一行下标写清任意张量运算",
+      "category": "类目 5：Python 与 PyTorch",
+      "taught_at": "2026-07-12T20:03:00+08:00"
     }
   ],
-  "total_count": 137,
-  "last_updated": "2026-07-12T14:03:00+08:00"
+  "total_count": 138,
+  "last_updated": "2026-07-12T20:03:00+08:00"
 }
