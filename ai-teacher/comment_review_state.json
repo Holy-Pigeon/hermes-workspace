@@ -135,9 +135,13 @@
     "399d8689-fc19-81a7-b7ed-f106465fd8cd",
     "39ad8689-fc19-8176-a6a7-fc8958c6af97",
     "39ad8689-fc19-81f2-b0d2-f4ece0e01e42",
-    "39ad8689-fc19-81dc-ac6d-f8031cda0fbf"
+    "39ad8689-fc19-81dc-ac6d-f8031cda0fbf",
+    "39bd8689-fc19-81c2-9c06-c6481ca699b2",
+    "39bd8689-fc19-8111-9d84-ea17af126c26"
   ],
   "page_titles": {
+    "39bd8689-fc19-81c2-9c06-c6481ca699b2": "模型量化（Quantization）——用更少的比特装下同一个大模型",
+    "39bd8689-fc19-8111-9d84-ea17af126c26": "BLEU（双语评估替补）——给机器生成的句子自动打分的第一把尺",
     "39ad8689-fc19-81f2-b0d2-f4ece0e01e42": "ELECTRA——把\"填空\"换成\"抓错别字\"，让预训练效率翻倍",
     "39ad8689-fc19-81dc-ac6d-f8031cda0fbf": "梯度检查点（Gradient Checkpointing）——用时间换显存，训得起更大的模型",
     "39ad8689-fc19-8176-a6a7-fc8958c6af97": "梯度累积（Gradient Accumulation）——显存不够，就把大 batch 拆成几口慢慢咽",
@@ -275,7 +279,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 96,
+  "cursor": 40,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -296,6 +300,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-11T20:10:57+0800",
-  "last_order_refresh": "2026-07-11T20:14:31+0800"
+  "last_review": "2026-07-12T14:10:41+0800",
+  "last_order_refresh": "2026-07-12T14:13:21+0800"
 }
