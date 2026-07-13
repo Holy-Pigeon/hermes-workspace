@@ -694,8 +694,13 @@
       "topic": "凸函数与凸性（Convexity）——为什么碗形的损失曲面让梯度下降有必胜把握",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-13T08:03:00+08:00"
+    },
+    {
+      "topic": "Jensen 不等式（Jensen's Inequality）——凸性一出手，一堆'大于等于'就都成立了",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-13T14:03:00+08:00"
     }
   ],
-  "total_count": 139,
-  "last_updated": "2026-07-13T08:03:00+08:00"
+  "total_count": 140,
+  "last_updated": "2026-07-13T14:03:00+08:00"
 }
