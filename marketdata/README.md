@@ -34,6 +34,25 @@ spot = get_spot("301013")                       # {price, date, source}，market
 - 日线列已归一：`date/open/high/low/close/volume/_source`
 - `market` 可省略，按代码格式自动推断（5位→HK，6位→A，纯字母→US）
 
+### 直连外部 API 的韧性收口（非 akshare）
+
+对于直接打外部 REST API 的 cron（ClinicalTrials.gov 临床、Polymarket、南向等），
+用 `http_get` / `http_get_json` 替代裸 `urllib.request.urlopen`——统一的指数退避
+重试 + 超时墙，兜底瞬时 SSL EOF / RemoteDisconnected / 超时。全失败抛
+`MarketDataError`（绝不返回填充值）。
+
+```python
+from marketdata import http_get_json
+d = http_get_json("https://clinicaltrials.gov/api/v2/studies?query.term=ivonescimab",
+                  headers={"User-Agent": "akeso-watch/1.0"}, timeout=30, label="ctgov")
+```
+
+> 背景：2026-07-13 akeso 临床监控因 ClinicalTrials.gov 间歇 SSL EOF 连续
+> RUN_ERROR（催化剂监控当天失明），根因是单发裸 urlopen 无重试。当时只在
+> akeso 内部内联修 backoff，未抽象。此原语把该教训收口成唯一可复用入口，
+> 消除各脚本各自重造 retry/backoff/timeout（akeso/polymarket/core-sina 三份漂移）。
+
+
 ## 迁移清单（待逐步收口的脚本，全部可逆）
 
 这些脚本目前各自取数，应逐步改为调本模块。**不一次性大改**，每改一个单独验证：

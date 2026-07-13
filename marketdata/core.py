@@ -598,6 +598,59 @@ def safe_call(fn, label="", attempts=3, base_delay=1.5):
 
 
 # ---------------------------------------------------------------------------
+# 通用原始 HTTP 取数硬化（非 akshare 的直连 API 收口）
+# ---------------------------------------------------------------------------
+# 为什么在 marketdata 里：safe_call 只硬化「akshare 可调用对象」，但工作区里还有
+# 多个 cron 直接 urllib.request.urlopen 打外部 REST API（ClinicalTrials.gov 临床、
+# Polymarket 押注、南向资金等），每个都各自手写一份 retry/backoff/timeout——
+# akeso=4次/2-4-8s/30s、polymarket=2次/1s/6s、core 内部 sina 直连=3次/线性/8s，
+# 四份互不一致的重试逻辑。2026-07-13 akeso 因 ClinicalTrials.gov 间歇 SSL EOF
+# 连续 RUN_ERROR（催化剂监控当天失明）暴露：单发裸 urlopen 无重试是系统级反模式，
+# 那次只在 akeso 内部内联修了 backoff，未把教训抽象成可复用的取数层原语。
+# 这里补上唯一的通用原语，让所有直连 API 的 cron 收口到同一套韧性逻辑，
+# 消除「每个脚本各自重造轮子、彼此漂移」。
+#
+# 数据诚实：全部重试失败抛 MarketDataError（附最后错误），绝不返回填充值/空壳。
+def http_get(url, headers=None, timeout=15, attempts=4, base_delay=1.5,
+             backoff="exp", label=""):
+    """
+    通用「直连 HTTP GET」硬化：指数(或线性)退避重试 + 超时墙，兜底瞬时
+    SSL EOF / RemoteDisconnected / 超时等抖动。返回原始字节 bytes。
+
+    用法（替换裸 urlopen）：
+        from marketdata import http_get
+        raw = http_get("https://clinicaltrials.gov/api/v2/studies?...",
+                       headers={"User-Agent": "akeso-watch/1.0"},
+                       timeout=30, label="ctgov")
+
+    backoff="exp" → base_delay*2^i；"lin" → base_delay*(i+1)。
+    全部重试失败抛 MarketDataError（message 带 url + 最后错误），绝不静默填充。
+    """
+    import urllib.request
+    req = urllib.request.Request(url, headers=headers or {"User-Agent": "Mozilla/5.0"})
+    last_err = None
+    for i in range(attempts):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read()
+        except Exception as e:  # SSL EOF / RemoteDisconnected / 超时 等瞬时故障
+            last_err = f"{type(e).__name__}: {str(e)[:80]}"
+            if i < attempts - 1:
+                delay = base_delay * (2 ** i) if backoff == "exp" else base_delay * (i + 1)
+                time.sleep(delay)
+    raise MarketDataError(f"http_get([{label}] {url}) 失败({attempts}次): {last_err}")
+
+
+def http_get_json(url, headers=None, timeout=15, attempts=4, base_delay=1.5,
+                  backoff="exp", label=""):
+    """http_get 的 JSON 便捷版：取回字节后 json.loads。同样的重试/超时/抛错语义。"""
+    import json as _json
+    raw = http_get(url, headers=headers, timeout=timeout, attempts=attempts,
+                   base_delay=base_delay, backoff=backoff, label=label)
+    return _json.loads(raw)
+
+
+# ---------------------------------------------------------------------------
 # 报告币种登记表（单一事实源）
 # ---------------------------------------------------------------------------
 # 为什么在 marketdata 里：现价由本层以「上市交易币种」取（美股 ADR 报 USD），
