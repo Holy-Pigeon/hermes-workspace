@@ -382,6 +382,34 @@
       "outcome": "pending",
       "resolved_value": null,
       "resolved_date": null
+    },
+    {
+      "id": "P028",
+      "created": "2026-07-13",
+      "subject": "MSFT (Microsoft)",
+      "claim": "现价385.10美元存在估值口径分裂:净利口径PE22.9x只隐含未来10年9到11.5%净利CAGR(有安全边际),但FCF口径P/FCF39x,AI capex(TTM 97.2B美元占OCF57%)把FCF增速压到+1.8%近零。核心可证伪判断:capex是折旧后仍高回报的护城河再投资,GAAP净利与OCF才是真实盈利能力,FCF端会随货币化跟上,而非防御性军备竞赛式FCF黑洞。",
+      "falsification": "FY26全年财报(7/29盘后)或后续两季:Capex同比增速持续大于营收增速且FCF同比转负=再投资叙事破裂(看多论点证伪);若FCF同比回正且capex占OCF比见顶回落=货币化跟上(论点成立)。",
+      "direction": "看多:净利口径便宜加货币化终将追上capex",
+      "confidence": 0.7,
+      "verify_by": "2026-11-30",
+      "source_note": "note_2026-07-13_msft_cheap_earnings_capex_fcf_squeeze.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
+    },
+    {
+      "id": "P029",
+      "created": "2026-07-13",
+      "subject": "MSFT (Microsoft) 云增速子论点",
+      "claim": "MSFT货币化引擎(Azure/云智能)未熄火:近年Azure增速维持+30%区间,是净利加速(TTM+29.6%)与经营利润率抬升到46.8%的核心驱动。子论点比capex主论点更早可证伪,7/29财报电话会即可读出。",
+      "falsification": "FY26全年财报(7/29盘后)披露的Azure/云智能分部营收增速跌破+20%=AI需求拐点货币化引擎熄火(证伪);维持+25%以上=引擎未熄(成立)。",
+      "direction": "看多:云货币化引擎未熄火",
+      "confidence": 0.72,
+      "verify_by": "2026-08-15",
+      "source_note": "note_2026-07-13_msft_cheap_earnings_capex_fcf_squeeze.md",
+      "outcome": "pending",
+      "resolved_value": null,
+      "resolved_date": null
     }
   ]
 }
