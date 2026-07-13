@@ -699,8 +699,13 @@
       "topic": "Jensen 不等式（Jensen's Inequality）——凸性一出手，一堆'大于等于'就都成立了",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-13T14:03:00+08:00"
+    },
+    {
+      "topic": "学习率预热（Learning Rate Warmup）——训练开头先慢跑几步，别让第一脚就崴了",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-07-13T20:03:00+08:00"
     }
   ],
-  "total_count": 140,
-  "last_updated": "2026-07-13T14:03:00+08:00"
+  "total_count": 141,
+  "last_updated": "2026-07-13T20:03:00+08:00"
 }
