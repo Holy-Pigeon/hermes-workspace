@@ -255,19 +255,6 @@
       "heartbeat_file": "~/hermes-workspace/Quant-Futu/notify_service/heartbeat.json"
     },
     {
-      "id": "quality-compounder",
-      "name": "质量复利发现器",
-      "icon": "💎",
-      "desc": "tech_screener正交镜头:锚=复利质量非估值低分位,补好生意优先于好价格的发现盲区,喂moat+reverse_dcf尽调",
-      "ports": null,
-      "tags": [
-        "研究",
-        "脚本",
-        "发现侧"
-      ],
-      "heartbeat_file": "~/hermes-workspace/quality-compounder"
-    },
-    {
       "id": "valuation-trigger",
       "name": "估值触发观察哨",
       "icon": "🟢",
@@ -393,19 +380,6 @@
         "元监控"
       ],
       "heartbeat_file": "~/hermes-workspace/capital-deployment"
-    },
-    {
-      "id": "db-freshness",
-      "name": "数据库表级新鲜度看门狗",
-      "icon": "🧊",
-      "desc": "artifact-freshness的表内容侧对偶:只读sqlite查时序表最新日期是否停更+依赖链断裂(alpha落后nav),补DB内单表静默冻结盲区(cron-health/artifact-freshness均失明)",
-      "ports": null,
-      "tags": [
-        "基础设施",
-        "元监控",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/db-freshness"
     },
     {
       "id": "martingale-guard",
