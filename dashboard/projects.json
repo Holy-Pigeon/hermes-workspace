@@ -168,6 +168,21 @@
       ],
       "heartbeat_file": "~/hermes-workspace/agent-notes/notes",
       "manual": true
+    },
+    {
+      "id": "world-rts",
+      "name": "World-RTS 全局态势引擎",
+      "icon": "🌍",
+      "desc": "把世界当一局RTS:10阵营×22维状态矩阵,归一化同尺,瓶颈由公式自动浮现(含阵营安全放大器)→读被迫资金流。当前为框架设计阶段,零数据落地,待用户审schema",
+      "ports": null,
+      "tags": [
+        "研究",
+        "宏观",
+        "框架"
+      ],
+      "heartbeat_file": "~/hermes-workspace/world-rts/docs",
+      "freshness_hours": 720,
+      "manual": true
     }
   ]
 }
