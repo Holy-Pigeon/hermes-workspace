@@ -704,8 +704,13 @@
       "topic": "学习率预热（Learning Rate Warmup）——训练开头先慢跑几步，别让第一脚就崴了",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-13T20:03:00+08:00"
+    },
+    {
+      "topic": "残差流（Residual Stream）——把 Transformer 看成一条不断被读写的信息主干",
+      "category": "类目 13：Transformer 架构",
+      "taught_at": "2026-07-14T08:03:00+08:00"
     }
   ],
-  "total_count": 141,
-  "last_updated": "2026-07-13T20:03:00+08:00"
+  "total_count": 142,
+  "last_updated": "2026-07-14T08:03:00+08:00"
 }
