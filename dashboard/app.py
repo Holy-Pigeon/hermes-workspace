@@ -269,17 +269,39 @@ def _shorten(text: str, limit: int = 80) -> str:
     return cut + "…"
 
 
+# 受控顶层桶词表（收敛到 9 个，防止 category 首段自由发挥导致桶爆炸）。
+# 按顺序匹配：命中任一关键词即归入该桶；全不中落 "其它"。
+# 关键词匹配整条原始 category（不只首段），因历史 category 大量用连字符分隔（如 "架构审视-取数收口"）。
+_BUCKET_RULES = [
+    ("研究型alpha",  ["研究型alpha", "呼叫alpha", "个股判断", "实盘决策", "研究呼叫", "alpha计分", "相对收益", "stockchoose"]),
+    ("准则审视",     ["准则诊断", "准则审视", "junze-shenshi", "jiaozhun", "校准诊断", "方法论纠偏", "数据诚实", "数据真实性"]),
+    ("元层治理",     ["元层", "元监控", "看门狗", "watchdog", "meta-", "yuanceng", "防腐", "PHANTOM", "假告警", "假阳性", "信噪比", "治理闭环", "治理工具"]),
+    ("架构治理",     ["架构", "jiagou-shenshi", "取数收口", "收口", "去重", "接线", "孤儿", "僵尸", "单一事实源", "桥接", "瘦身", "arch-", "heartbeat", "心跳", "驾驶舱"]),
+    ("基础设施",     ["基础设施", "配置", "交付backbone", "取数层", "FX收口", "迁移", "备份纪律", "seam"]),
+    ("投资纪律",     ["投资纪律", "卖出纪律", "卖出哨兵", "结算", "台账", "归因"]),
+    ("新建项目",     ["新建项目", "系统级gap", "系统级缺口", "能力缺口", "xinjian", "研究产线", "资本部署监控"]),
+    ("现有系统改进", ["现有系统改进", "系统改进"]),
+    ("运维统筹",     ["统筹", "监控工具", "挂cron", "cron", "定时任务", "测试", "gua-cron", "调度", "巡检"]),
+]
+
 def _idea_bucket(category: str) -> str:
-    """把细碎的多级分类（如 '研究型alpha·新数据源·南向资金'）归并成顶层桶。
-    取第一个分隔符（· / ／ /）之前的部分。空则归 '未分类'。"""
+    """把细碎的多级分类归并成受控的 9 个顶层桶（防桶爆炸）。
+    先按受控词表关键词匹配整条 category；全不中再退化为取首段；仍空则 '其它'。"""
     cat = (category or "").strip()
     if not cat:
-        return "未分类"
-    for sep in ("·", "・", "／", "/", " "):
-        if sep in cat:
-            cat = cat.split(sep)[0].strip()
+        return "其它"
+    low = cat.lower()
+    for bucket, kws in _BUCKET_RULES:
+        for kw in kws:
+            if kw.lower() in low:
+                return bucket
+    # 词表未覆盖：退化取首段（分隔符含连字符），避免长串独立成桶
+    head = cat
+    for sep in ("·", "・", "／", "/", "-", " ", "，", ",", "、"):
+        if sep in head:
+            head = head.split(sep)[0].strip()
             break
-    return cat or "未分类"
+    return head or "其它"
 
 
 def parse_ideas():
