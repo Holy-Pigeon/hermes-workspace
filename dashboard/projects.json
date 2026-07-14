@@ -61,18 +61,6 @@
       "external_label": "Notion 笔记"
     },
     {
-      "id": "stock-discovery",
-      "name": "标的发现管线",
-      "icon": "🔭",
-      "desc": "科技股价值-成长筛选 · 组合外新标的发现 · 反向DCF+护城河尽调入口",
-      "ports": null,
-      "tags": [
-        "研究",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/stock-discovery"
-    },
-    {
       "id": "moat-durability",
       "name": "护城河耐久度",
       "icon": "🏰",
@@ -85,19 +73,6 @@
       "heartbeat_file": "~/hermes-workspace/moat-durability"
     },
     {
-      "id": "prediction-ledger",
-      "name": "预测台账",
-      "icon": "🎯",
-      "desc": "Tetlock式校准 · 可证伪论点登记+结算 · 对抗过度自信",
-      "ports": null,
-      "tags": [
-        "研究",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/prediction-ledger",
-      "freshness_hours": 192
-    },
-    {
       "id": "marketdata",
       "name": "统一取数层",
       "icon": "🔌",
@@ -108,44 +83,6 @@
         "脚本"
       ],
       "heartbeat_file": "~/hermes-workspace/marketdata"
-    },
-    {
-      "id": "innovation-engine",
-      "name": "创新引擎",
-      "icon": "🧠",
-      "desc": "元层统筹官 · 架构/准则/赚钱逻辑审视 · idea登记唯一入口ie.py",
-      "ports": null,
-      "tags": [
-        "元层",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/innovation-engine/ideas_log.md"
-    },
-    {
-      "id": "price-watch",
-      "name": "涨价观测池",
-      "icon": "💹",
-      "desc": "自下而上涨价预期跟踪 · 入池≥20%/移出跌破15% · 真实价格序列驱动",
-      "ports": null,
-      "tags": [
-        "研究",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/price-watch/pool.json",
-      "freshness_hours": 192
-    },
-    {
-      "id": "research-pipeline",
-      "name": "研究编排流水线",
-      "icon": "🔗",
-      "desc": "发现估值护城河三件套尽调链编排器 输出候选简报stub",
-      "ports": null,
-      "tags": [
-        "研究",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/research-pipeline",
-      "freshness_hours": 192
     },
     {
       "id": "polymarket-dashboard",
@@ -165,19 +102,6 @@
       "heartbeat_file": "~/hermes-workspace/polymarket-dashboard/data/changes_1h.json"
     },
     {
-      "id": "cron-health",
-      "name": "Cron交付健康看门狗",
-      "icon": "🩺",
-      "desc": "盯cron基础设施自身:RUN_ERROR/DELIVERY_FAIL(产出但没送达)/STALE 三类失效的元监控",
-      "ports": null,
-      "tags": [
-        "基础设施",
-        "脚本",
-        "元监控"
-      ],
-      "heartbeat_file": "~/hermes-workspace/cron-health"
-    },
-    {
       "id": "us-tech-scout",
       "name": "美股科技发现雷达",
       "icon": "🦅",
@@ -193,48 +117,6 @@
       ],
       "heartbeat_file": "~/hermes-workspace/us-tech-scout",
       "health_path": "/healthz"
-    },
-    {
-      "id": "allocation-discipline",
-      "name": "资本配置纪律",
-      "icon": "🧮",
-      "desc": "信号到目标权重+行为护栏(封顶/反等权/信号-权重对齐),价投第二支柱",
-      "ports": null,
-      "tags": [
-        "配置层",
-        "风控",
-        "只读",
-        "纪律"
-      ],
-      "heartbeat_file": "~/hermes-workspace/allocation-discipline"
-    },
-    {
-      "id": "polymarket-monitor",
-      "name": "Polymarket 异动告警器",
-      "icon": "🚨",
-      "desc": "独立cron(每1h):关键词扫宏观/行业/个股押注,价格异动>阈值推Discord告警(实际告警器在此,非dashboard)",
-      "ports": null,
-      "tags": [
-        "预测市场",
-        "告警",
-        "脚本"
-      ],
-      "heartbeat_file": "~/hermes-workspace/polymarket-monitor/monitor.log",
-      "freshness_hours": 3.0,
-      "artifact_glob": "monitor.log"
-    },
-    {
-      "id": "signal-orthogonality",
-      "name": "信号正交性审计",
-      "icon": "🔀",
-      "desc": "审计『N重独立印证』是否真输入正交·堵伪多重印证的确认偏误·7/9信号实为price派生",
-      "ports": null,
-      "tags": [
-        "元层",
-        "准则诊断",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/signal-orthogonality"
     },
     {
       "id": "feishu-notify",
@@ -253,86 +135,6 @@
       ],
       "health_path": "/healthz",
       "heartbeat_file": "~/hermes-workspace/Quant-Futu/notify_service/heartbeat.json"
-    },
-    {
-      "id": "valuation-trigger",
-      "name": "估值触发观察哨",
-      "icon": "🟢",
-      "desc": "纵向监控候选reverse_dcf隐含增速 补SOUL等合理价格自动化半边 好生意跌进合理价时告警 价格要求增速远低于已兑现增速判买入区",
-      "ports": null,
-      "tags": [
-        "配置触发",
-        "研究",
-        "脚本",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/valuation-trigger/history.json"
-    },
-    {
-      "id": "call-alpha-tracker",
-      "name": "呼叫Alpha记分卡",
-      "icon": "🎯",
-      "desc": "跟踪每条研究呼叫的基准调整后呼叫alpha,补齐相对收益计分(与ledger事后Brier互补)",
-      "ports": null,
-      "tags": [
-        "计分",
-        "相对收益",
-        "研究复盘"
-      ],
-      "heartbeat_file": "~/hermes-workspace/call-alpha-tracker"
-    },
-    {
-      "id": "artifact-freshness",
-      "name": "产出物新鲜度看门狗",
-      "icon": "🧊",
-      "desc": "cron-health的产出侧对偶:盯文件型产出是否静默冻结(job绿灯但artifact停更),读projects.json比对mtime和freshness SLA报STALE_OUTPUT",
-      "ports": null,
-      "tags": [
-        "基础设施",
-        "元监控",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/artifact-freshness"
-    },
-    {
-      "id": "alpha-attribution",
-      "name": "呼叫alpha失败模式归因器",
-      "icon": "🔬",
-      "desc": "把负呼叫alpha机械拆成F1方向错/F2时机错/F3便宜陷阱,补归因闭环",
-      "ports": null,
-      "tags": [
-        "归因",
-        "准则诊断",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/alpha-attribution"
-    },
-    {
-      "id": "candidate-deepening",
-      "name": "候选深研待办队列",
-      "icon": "📝",
-      "desc": "补orphaned的深度note authoring环:读dossier候选对照已有note算出待深研队列,喂authoring cron",
-      "ports": null,
-      "tags": [
-        "研究",
-        "产线补位",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/candidate-deepening"
-    },
-    {
-      "id": "exit-sentinel",
-      "name": "持仓论点破裂哨兵",
-      "icon": "🚪",
-      "desc": "卖出纪律自动化:盯4持仓论点破裂,ORPHAN裸持/WINDOW窗口临近/ADVERSE价格背离三红旗,valuation-trigger的卖出侧镜像",
-      "ports": null,
-      "tags": [
-        "配置层",
-        "风控",
-        "卖出纪律",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/exit-sentinel"
     },
     {
       "id": "quant-systems-curriculum",
@@ -366,34 +168,6 @@
       ],
       "heartbeat_file": "~/hermes-workspace/agent-notes/notes",
       "manual": true
-    },
-    {
-      "id": "capital-deployment",
-      "name": "资本部署看门狗",
-      "icon": "🏦",
-      "desc": "盯全书资本部署率:大额现金长期零配置无人复盘的机会成本盲区,补allocation-discipline跳过空账户的洞",
-      "ports": null,
-      "tags": [
-        "配置层",
-        "风控",
-        "只读",
-        "元监控"
-      ],
-      "heartbeat_file": "~/hermes-workspace/capital-deployment"
-    },
-    {
-      "id": "martingale-guard",
-      "name": "马丁加仓哨兵",
-      "icon": "🚧",
-      "desc": "盯成交时间序列的向下加仓摊低轨迹，补配置层时间维度盲区，防用户第一自陈的马丁加满仓负偏度爆仓，纯只读",
-      "ports": null,
-      "tags": [
-        "配置层",
-        "风控",
-        "行为纪律",
-        "只读"
-      ],
-      "heartbeat_file": "~/hermes-workspace/martingale-guard"
     }
   ]
 }
