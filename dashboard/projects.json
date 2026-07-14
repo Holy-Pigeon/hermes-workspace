@@ -10,9 +10,7 @@
         "remote": 6010
       },
       "tags": [
-        "实盘镜像",
-        "盯市",
-        "风控"
+        "实盘"
       ],
       "heartbeat_file": "~/hermes-workspace/paper-trading/paper_trading.db",
       "freshness_hours": 48.0
@@ -95,7 +93,6 @@
       },
       "tags": [
         "预测市场",
-        "Web服务",
         "基础设施"
       ],
       "health_path": "/api/status",
@@ -128,10 +125,7 @@
         "remote": 6014
       },
       "tags": [
-        "通知服务",
-        "WebSocket",
-        "基础设施",
-        "Web服务"
+        "基础设施"
       ],
       "health_path": "/healthz",
       "heartbeat_file": "~/hermes-workspace/Quant-Futu/notify_service/heartbeat.json"
@@ -146,9 +140,7 @@
       "ports": null,
       "tags": [
         "学习",
-        "量化",
-        "C++",
-        "OS"
+        "量化"
       ],
       "heartbeat_file": "~/hermes-workspace/quant-systems-curriculum/notes",
       "manual": true
@@ -162,9 +154,7 @@
       "external_label": "Notion 笔记",
       "ports": null,
       "tags": [
-        "学习",
-        "agent",
-        "经验"
+        "学习"
       ],
       "heartbeat_file": "~/hermes-workspace/agent-notes/notes",
       "manual": true
@@ -176,9 +166,7 @@
       "desc": "把世界当一局RTS:10阵营×22维状态矩阵,归一化同尺,瓶颈由公式自动浮现(含阵营安全放大器)→读被迫资金流。当前为框架设计阶段,零数据落地,待用户审schema",
       "ports": null,
       "tags": [
-        "研究",
-        "宏观",
-        "框架"
+        "研究"
       ],
       "heartbeat_file": "~/hermes-workspace/world-rts/docs",
       "freshness_hours": 720,
