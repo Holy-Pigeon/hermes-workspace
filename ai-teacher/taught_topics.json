@@ -709,8 +709,13 @@
       "topic": "残差流（Residual Stream）——把 Transformer 看成一条不断被读写的信息主干",
       "category": "类目 13：Transformer 架构",
       "taught_at": "2026-07-14T08:03:00+08:00"
+    },
+    {
+      "topic": "多查询注意力（Multi-Query Attention, MQA）——所有头共用同一套钥匙和仓库",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-07-14T14:03:00+08:00"
     }
   ],
-  "total_count": 142,
-  "last_updated": "2026-07-14T08:03:00+08:00"
+  "total_count": 143,
+  "last_updated": "2026-07-14T14:03:00+08:00"
 }

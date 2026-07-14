@@ -142,9 +142,11 @@
     "39bd8689-fc19-8196-8f4b-fc118548a6b0",
     "39cd8689-fc19-8132-ad91-fe27ca6cf547",
     "39cd8689-fc19-8151-9973-c1f9743a39e4",
-    "39dd8689-fc19-8142-aea1-e76af2e4fc08"
+    "39dd8689-fc19-8142-aea1-e76af2e4fc08",
+    "39dd8689-fc19-81d6-b9a5-dbc085bb7100"
   ],
   "page_titles": {
+    "39dd8689-fc19-81d6-b9a5-dbc085bb7100": "多查询注意力（Multi-Query Attention, MQA）——所有头共用同一套钥匙和仓库",
     "39dd8689-fc19-8142-aea1-e76af2e4fc08": "残差流（Residual Stream）——把 Transformer 看成一条不断被读写的信息主干",
     "39cd8689-fc19-8151-9973-c1f9743a39e4": "学习率预热（Learning Rate Warmup）——训练开头先慢跑几步，别让第一脚就崴了",
     "39cd8689-fc19-8132-ad91-fe27ca6cf547": "Jensen 不等式（Jensen's Inequality）——凸性一出手，一堆'大于等于'就都成立了",
@@ -289,7 +291,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 124,
+  "cursor": 53,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -310,6 +312,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-14T08:11:04+0800",
-  "last_order_refresh": "2026-07-14T08:13:59+0800"
+  "last_review": "2026-07-14T14:11:14+0800",
+  "last_order_refresh": "2026-07-14T14:14:12+0800"
 }
