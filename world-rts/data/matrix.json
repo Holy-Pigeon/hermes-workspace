@@ -249,84 +249,284 @@
   "cells": {
     "us::d01": {
       "physical_gap": {
-        "value": 0.0,
-        "self_sufficiency": 100.0,
-        "desc": "页岩革命后转能源净出口国(自给107%,封顶100)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 104.5,
+        "desc": "六项加权自给率104.5%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 100.3,
+            "weight": 0.375,
+            "consumption_twh": 9949
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 114.5,
+            "weight": 0.34,
+            "consumption_twh": 9022
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 134.3,
+            "weight": 0.083,
+            "consumption_twh": 2196
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.076,
+            "consumption_twh": 2008
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.022,
+            "consumption_twh": 582
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.07,
+            "consumption_twh": 1864
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:美国本土",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.8,
-        "desc": "能源独立是既定国策但已实现,战略优先级中高",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "能源独立既定国策且已实现",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "多元自产+盟友供给,易替代"
+        "desc": "多元自产+盟友供给易替代"
       },
       "security_amp": {
         "value": 1.5,
-        "desc": "能源已自主,非生存级安全议题",
+        "desc": "能源已自主非生存级",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.0
+      "score": 0.24
     },
     "cn::d01": {
       "physical_gap": {
-        "value": 0.17,
-        "self_sufficiency": 83.0,
-        "desc": "煤自给/油约70%依赖进口(整体自给83%)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 81.8,
+        "desc": "六项加权自给率81.8%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 27.6,
+            "weight": 0.183,
+            "consumption_twh": 8964
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 57.2,
+            "weight": 0.089,
+            "consumption_twh": 4344
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 102.5,
+            "weight": 0.523,
+            "consumption_twh": 25599
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.022,
+            "consumption_twh": 1100
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.067,
+            "consumption_twh": 3303
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.091,
+            "consumption_twh": 4478
+          }
+        ],
+        "data_year": 2024,
+        "note": "核电燃料铀约60%+依赖进口",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 1.0,
-        "desc": "能源安全写入十四五,油气进口通道是核心关切",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "能源安全写入十四五,油气进口通道核心关切",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "石油进口高度依赖中东+马六甲海运,替代难"
+        "desc": "石油进口依赖中东+马六甲海运,替代难"
       },
       "security_amp": {
         "value": 3.0,
         "desc": "能源安全=生存级,战略储备+多元化举国推进",
         "source": "基于官方战略文件判断"
       },
-      "score": 1.02
+      "score": 1.2
     },
     "eu::d01": {
       "physical_gap": {
-        "value": 0.6,
-        "self_sufficiency": 40.0,
-        "desc": "油气高度依赖进口(自给40%,Eurostat官方41.7%交叉验证)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.638,
+        "self_sufficiency": 36.2,
+        "desc": "六项加权自给率36.2%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 3.1,
+            "weight": 0.382,
+            "consumption_twh": 6073
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 10.2,
+            "weight": 0.203,
+            "consumption_twh": 3230
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 62.5,
+            "weight": 0.082,
+            "consumption_twh": 1308
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.1,
+            "consumption_twh": 1584
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.057,
+            "consumption_twh": 899
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.122,
+            "consumption_twh": 1933
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:EU27整体;核电铀依赖俄/哈",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          },
+          {
+            "label": "Eurostat 能源进口依赖度 nrg_ind_id (欧盟官方,交叉验证用)",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nrg_ind_id/default/table"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 1.0,
         "desc": "2022俄气断供后能源安全升至最高战略",
-        "source": "基于各阵营官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 2.5,
-        "desc": "俄气断供后LNG替代成本高、周期长"
+        "desc": "俄气断供后LNG替代成本高周期长"
       },
       "security_amp": {
         "value": 3.0,
-        "desc": "REPowerEU=生存级应对,不计成本去俄化",
+        "desc": "REPowerEU=生存级去俄化,不计成本",
         "source": "基于官方战略文件判断"
       },
-      "score": 4.5
+      "score": 4.79
     },
     "ru::d01": {
       "physical_gap": {
-        "value": 0.0,
-        "self_sufficiency": 100.0,
-        "desc": "油气煤全面盈余(自给177%,封顶100)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 176.9,
+        "desc": "六项加权自给率176.9%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 287.5,
+            "weight": 0.235,
+            "consumption_twh": 2129
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 132.0,
+            "weight": 0.527,
+            "consumption_twh": 4770
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 243.3,
+            "weight": 0.115,
+            "consumption_twh": 1041
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.058,
+            "consumption_twh": 526
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.057,
+            "consumption_twh": 514
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.002,
+            "consumption_twh": 18
+          }
+        ],
+        "data_year": 2024,
+        "note": "净出口国,物理缺口触0.2下限",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.8,
-        "desc": "能源是财政命脉与地缘武器,战略核心",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "能源是财政命脉与地缘武器",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 1.0,
@@ -334,68 +534,203 @@
       },
       "security_amp": {
         "value": 2.0,
-        "desc": "出口通道受制裁威胁,安全关切在出口端非供给端",
+        "desc": "安全关切在出口通道非供给端",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.0
+      "score": 0.32
     },
     "in::d01": {
       "physical_gap": {
-        "value": 0.39,
-        "self_sufficiency": 61.0,
-        "desc": "煤为主仍需进口,油依赖>85%(整体自给61%)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.403,
+        "self_sufficiency": 59.7,
+        "desc": "六项加权自给率59.7%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 12.6,
+            "weight": 0.267,
+            "consumption_twh": 3029
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 46.0,
+            "weight": 0.062,
+            "consumption_twh": 703
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 78.6,
+            "weight": 0.563,
+            "consumption_twh": 6380
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.012,
+            "consumption_twh": 133
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.034,
+            "consumption_twh": 382
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.047,
+            "consumption_twh": 532
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:印度本土",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 1.0,
-        "desc": "能源安全是印度增长的关键约束",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "能源安全是印度增长关键约束",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "油气进口高度依赖中东,替代选项有限"
+        "desc": "油气进口依赖中东,替代有限"
       },
       "security_amp": {
         "value": 2.5,
-        "desc": "能源进口安全是战略级但未到举国体制",
+        "desc": "能源进口安全战略级但未到举国",
         "source": "基于官方战略文件判断"
       },
-      "score": 1.95
+      "score": 2.02
     },
     "jpkr::d01": {
       "physical_gap": {
-        "value": 0.83,
-        "self_sufficiency": 17.0,
-        "desc": "化石几乎全进口(日本自给17%,全球最低之一)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.861,
+        "self_sufficiency": 13.9,
+        "desc": "六项加权自给率13.9%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 0.0,
+            "weight": 0.372,
+            "consumption_twh": 1783
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 0.0,
+            "weight": 0.19,
+            "consumption_twh": 909
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 0.3,
+            "weight": 0.262,
+            "consumption_twh": 1259
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.043,
+            "consumption_twh": 207
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.04,
+            "consumption_twh": 194
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.055,
+            "consumption_twh": 264
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:日本;核电铀100%进口",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 1.0,
-        "desc": "资源贫国,能源安全是国家生存基础",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "资源贫国,能源安全=国家生存基础",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 3.0,
-        "desc": "化石燃料无本土替代,核电是唯一自主选项"
+        "desc": "化石无本土替代,核电是唯一自主选项"
       },
       "security_amp": {
         "value": 3.0,
-        "desc": "能源=生存级安全,长期战略储备+核电复兴",
+        "desc": "能源=生存级,战略储备+核电复兴",
         "source": "基于官方战略文件判断"
       },
-      "score": 7.47
+      "score": 7.75
     },
     "gulf::d01": {
       "physical_gap": {
-        "value": 0.0,
-        "self_sufficiency": 100.0,
-        "desc": "世界级油气出口国(沙特自给218%,封顶100)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 217.9,
+        "desc": "六项加权自给率217.9%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 289.6,
+            "weight": 0.623,
+            "consumption_twh": 2048
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 100.0,
+            "weight": 0.369,
+            "consumption_twh": 1215
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 0.0,
+            "weight": 0.001,
+            "consumption_twh": 2
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.007,
+            "consumption_twh": 24
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:沙特;净出口触0.2下限",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.9,
-        "desc": "油气是立国根基,但供给端无瓶颈",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "油气是立国根基但供给端无瓶颈",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 1.0,
@@ -403,22 +738,65 @@
       },
       "security_amp": {
         "value": 1.5,
-        "desc": "安全关切在'后石油转型'而非供给",
+        "desc": "安全关切在后石油转型非供给",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.0
+      "score": 0.27
     },
     "asean::d01": {
       "physical_gap": {
-        "value": 0.0,
-        "self_sufficiency": 100.0,
-        "desc": "印尼为最大动力煤出口国之一(自给205%,封顶100;区域内差异大)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 195.8,
+        "desc": "六项加权自给率195.8%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 39.6,
+            "weight": 0.294,
+            "consumption_twh": 879
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 151.0,
+            "weight": 0.158,
+            "consumption_twh": 473
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 359.5,
+            "weight": 0.439,
+            "consumption_twh": 1311
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.022,
+            "consumption_twh": 65
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.001,
+            "consumption_twh": 3
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:印尼(最大动力煤出口国);新马依赖进口",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.7,
-        "desc": "区域整体能源盈余但内部分化(新马依赖进口)",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "区域整体能源盈余但内部分化",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 1.5,
@@ -426,45 +804,143 @@
       },
       "security_amp": {
         "value": 2.0,
-        "desc": "能源安全区域协调中,未到举国级",
+        "desc": "能源安全区域协调中未到举国",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.0
+      "score": 0.42
     },
     "latam::d01": {
       "physical_gap": {
-        "value": 0.0,
-        "self_sufficiency": 100.0,
-        "desc": "巴西深海油+水电+乙醇多元自给(自给110%,封顶100)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 98.5,
+        "desc": "六项加权自给率98.5%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 148.3,
+            "weight": 0.364,
+            "consumption_twh": 1428
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 72.8,
+            "weight": 0.08,
+            "consumption_twh": 314
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 20.2,
+            "weight": 0.038,
+            "consumption_twh": 148
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.01,
+            "consumption_twh": 38
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.257,
+            "consumption_twh": 1008
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.112,
+            "consumption_twh": 439
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:巴西(深海油+水电+乙醇);净出口触0.2下限",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.6,
-        "desc": "能源基本自给,非核心战略瓶颈",
-        "source": "基于各阵营官方能源战略文件判断"
+        "desc": "能源基本自给非核心战略瓶颈",
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "本土多元能源结构,替代性好"
+        "desc": "本土多元能源结构替代性好"
       },
       "security_amp": {
         "value": 1.5,
         "desc": "能源安全非紧迫议题",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.0
+      "score": 0.18
     },
     "africa::d01": {
       "physical_gap": {
-        "value": 0.1,
-        "self_sufficiency": 90.0,
-        "desc": "整体近自给但分化极大(产油国盈余/多数电力短缺)",
-        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+        "value": 0.2,
+        "self_sufficiency": 142.4,
+        "desc": "六项加权自给率142.4%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 157.9,
+            "weight": 0.414,
+            "consumption_twh": 2544
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 134.6,
+            "weight": 0.29,
+            "consumption_twh": 1780
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 148.6,
+            "weight": 0.195,
+            "consumption_twh": 1195
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.003,
+            "consumption_twh": 19
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.068,
+            "consumption_twh": 415
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.02,
+            "consumption_twh": 122
+          }
+        ],
+        "data_year": 2024,
+        "note": "代表体:非洲整体;产油国盈余but多数电力短缺",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
       },
       "strategic_relevance": {
         "value": 0.7,
         "desc": "能源可及性是发展瓶颈(电力普及率低)",
-        "source": "基于各阵营官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断"
       },
       "irreplaceability": {
         "value": 2.0,
@@ -472,10 +948,10 @@
       },
       "security_amp": {
         "value": 2.0,
-        "desc": "能源发展是战略优先但资金受限",
+        "desc": "能源发展战略优先但资金受限",
         "source": "基于官方战略文件判断"
       },
-      "score": 0.28
+      "score": 0.56
     }
   }
 }
