@@ -306,16 +306,46 @@
       "strategic_relevance": {
         "value": 0.8,
         "desc": "能源独立既定国策且已实现",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "美国能源部 DOE(能源独立战略主管机构)",
+            "url": "https://www.energy.gov/"
+          },
+          {
+            "label": "Inflation Reduction Act 2022 法案文本(congress.gov,H.R.5376;反爬需浏览器)",
+            "url": "https://www.congress.gov/bill/117th-congress/house-bill/5376"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "多元自产+盟友供给易替代"
+        "desc": "多元自产+盟友供给易替代",
+        "policy_refs": [
+          {
+            "label": "美国能源部 DOE(能源独立战略主管机构)",
+            "url": "https://www.energy.gov/"
+          },
+          {
+            "label": "Inflation Reduction Act 2022 法案文本(congress.gov,H.R.5376;反爬需浏览器)",
+            "url": "https://www.congress.gov/bill/117th-congress/house-bill/5376"
+          }
+        ]
       },
       "security_amp": {
         "value": 1.5,
         "desc": "能源已自主非生存级",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "美国能源部 DOE(能源独立战略主管机构)",
+            "url": "https://www.energy.gov/"
+          },
+          {
+            "label": "Inflation Reduction Act 2022 法案文本(congress.gov,H.R.5376;反爬需浏览器)",
+            "url": "https://www.congress.gov/bill/117th-congress/house-bill/5376"
+          }
+        ]
       },
       "score": 0.24
     },
@@ -378,16 +408,46 @@
       "strategic_relevance": {
         "value": 1.0,
         "desc": "能源安全写入十四五,油气进口通道核心关切",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《十四五现代能源体系规划》原文(国务院gov.cn,2022)",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2022-03/23/content_5680759.htm"
+          },
+          {
+            "label": "国家能源局(能源安全新战略主管)",
+            "url": "https://www.nea.gov.cn/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "石油进口依赖中东+马六甲海运,替代难"
+        "desc": "石油进口依赖中东+马六甲海运,替代难",
+        "policy_refs": [
+          {
+            "label": "《十四五现代能源体系规划》原文(国务院gov.cn,2022)",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2022-03/23/content_5680759.htm"
+          },
+          {
+            "label": "国家能源局(能源安全新战略主管)",
+            "url": "https://www.nea.gov.cn/"
+          }
+        ]
       },
       "security_amp": {
         "value": 3.0,
         "desc": "能源安全=生存级,战略储备+多元化举国推进",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《十四五现代能源体系规划》原文(国务院gov.cn,2022)",
+            "url": "https://www.gov.cn/zhengce/zhengceku/2022-03/23/content_5680759.htm"
+          },
+          {
+            "label": "国家能源局(能源安全新战略主管)",
+            "url": "https://www.nea.gov.cn/"
+          }
+        ]
       },
       "score": 1.2
     },
@@ -454,16 +514,34 @@
       "strategic_relevance": {
         "value": 1.0,
         "desc": "2022俄气断供后能源安全升至最高战略",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "REPowerEU Plan 官方页(欧盟委员会,2022)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/repowereu-affordable-secure-and-sustainable-energy-europe_en"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 2.5,
-        "desc": "俄气断供后LNG替代成本高周期长"
+        "desc": "俄气断供后LNG替代成本高周期长",
+        "policy_refs": [
+          {
+            "label": "REPowerEU Plan 官方页(欧盟委员会,2022)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/repowereu-affordable-secure-and-sustainable-energy-europe_en"
+          }
+        ]
       },
       "security_amp": {
         "value": 3.0,
         "desc": "REPowerEU=生存级去俄化,不计成本",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "REPowerEU Plan 官方页(欧盟委员会,2022)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/repowereu-affordable-secure-and-sustainable-energy-europe_en"
+          }
+        ]
       },
       "score": 4.79
     },
@@ -526,16 +604,34 @@
       "strategic_relevance": {
         "value": 0.8,
         "desc": "能源是财政命脉与地缘武器",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦能源部 Minenergo(《至2035能源战略》主管)",
+            "url": "https://minenergo.gov.ru/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "能源极度自给无需替代"
+        "desc": "能源极度自给无需替代",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦能源部 Minenergo(《至2035能源战略》主管)",
+            "url": "https://minenergo.gov.ru/"
+          }
+        ]
       },
       "security_amp": {
         "value": 2.0,
         "desc": "安全关切在出口通道非供给端",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦能源部 Minenergo(《至2035能源战略》主管)",
+            "url": "https://minenergo.gov.ru/"
+          }
+        ]
       },
       "score": 0.32
     },
@@ -598,16 +694,46 @@
       "strategic_relevance": {
         "value": 1.0,
         "desc": "能源安全是印度增长关键约束",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家绿氢使命 National Green Hydrogen Mission(MNRE,2023)",
+            "url": "https://mnre.gov.in/national-green-hydrogen-mission/"
+          },
+          {
+            "label": "NITI Aayog(National Energy Policy 主管)",
+            "url": "https://www.niti.gov.in/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "油气进口依赖中东,替代有限"
+        "desc": "油气进口依赖中东,替代有限",
+        "policy_refs": [
+          {
+            "label": "印度国家绿氢使命 National Green Hydrogen Mission(MNRE,2023)",
+            "url": "https://mnre.gov.in/national-green-hydrogen-mission/"
+          },
+          {
+            "label": "NITI Aayog(National Energy Policy 主管)",
+            "url": "https://www.niti.gov.in/"
+          }
+        ]
       },
       "security_amp": {
         "value": 2.5,
         "desc": "能源进口安全战略级但未到举国",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家绿氢使命 National Green Hydrogen Mission(MNRE,2023)",
+            "url": "https://mnre.gov.in/national-green-hydrogen-mission/"
+          },
+          {
+            "label": "NITI Aayog(National Energy Policy 主管)",
+            "url": "https://www.niti.gov.in/"
+          }
+        ]
       },
       "score": 2.02
     },
@@ -670,16 +796,34 @@
       "strategic_relevance": {
         "value": 1.0,
         "desc": "资源贫国,能源安全=国家生存基础",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)",
+            "url": "https://www.enecho.meti.go.jp/en/category/others/basic_plan/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 3.0,
-        "desc": "化石无本土替代,核电是唯一自主选项"
+        "desc": "化石无本土替代,核电是唯一自主选项",
+        "policy_refs": [
+          {
+            "label": "日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)",
+            "url": "https://www.enecho.meti.go.jp/en/category/others/basic_plan/"
+          }
+        ]
       },
       "security_amp": {
         "value": 3.0,
         "desc": "能源=生存级,战略储备+核电复兴",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)",
+            "url": "https://www.enecho.meti.go.jp/en/category/others/basic_plan/"
+          }
+        ]
       },
       "score": 7.75
     },
@@ -730,16 +874,34 @@
       "strategic_relevance": {
         "value": 0.9,
         "desc": "油气是立国根基但供给端无瓶颈",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)",
+            "url": "https://www.vision2030.gov.sa/en"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "能源极度盈余"
+        "desc": "能源极度盈余",
+        "policy_refs": [
+          {
+            "label": "Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)",
+            "url": "https://www.vision2030.gov.sa/en"
+          }
+        ]
       },
       "security_amp": {
         "value": 1.5,
         "desc": "安全关切在后石油转型非供给",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)",
+            "url": "https://www.vision2030.gov.sa/en"
+          }
+        ]
       },
       "score": 0.27
     },
@@ -796,16 +958,34 @@
       "strategic_relevance": {
         "value": 0.7,
         "desc": "区域整体能源盈余但内部分化",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 1.5,
-        "desc": "区域内可调剂但跨国电网不足"
+        "desc": "区域内可调剂但跨国电网不足",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
       },
       "security_amp": {
         "value": 2.0,
         "desc": "能源安全区域协调中未到举国",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
       },
       "score": 0.42
     },
@@ -868,16 +1048,34 @@
       "strategic_relevance": {
         "value": 0.6,
         "desc": "能源基本自给非核心战略瓶颈",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)",
+            "url": "https://www.epe.gov.br/"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "本土多元能源结构替代性好"
+        "desc": "本土多元能源结构替代性好",
+        "policy_refs": [
+          {
+            "label": "巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)",
+            "url": "https://www.epe.gov.br/"
+          }
+        ]
       },
       "security_amp": {
         "value": 1.5,
         "desc": "能源安全非紧迫议题",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)",
+            "url": "https://www.epe.gov.br/"
+          }
+        ]
       },
       "score": 0.18
     },
@@ -940,16 +1138,34 @@
       "strategic_relevance": {
         "value": 0.7,
         "desc": "能源可及性是发展瓶颈(电力普及率低)",
-        "source": "基于官方能源战略文件判断"
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
+            "url": "https://au.int/en/agenda2063/overview"
+          }
+        ]
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "基建薄弱制约本土能源转化"
+        "desc": "基建薄弱制约本土能源转化",
+        "policy_refs": [
+          {
+            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
+            "url": "https://au.int/en/agenda2063/overview"
+          }
+        ]
       },
       "security_amp": {
         "value": 2.0,
         "desc": "能源发展战略优先但资金受限",
-        "source": "基于官方战略文件判断"
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
+            "url": "https://au.int/en/agenda2063/overview"
+          }
+        ]
       },
       "score": 0.56
     }

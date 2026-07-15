@@ -47,6 +47,23 @@ SRC_EI = {"label":"Energy Institute Statistical Review of World Energy 2024",
 SRC_EUROSTAT = {"label":"Eurostat 能源进口依赖度 nrg_ind_id (欧盟官方,交叉验证用)",
                 "url":"https://ec.europa.eu/eurostat/databrowser/view/nrg_ind_id/default/table"}
 
+# 项2/3/4 赋档依据的真实政策/战略文件(链接均已实测,403/Cloudflare的为反爬非死链,真浏览器可开)
+POLICY_REFS = {
+    "us":   [{"label":"美国能源部 DOE(能源独立战略主管机构)","url":"https://www.energy.gov/"},
+             {"label":"Inflation Reduction Act 2022 法案文本(congress.gov,H.R.5376;反爬需浏览器)","url":"https://www.congress.gov/bill/117th-congress/house-bill/5376"}],
+    "cn":   [{"label":"《十四五现代能源体系规划》原文(国务院gov.cn,2022)","url":"https://www.gov.cn/zhengce/zhengceku/2022-03/23/content_5680759.htm"},
+             {"label":"国家能源局(能源安全新战略主管)","url":"https://www.nea.gov.cn/"}],
+    "eu":   [{"label":"REPowerEU Plan 官方页(欧盟委员会,2022)","url":"https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/repowereu-affordable-secure-and-sustainable-energy-europe_en"}],
+    "ru":   [{"label":"俄罗斯联邦能源部 Minenergo(《至2035能源战略》主管)","url":"https://minenergo.gov.ru/"}],
+    "in":   [{"label":"印度国家绿氢使命 National Green Hydrogen Mission(MNRE,2023)","url":"https://mnre.gov.in/national-green-hydrogen-mission/"},
+             {"label":"NITI Aayog(National Energy Policy 主管)","url":"https://www.niti.gov.in/"}],
+    "jpkr": [{"label":"日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)","url":"https://www.enecho.meti.go.jp/en/category/others/basic_plan/"}],
+    "gulf": [{"label":"Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)","url":"https://www.vision2030.gov.sa/en"}],
+    "asean":[{"label":"印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)","url":"https://www.esdm.go.id/"}],
+    "latam":[{"label":"巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)","url":"https://www.epe.gov.br/"}],
+    "africa":[{"label":"非盟 Agenda 2063 官方页(含能源一体化 PIDA)","url":"https://au.int/en/agenda2063/overview"}],
+}
+
 def fnum(row,k):
     try: return float(row.get(k,""))
     except: return None
@@ -92,13 +109,14 @@ for fid,country in FAC_MAP.items():
     sr,irr,sec,srd,irrd,secd,note=JUDGE[fid]
     sources=[SRC_OWID,SRC_EI]
     if fid=="eu": sources.append(SRC_EUROSTAT)
+    prefs=POLICY_REFS.get(fid,[])  # 政策判断依据的真实文件链接
     cell={
         "physical_gap":{"value":pg,"self_sufficiency":round(wss,1),
             "desc":f"六项加权自给率{wss}%(净出口封顶100,物理缺口下限0.2)",
             "breakdown":bd,"data_year":yr,"note":note,"sources":sources},
-        "strategic_relevance":{"value":sr,"desc":srd,"source":"基于官方能源战略文件判断"},
-        "irreplaceability":{"value":irr,"desc":irrd},
-        "security_amp":{"value":sec,"desc":secd,"source":"基于官方战略文件判断"},
+        "strategic_relevance":{"value":sr,"desc":srd,"source":"基于官方能源战略文件判断","policy_refs":prefs},
+        "irreplaceability":{"value":irr,"desc":irrd,"policy_refs":prefs},
+        "security_amp":{"value":sec,"desc":secd,"source":"基于官方战略文件判断","policy_refs":prefs},
     }
     cell["score"]=round(pg*sr*irr*sec,2)
     m.setdefault("cells",{})[f"{fid}::d01"]=cell

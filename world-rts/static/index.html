@@ -341,7 +341,14 @@ async function openCell(fid,did){
     body.innerHTML=`<div class="wait-box"><span class="big">📭</span>该格尚未采集数据<br><span style="font-size:11.5px;color:var(--dim)">硬指标：${d.dimension.metric}<br>一手源：${d.dimension.source}</span></div>`;
   }else{
     const c=d.cell;
-    const f=(o,cls,tag,name)=>`<div class="factor ${cls}"><div class="fh">${name}<span class="ftag">${tag}</span></div><div class="fval">${o&&o.value!=null?o.value:'—'}</div><div class="fdesc">${o&&o.desc||'—'}</div>${o&&o.source?`<div class="fsrc">来源：${o.source}</div>`:''}</div>`;
+    const f=(o,cls,tag,name)=>{
+      let h=`<div class="factor ${cls}"><div class="fh">${name}<span class="ftag">${tag}</span></div><div class="fval">${o&&o.value!=null?o.value:'—'}</div><div class="fdesc">${o&&o.desc||'—'}</div>`;
+      if(o&&o.source){h+=`<div class="fsrc" style="color:var(--dim)">判断口径：${o.source}</div>`;}
+      if(o&&o.policy_refs&&o.policy_refs.length){
+        h+=`<div class="fsrc">依据文件：`+o.policy_refs.map(p=>`<a href="${p.url}" target="_blank" rel="noopener">${p.label} ↗</a>`).join('<br>')+`</div>`;
+      }
+      return h+`</div>`;
+    };
     // 物理缺口：带二级明细表 + 多源可跳转
     const pg=c.physical_gap||{};
     let pgHtml=`<div class="factor hard"><div class="fh">① 物理缺口<span class="ftag">硬数据</span></div>`+
