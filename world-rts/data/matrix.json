@@ -4,54 +4,478 @@
     "status": "skeleton",
     "note": "框架已定稿，硬数据尚未采集。全表 cells 为空占位，前端显示『待采集』，绝不摆假数字。",
     "formula": "瓶颈强度 = 物理缺口 × 战略相关性 × 填补难度 × 安全放大器",
-    "score_range": [0, 9],
+    "score_range": [
+      0,
+      9
+    ],
     "last_updated": "2026-07-14",
     "factions_count": 10,
     "dimensions_count": 22
   },
   "layers": [
-    {"id": "A", "name": "硬资源层"},
-    {"id": "B", "name": "人口层"},
-    {"id": "C", "name": "科技树层"},
-    {"id": "D", "name": "领土·地缘层"},
-    {"id": "E", "name": "生产·基建层"},
-    {"id": "F", "name": "经济·元层"}
+    {
+      "id": "A",
+      "name": "硬资源层"
+    },
+    {
+      "id": "B",
+      "name": "人口层"
+    },
+    {
+      "id": "C",
+      "name": "科技树层"
+    },
+    {
+      "id": "D",
+      "name": "领土·地缘层"
+    },
+    {
+      "id": "E",
+      "name": "生产·基建层"
+    },
+    {
+      "id": "F",
+      "name": "经济·元层"
+    }
   ],
   "dimensions": [
-    {"id": "d01", "layer": "A", "name": "能源", "metric": "一次能源自给率/发电缺口/油气储量", "source": "EIA / IEA / Ember"},
-    {"id": "d02", "layer": "A", "name": "粮食·农业", "metric": "谷物自给率/耕地/化肥/种子/卡路里进口依赖", "source": "FAO / USDA FAS"},
-    {"id": "d03", "layer": "A", "name": "水", "metric": "人均可再生水/跨境河流依赖", "source": "FAO AQUASTAT"},
-    {"id": "d04", "layer": "A", "name": "关键矿产", "metric": "锂铜镍钴稀土铀·储量份额+精炼份额", "source": "USGS MCS"},
-    {"id": "d05", "layer": "A", "name": "资本", "metric": "外储/主权基金/储蓄率/经常账户", "source": "IMF / World Bank"},
-    {"id": "d06", "layer": "B", "name": "人口结构", "metric": "劳动年龄占比/抚养比/生育率", "source": "UN Population Division"},
-    {"id": "d07", "layer": "B", "name": "人才", "metric": "STEM毕业生/研究人员密度", "source": "OECD / UNESCO"},
-    {"id": "d08", "layer": "B", "name": "健康·医药", "metric": "预期寿命/医疗承载/原料药·疫苗·创新药自给", "source": "WHO / OECD Health"},
-    {"id": "d09", "layer": "C", "name": "半导体", "metric": "自给率/先进制程能力", "source": "SIA / TrendForce"},
-    {"id": "d10", "layer": "C", "name": "AI·算力", "metric": "算力存量/前沿模型/芯片", "source": "Stanford AI Index / Epoch"},
-    {"id": "d11", "layer": "C", "name": "生物科技", "metric": "创新药管线/批件", "source": "Nature Index / 药监"},
-    {"id": "d12", "layer": "C", "name": "国防科技", "metric": "武器代差/自主装备", "source": "SIPRI / IISS"},
-    {"id": "d13", "layer": "C", "name": "能源科技", "metric": "聚变/储能/电网技术", "source": "IEA / BNEF"},
-    {"id": "d14", "layer": "C", "name": "航天", "metric": "发射能力/在轨资产", "source": "各国航天局"},
-    {"id": "d15", "layer": "D", "name": "地理咽喉", "metric": "霍尔木兹/马六甲/台海/苏伊士·谁控谁被卡", "source": "EIA chokepoints / UNCTAD"},
-    {"id": "d16", "layer": "D", "name": "势力范围", "metric": "贸易集团/一带一路vs印太", "source": "条约与贸易协定库"},
-    {"id": "d17", "layer": "D", "name": "军事投射", "metric": "军费/海军吨位/海外基地", "source": "SIPRI / IISS Military Balance"},
-    {"id": "d18", "layer": "E", "name": "制造业产能", "metric": "制造业增加值份额/机器人密度/供应链完整度", "source": "UNIDO / IFR"},
-    {"id": "d19", "layer": "E", "name": "基建", "metric": "电网/港口/fab/数据中心", "source": "IEA / 各国统计"},
-    {"id": "d20", "layer": "F", "name": "财政健康", "metric": "赤字/GDP·债务/GDP·利息负担", "source": "IMF WEO / BIS"},
-    {"id": "d21", "layer": "F", "name": "货币权力", "metric": "储备货币份额/结算话语权", "source": "IMF COFER / SWIFT"},
-    {"id": "d22", "layer": "F", "name": "贸易", "metric": "贸易差额/出口复杂度", "source": "World Bank / Harvard Atlas"}
+    {
+      "id": "d01",
+      "layer": "A",
+      "name": "能源",
+      "metric": "一次能源自给率/发电缺口/油气储量",
+      "source": "EIA / IEA / Ember"
+    },
+    {
+      "id": "d02",
+      "layer": "A",
+      "name": "粮食·农业",
+      "metric": "谷物自给率/耕地/化肥/种子/卡路里进口依赖",
+      "source": "FAO / USDA FAS"
+    },
+    {
+      "id": "d03",
+      "layer": "A",
+      "name": "水",
+      "metric": "人均可再生水/跨境河流依赖",
+      "source": "FAO AQUASTAT"
+    },
+    {
+      "id": "d04",
+      "layer": "A",
+      "name": "关键矿产",
+      "metric": "锂铜镍钴稀土铀·储量份额+精炼份额",
+      "source": "USGS MCS"
+    },
+    {
+      "id": "d05",
+      "layer": "A",
+      "name": "资本",
+      "metric": "外储/主权基金/储蓄率/经常账户",
+      "source": "IMF / World Bank"
+    },
+    {
+      "id": "d06",
+      "layer": "B",
+      "name": "人口结构",
+      "metric": "劳动年龄占比/抚养比/生育率",
+      "source": "UN Population Division"
+    },
+    {
+      "id": "d07",
+      "layer": "B",
+      "name": "人才",
+      "metric": "STEM毕业生/研究人员密度",
+      "source": "OECD / UNESCO"
+    },
+    {
+      "id": "d08",
+      "layer": "B",
+      "name": "健康·医药",
+      "metric": "预期寿命/医疗承载/原料药·疫苗·创新药自给",
+      "source": "WHO / OECD Health"
+    },
+    {
+      "id": "d09",
+      "layer": "C",
+      "name": "半导体",
+      "metric": "自给率/先进制程能力",
+      "source": "SIA / TrendForce"
+    },
+    {
+      "id": "d10",
+      "layer": "C",
+      "name": "AI·算力",
+      "metric": "算力存量/前沿模型/芯片",
+      "source": "Stanford AI Index / Epoch"
+    },
+    {
+      "id": "d11",
+      "layer": "C",
+      "name": "生物科技",
+      "metric": "创新药管线/批件",
+      "source": "Nature Index / 药监"
+    },
+    {
+      "id": "d12",
+      "layer": "C",
+      "name": "国防科技",
+      "metric": "武器代差/自主装备",
+      "source": "SIPRI / IISS"
+    },
+    {
+      "id": "d13",
+      "layer": "C",
+      "name": "能源科技",
+      "metric": "聚变/储能/电网技术",
+      "source": "IEA / BNEF"
+    },
+    {
+      "id": "d14",
+      "layer": "C",
+      "name": "航天",
+      "metric": "发射能力/在轨资产",
+      "source": "各国航天局"
+    },
+    {
+      "id": "d15",
+      "layer": "D",
+      "name": "地理咽喉",
+      "metric": "霍尔木兹/马六甲/台海/苏伊士·谁控谁被卡",
+      "source": "EIA chokepoints / UNCTAD"
+    },
+    {
+      "id": "d16",
+      "layer": "D",
+      "name": "势力范围",
+      "metric": "贸易集团/一带一路vs印太",
+      "source": "条约与贸易协定库"
+    },
+    {
+      "id": "d17",
+      "layer": "D",
+      "name": "军事投射",
+      "metric": "军费/海军吨位/海外基地",
+      "source": "SIPRI / IISS Military Balance"
+    },
+    {
+      "id": "d18",
+      "layer": "E",
+      "name": "制造业产能",
+      "metric": "制造业增加值份额/机器人密度/供应链完整度",
+      "source": "UNIDO / IFR"
+    },
+    {
+      "id": "d19",
+      "layer": "E",
+      "name": "基建",
+      "metric": "电网/港口/fab/数据中心",
+      "source": "IEA / 各国统计"
+    },
+    {
+      "id": "d20",
+      "layer": "F",
+      "name": "财政健康",
+      "metric": "赤字/GDP·债务/GDP·利息负担",
+      "source": "IMF WEO / BIS"
+    },
+    {
+      "id": "d21",
+      "layer": "F",
+      "name": "货币权力",
+      "metric": "储备货币份额/结算话语权",
+      "source": "IMF COFER / SWIFT"
+    },
+    {
+      "id": "d22",
+      "layer": "F",
+      "name": "贸易",
+      "metric": "贸易差额/出口复杂度",
+      "source": "World Bank / Harvard Atlas"
+    }
   ],
   "factions": [
-    {"id": "us", "name": "美国", "flag": "🇺🇸"},
-    {"id": "cn", "name": "中国", "flag": "🇨🇳"},
-    {"id": "eu", "name": "欧盟", "flag": "🇪🇺"},
-    {"id": "ru", "name": "俄罗斯", "flag": "🇷🇺"},
-    {"id": "in", "name": "印度", "flag": "🇮🇳"},
-    {"id": "jpkr", "name": "日韩同盟", "flag": "🇯🇵"},
-    {"id": "gulf", "name": "海湾", "flag": "🇸🇦"},
-    {"id": "asean", "name": "东盟", "flag": "🌏"},
-    {"id": "latam", "name": "拉美", "flag": "🌎"},
-    {"id": "africa", "name": "非洲", "flag": "🌍"}
+    {
+      "id": "us",
+      "name": "美国",
+      "flag": "🇺🇸"
+    },
+    {
+      "id": "cn",
+      "name": "中国",
+      "flag": "🇨🇳"
+    },
+    {
+      "id": "eu",
+      "name": "欧盟",
+      "flag": "🇪🇺"
+    },
+    {
+      "id": "ru",
+      "name": "俄罗斯",
+      "flag": "🇷🇺"
+    },
+    {
+      "id": "in",
+      "name": "印度",
+      "flag": "🇮🇳"
+    },
+    {
+      "id": "jpkr",
+      "name": "日韩同盟",
+      "flag": "🇯🇵"
+    },
+    {
+      "id": "gulf",
+      "name": "海湾",
+      "flag": "🇸🇦"
+    },
+    {
+      "id": "asean",
+      "name": "东盟",
+      "flag": "🌏"
+    },
+    {
+      "id": "latam",
+      "name": "拉美",
+      "flag": "🌎"
+    },
+    {
+      "id": "africa",
+      "name": "非洲",
+      "flag": "🌍"
+    }
   ],
-  "cells": {}
+  "cells": {
+    "us::d01": {
+      "physical_gap": {
+        "value": 0.0,
+        "self_sufficiency": 100.0,
+        "desc": "页岩革命后转能源净出口国(自给107%,封顶100)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "能源独立是既定国策但已实现,战略优先级中高",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "多元自产+盟友供给,易替代"
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "能源已自主,非生存级安全议题",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.0
+    },
+    "cn::d01": {
+      "physical_gap": {
+        "value": 0.17,
+        "self_sufficiency": 83.0,
+        "desc": "煤自给/油约70%依赖进口(整体自给83%)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "能源安全写入十四五,油气进口通道是核心关切",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "石油进口高度依赖中东+马六甲海运,替代难"
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "能源安全=生存级,战略储备+多元化举国推进",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 1.02
+    },
+    "eu::d01": {
+      "physical_gap": {
+        "value": 0.6,
+        "self_sufficiency": 40.0,
+        "desc": "油气高度依赖进口(自给40%,Eurostat官方41.7%交叉验证)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "2022俄气断供后能源安全升至最高战略",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 2.5,
+        "desc": "俄气断供后LNG替代成本高、周期长"
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "REPowerEU=生存级应对,不计成本去俄化",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 4.5
+    },
+    "ru::d01": {
+      "physical_gap": {
+        "value": 0.0,
+        "self_sufficiency": 100.0,
+        "desc": "油气煤全面盈余(自给177%,封顶100)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "能源是财政命脉与地缘武器,战略核心",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "能源极度自给无需替代"
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "出口通道受制裁威胁,安全关切在出口端非供给端",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.0
+    },
+    "in::d01": {
+      "physical_gap": {
+        "value": 0.39,
+        "self_sufficiency": 61.0,
+        "desc": "煤为主仍需进口,油依赖>85%(整体自给61%)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "能源安全是印度增长的关键约束",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "油气进口高度依赖中东,替代选项有限"
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "能源进口安全是战略级但未到举国体制",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 1.95
+    },
+    "jpkr::d01": {
+      "physical_gap": {
+        "value": 0.83,
+        "self_sufficiency": 17.0,
+        "desc": "化石几乎全进口(日本自给17%,全球最低之一)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "资源贫国,能源安全是国家生存基础",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "化石燃料无本土替代,核电是唯一自主选项"
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "能源=生存级安全,长期战略储备+核电复兴",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 7.47
+    },
+    "gulf::d01": {
+      "physical_gap": {
+        "value": 0.0,
+        "self_sufficiency": 100.0,
+        "desc": "世界级油气出口国(沙特自给218%,封顶100)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "油气是立国根基,但供给端无瓶颈",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "能源极度盈余"
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "安全关切在'后石油转型'而非供给",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.0
+    },
+    "asean::d01": {
+      "physical_gap": {
+        "value": 0.0,
+        "self_sufficiency": 100.0,
+        "desc": "印尼为最大动力煤出口国之一(自给205%,封顶100;区域内差异大)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "区域整体能源盈余但内部分化(新马依赖进口)",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "区域内可调剂但跨国电网不足"
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "能源安全区域协调中,未到举国级",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.0
+    },
+    "latam::d01": {
+      "physical_gap": {
+        "value": 0.0,
+        "self_sufficiency": 100.0,
+        "desc": "巴西深海油+水电+乙醇多元自给(自给110%,封顶100)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.6,
+        "desc": "能源基本自给,非核心战略瓶颈",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "本土多元能源结构,替代性好"
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "能源安全非紧迫议题",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.0
+    },
+    "africa::d01": {
+      "physical_gap": {
+        "value": 0.1,
+        "self_sufficiency": 90.0,
+        "desc": "整体近自给但分化极大(产油国盈余/多数电力短缺)",
+        "source": "OWID←Energy Institute Statistical Review 2024 + EIA(欧盟经Eurostat nrg_ind_id 2023官方交叉验证)"
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "能源可及性是发展瓶颈(电力普及率低)",
+        "source": "基于各阵营官方能源战略文件判断"
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "基建薄弱制约本土能源转化"
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "能源发展是战略优先但资金受限",
+        "source": "基于官方战略文件判断"
+      },
+      "score": 0.28
+    }
+  }
 }
