@@ -73,7 +73,8 @@ table.matrix td{width:34px;height:34px;cursor:pointer;color:#08111f;font-weight:
   position:relative;}
 table.matrix td.filled:hover{transform:scale(1.18);box-shadow:0 0 0 2px var(--accent),0 4px 12px rgba(0,0,0,.5);z-index:3;}
 /* 空格：极淡棋盘占位，去噪 */
-table.matrix td.empty{background:#161b26;cursor:default;}
+table.matrix td.empty{background:#161b26;cursor:pointer;}
+table.matrix td.empty:hover{background:#1c2230;}
 table.matrix td.empty::after{content:"";position:absolute;inset:38%;border-radius:50%;
   background:#28303e;}
 
@@ -149,14 +150,12 @@ table.ledger td.src{color:var(--accent);font-size:11px;}
   .wrap{grid-column:2;width:100%;display:flex;flex-direction:column;}
   #tab-matrix.active{display:flex;flex-direction:column;flex:1;}
   .cards{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
-  /* PC 加大格子撑满横向 */
+  /* PC 加大格子（固定尺寸，不用100%拉伸——那会把宽度全压到第一列导致能源列被拉宽） */
   table.matrix{border-spacing:4px;font-size:12px;}
-  table.matrix td{width:100%;min-width:42px;height:44px;font-size:13px;}
+  table.matrix td{width:46px;height:46px;font-size:13px;}
   table.matrix thead th{height:86px;}
   table.matrix thead th .dname{max-height:74px;font-size:11px;letter-spacing:2px;}
   table.matrix tbody th{font-size:12.5px;padding:10px 12px;}
-  /* 让矩阵表格横向铺满可用宽度 */
-  table.matrix{width:100%;}
 }
 
 /* ---------- 底部信息条(填补 PC 空白) ---------- */
@@ -292,7 +291,7 @@ function renderMatrix(){
       const key=`${f.id}::${d.id}`; const c=cells[key];
       if(c&&c.score!=null){
         tbody+=`<td class="filled" style="background:${heatColor(c.score)}" onclick="openCell('${f.id}','${d.id}')">${c.score.toFixed(1)}</td>`;
-      }else{ tbody+=`<td class="empty" title="待采集"></td>`; }
+      }else{ tbody+=`<td class="empty" title="待采集：点击查看" onclick="openCell('${f.id}','${d.id}')"></td>`; }
     });
     tbody+='</tr>';
   });
