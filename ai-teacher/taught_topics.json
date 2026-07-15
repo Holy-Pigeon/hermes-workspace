@@ -729,8 +729,13 @@
       "topic": "拉格朗日乘子法（Lagrange Multipliers）——给带约束的优化问题找一把万能钥匙",
       "category": "类目 2：微积分基础",
       "taught_at": "2026-07-15T14:03:00+08:00"
+    },
+    {
+      "topic": "置换等变性（Permutation Equivariance）——自注意力天生看不见语序的数学本质",
+      "category": "类目 12：Self-Attention 详解",
+      "taught_at": "2026-07-15T20:03:00+08:00"
     }
   ],
-  "total_count": 146,
-  "last_updated": "2026-07-15T14:03:00+08:00"
+  "total_count": 147,
+  "last_updated": "2026-07-15T20:03:00+08:00"
 }
