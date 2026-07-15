@@ -146,8 +146,29 @@ table.ledger td.src{color:var(--accent);font-size:11px;}
     display:flex;gap:10px;align-items:center;transition:all .15s;font-weight:500;}
   .tabs-desktop button:hover{background:var(--panel2);color:var(--text);}
   .tabs-desktop button.active{background:var(--panel3);color:var(--text);font-weight:600;}
-  .wrap{grid-column:2;width:100%;}
+  .wrap{grid-column:2;width:100%;display:flex;flex-direction:column;}
+  #tab-matrix.active{display:flex;flex-direction:column;flex:1;}
   .cards{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+  /* PC 加大格子撑满横向 */
+  table.matrix{border-spacing:4px;font-size:12px;}
+  table.matrix td{width:100%;min-width:42px;height:44px;font-size:13px;}
+  table.matrix thead th{height:86px;}
+  table.matrix thead th .dname{max-height:74px;font-size:11px;letter-spacing:2px;}
+  table.matrix tbody th{font-size:12.5px;padding:10px 12px;}
+  /* 让矩阵表格横向铺满可用宽度 */
+  table.matrix{width:100%;}
+}
+
+/* ---------- 底部信息条(填补 PC 空白) ---------- */
+.info-strip{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px;}
+.info-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.info-card .ic-t{font-size:13px;font-weight:650;display:flex;align-items:center;gap:7px;margin-bottom:10px;}
+.info-card .ic-b{font-size:12px;color:var(--muted);line-height:1.75;}
+.info-card .ic-b b{color:var(--text);font-weight:600;}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin:5px 0;}
+.legend-swatch{width:26px;height:14px;border-radius:4px;flex-shrink:0;}
+@media(min-width:900px){
+  .info-strip{grid-template-columns:repeat(3,1fr);margin-top:18px;}
 }
 
 /* ---------- 移动端微调 ---------- */
@@ -181,6 +202,29 @@ table.ledger td.src{color:var(--accent);font-size:11px;}
   <div class="tab-content active" id="tab-matrix">
     <div class="matrix-card"><div class="matrix-scroll"><table class="matrix" id="matrixTable"></table></div></div>
     <p style="font-size:11px;color:var(--dim);margin-top:10px;line-height:1.6;">点亮的格子可点开看四因子拆解 · 颜色越红=瓶颈越强(0–9) · 空心圆=待采集</p>
+    <div class="info-strip">
+      <div class="info-card">
+        <div class="ic-t">🎨 色阶图例</div>
+        <div class="ic-b">
+          <div class="legend-row"><span class="legend-swatch" style="background:rgb(46,150,70)"></span>0–3 低瓶颈 · 自给充足</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:rgb(214,180,70)"></span>3–6 中瓶颈 · 部分依赖</div>
+          <div class="legend-row"><span class="legend-swatch" style="background:rgb(224,88,80)"></span>6–9 高瓶颈 · 生存级卡脖子</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="ic-t">🧮 四因子拆解</div>
+        <div class="ic-b">
+          <b>物理缺口</b> 缺多少（唯一硬数据）<br>
+          <b>战略相关性</b> 在乎不在乎补<br>
+          <b>填补难度</b> 能不能靠市场填<br>
+          <b>安全放大器</b> 会不会不计成本砸钱
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="ic-t">📊 采集进度</div>
+        <div class="ic-b" id="progressCard">加载中…</div>
+      </div>
+    </div>
   </div>
   <div class="tab-content" id="tab-rank"><div class="cards" id="rankCards"></div></div>
   <div class="tab-content" id="tab-flow">
@@ -228,6 +272,12 @@ function renderMeta(){
     `<span><span class="dot" style="background:#d4a017"></span>含赋档 <b>${t.filled-t.hard_anchored}</b></span>`+
     `<span><span class="dot" style="background:#28303e"></span>待采集 <b>${t.empty}</b></span>`+
     `<span style="color:var(--dim)">共 ${total} 格 · 已填 <b style="color:var(--text)">${t.fill_pct}%</b></span>`;
+  const pc=document.getElementById('progressCard');
+  if(pc){
+    const layerCount={};DATA.layers.forEach(l=>layerCount[l.id]=0);
+    DATA.dimensions.forEach(d=>layerCount[d.layer]++);
+    pc.innerHTML=`已采集 <b>${t.filled}</b> / ${total} 格（<b>${t.fill_pct}%</b>）<br>其中硬数据 <b>${t.hard_anchored}</b> 格、含赋档 <b>${t.filled-t.hard_anchored}</b> 格<br><span style="color:var(--dim)">下一步：从硬资源层（能源/粮食/矿产）逐层灌真实数据</span>`;
+  }
 }
 function renderMatrix(){
   const t=document.getElementById('matrixTable');
