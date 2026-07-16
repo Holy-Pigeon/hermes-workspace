@@ -739,8 +739,13 @@
       "topic": "view / reshape / contiguous——改变张量形状而不搬动数据的魔术",
       "category": "类目 5：Python 与 PyTorch",
       "taught_at": "2026-07-16T08:03:00+08:00"
+    },
+    {
+      "topic": "双向 RNN（Bidirectional RNN）——让模型既回头看，又提前看",
+      "category": "类目 10：序列建模基础",
+      "taught_at": "2026-07-16T14:03:00+08:00"
     }
   ],
-  "total_count": 148,
-  "last_updated": "2026-07-16T08:03:00+08:00"
+  "total_count": 149,
+  "last_updated": "2026-07-16T14:03:00+08:00"
 }
