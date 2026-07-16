@@ -734,8 +734,13 @@
       "topic": "置换等变性（Permutation Equivariance）——自注意力天生看不见语序的数学本质",
       "category": "类目 12：Self-Attention 详解",
       "taught_at": "2026-07-15T20:03:00+08:00"
+    },
+    {
+      "topic": "view / reshape / contiguous——改变张量形状而不搬动数据的魔术",
+      "category": "类目 5：Python 与 PyTorch",
+      "taught_at": "2026-07-16T08:03:00+08:00"
     }
   ],
-  "total_count": 147,
-  "last_updated": "2026-07-15T20:03:00+08:00"
+  "total_count": 148,
+  "last_updated": "2026-07-16T08:03:00+08:00"
 }
