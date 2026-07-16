@@ -1168,6 +1168,918 @@
         ]
       },
       "score": 0.56
+    },
+    "us::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 101.9,
+        "desc": "六品类卡路里加权粮食自给率101.9%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 117.9,
+            "weight": 0.317,
+            "kcal_share_pct": 31.7
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 159.3,
+            "weight": 0.026,
+            "kcal_share_pct": 2.6
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 113.1,
+            "weight": 0.183,
+            "kcal_share_pct": 18.3
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 87.4,
+            "weight": 0.212,
+            "kcal_share_pct": 21.2
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 48.0,
+            "weight": 0.084,
+            "kcal_share_pct": 8.4
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 96.2,
+            "weight": 0.178,
+            "kcal_share_pct": 17.8
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:美国;全球最大农产品出口国之一",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "农业出口强国,粮食安全非瓶颈",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "USDA 美国农业部(农业出口/粮食政策主管)",
+            "url": "https://www.usda.gov/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "多元高产+出口盈余",
+        "policy_refs": [
+          {
+            "label": "USDA 美国农业部(农业出口/粮食政策主管)",
+            "url": "https://www.usda.gov/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "粮食完全自主非安全议题",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "USDA 美国农业部(农业出口/粮食政策主管)",
+            "url": "https://www.usda.gov/"
+          }
+        ]
+      },
+      "score": 0.14
+    },
+    "cn::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 89.0,
+        "desc": "六品类卡路里加权粮食自给率89.0%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 90.7,
+            "weight": 0.547,
+            "kcal_share_pct": 54.7
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 39.1,
+            "weight": 0.052,
+            "kcal_share_pct": 5.2
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 93.6,
+            "weight": 0.142,
+            "kcal_share_pct": 14.2
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 81.6,
+            "weight": 0.03,
+            "kcal_share_pct": 3.0
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 101.8,
+            "weight": 0.156,
+            "kcal_share_pct": 15.6
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 78.8,
+            "weight": 0.073,
+            "kcal_share_pct": 7.3
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:中国mainland;大豆对外依存度极高",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "口粮绝对安全写入国策,大豆是软肋",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《国家粮食安全中长期规划纲要》/耕地红线(农业农村部)",
+            "url": "http://www.moa.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国粮食安全保障法》(2024施行,gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "谷物基本自给但大豆85%+靠进口,替代难",
+        "policy_refs": [
+          {
+            "label": "《国家粮食安全中长期规划纲要》/耕地红线(农业农村部)",
+            "url": "http://www.moa.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国粮食安全保障法》(2024施行,gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "粮食安全=生存级,18亿亩耕地红线+储备举国",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《国家粮食安全中长期规划纲要》/耕地红线(农业农村部)",
+            "url": "http://www.moa.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国粮食安全保障法》(2024施行,gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "score": 1.2
+    },
+    "eu::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 95.2,
+        "desc": "六品类卡路里加权粮食自给率95.2%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 98.7,
+            "weight": 0.374,
+            "kcal_share_pct": 37.4
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 66.4,
+            "weight": 0.014,
+            "kcal_share_pct": 1.4
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 114.4,
+            "weight": 0.144,
+            "kcal_share_pct": 14.4
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 93.9,
+            "weight": 0.164,
+            "kcal_share_pct": 16.4
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 81.6,
+            "weight": 0.084,
+            "kcal_share_pct": 8.4
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 84.9,
+            "weight": 0.22,
+            "kcal_share_pct": 22.0
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:EU27;共同农业政策CAP高补贴",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "CAP保障粮食自给,整体盈余",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "欧盟共同农业政策 CAP(欧盟委员会农业总司)",
+            "url": "https://agriculture.ec.europa.eu/common-agricultural-policy_en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "部分饲料/油料进口但可替代",
+        "policy_refs": [
+          {
+            "label": "欧盟共同农业政策 CAP(欧盟委员会农业总司)",
+            "url": "https://agriculture.ec.europa.eu/common-agricultural-policy_en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "粮食安全政策级非生存级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "欧盟共同农业政策 CAP(欧盟委员会农业总司)",
+            "url": "https://agriculture.ec.europa.eu/common-agricultural-policy_en"
+          }
+        ]
+      },
+      "score": 0.48
+    },
+    "ru::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 124.6,
+        "desc": "六品类卡路里加权粮食自给率124.6%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 158.2,
+            "weight": 0.446,
+            "kcal_share_pct": 44.6
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 99.6,
+            "weight": 0.006,
+            "kcal_share_pct": 0.6
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 100.6,
+            "weight": 0.138,
+            "kcal_share_pct": 13.8
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 106.6,
+            "weight": 0.161,
+            "kcal_share_pct": 16.1
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 68.1,
+            "weight": 0.064,
+            "kcal_share_pct": 6.4
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 97.3,
+            "weight": 0.184,
+            "kcal_share_pct": 18.4
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:俄罗斯;全球最大小麦出口国",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "谷物出口大国,粮食武器化",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯粮食安全学说 Doctrine of Food Security(俄农业部)",
+            "url": "https://mcx.gov.ru/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "谷物极度盈余",
+        "policy_refs": [
+          {
+            "label": "俄罗斯粮食安全学说 Doctrine of Food Security(俄农业部)",
+            "url": "https://mcx.gov.ru/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "粮食安全在出口端非供给端",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯粮食安全学说 Doctrine of Food Security(俄农业部)",
+            "url": "https://mcx.gov.ru/"
+          }
+        ]
+      },
+      "score": 0.24
+    },
+    "in::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 111.4,
+        "desc": "六品类卡路里加权粮食自给率111.4%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 111.6,
+            "weight": 0.66,
+            "kcal_share_pct": 66.0
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 103.6,
+            "weight": 0.03,
+            "kcal_share_pct": 3.0
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 109.9,
+            "weight": 0.015,
+            "kcal_share_pct": 1.5
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 132.4,
+            "weight": 0.095,
+            "kcal_share_pct": 9.5
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 101.8,
+            "weight": 0.08,
+            "kcal_share_pct": 8.0
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 102.5,
+            "weight": 0.12,
+            "kcal_share_pct": 12.0
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:印度;食用油高度依赖进口",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "口粮自给是14亿人口生存底线",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家粮食安全法 National Food Security Act(粮食公共分配部)",
+            "url": "https://dfpd.gov.in/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "谷物自给但油料依赖进口",
+        "policy_refs": [
+          {
+            "label": "印度国家粮食安全法 National Food Security Act(粮食公共分配部)",
+            "url": "https://dfpd.gov.in/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "粮食安全=战略级,公共分配系统PDS",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家粮食安全法 National Food Security Act(粮食公共分配部)",
+            "url": "https://dfpd.gov.in/"
+          }
+        ]
+      },
+      "score": 0.75
+    },
+    "jpkr::d02": {
+      "physical_gap": {
+        "value": 0.593,
+        "self_sufficiency": 40.7,
+        "desc": "六品类卡路里加权粮食自给率40.7%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 21.8,
+            "weight": 0.447,
+            "kcal_share_pct": 44.7
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 10.1,
+            "weight": 0.039,
+            "kcal_share_pct": 3.9
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 63.7,
+            "weight": 0.148,
+            "kcal_share_pct": 14.8
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 48.2,
+            "weight": 0.199,
+            "kcal_share_pct": 19.9
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 77.0,
+            "weight": 0.088,
+            "kcal_share_pct": 8.8
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 60.5,
+            "weight": 0.078,
+            "kcal_share_pct": 7.8
+          }
+        ],
+        "data_year": 2023,
+        "note": "FAO FBS缺日本数据→代表体用韩国;日韩均全球最低粮食自给率之一",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "卡路里自给率极低,极度依赖进口",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
+            "url": "https://www.maff.go.jp/e/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.5,
+        "desc": "耕地稀缺无本土替代空间",
+        "policy_refs": [
+          {
+            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
+            "url": "https://www.maff.go.jp/e/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "粮食安全=生存级国策,长期提自给率",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
+            "url": "https://www.maff.go.jp/e/"
+          }
+        ]
+      },
+      "score": 4.45
+    },
+    "gulf::d02": {
+      "physical_gap": {
+        "value": 0.695,
+        "self_sufficiency": 30.5,
+        "desc": "六品类卡路里加权粮食自给率30.5%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 13.1,
+            "weight": 0.549,
+            "kcal_share_pct": 54.9
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 27.9,
+            "weight": 0.019,
+            "kcal_share_pct": 1.9
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 70.1,
+            "weight": 0.081,
+            "kcal_share_pct": 8.1
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 16.7,
+            "weight": 0.121,
+            "kcal_share_pct": 12.1
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 61.6,
+            "weight": 0.146,
+            "kcal_share_pct": 14.6
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 72.5,
+            "weight": 0.083,
+            "kcal_share_pct": 8.3
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:沙特;粮食自给率极低",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "沙漠国家几乎全靠进口,水粮双缺",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "url": "https://www.mewa.gov.sa/en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "无耕地无淡水,本土生产极限低",
+        "policy_refs": [
+          {
+            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "url": "https://www.mewa.gov.sa/en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "粮食安全=生存级,海外购地+储备战略",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "url": "https://www.mewa.gov.sa/en"
+          }
+        ]
+      },
+      "score": 6.25
+    },
+    "asean::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 82.4,
+        "desc": "六品类卡路里加权粮食自给率82.4%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 87.0,
+            "weight": 0.605,
+            "kcal_share_pct": 60.5
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 97.0,
+            "weight": 0.078,
+            "kcal_share_pct": 7.8
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 94.4,
+            "weight": 0.036,
+            "kcal_share_pct": 3.6
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 42.7,
+            "weight": 0.126,
+            "kcal_share_pct": 12.6
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 98.3,
+            "weight": 0.075,
+            "kcal_share_pct": 7.5
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 75.4,
+            "weight": 0.08,
+            "kcal_share_pct": 8.0
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:印尼;人口大国口粮压力",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "区域整体近自给但内部分化",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "热带作物盈余但小麦全进口",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "粮食安全区域协调,印尼大米自给波动",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "score": 0.42
+    },
+    "latam::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 156.3,
+        "desc": "六品类卡路里加权粮食自给率156.3%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 154.1,
+            "weight": 0.391,
+            "kcal_share_pct": 39.1
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 233.2,
+            "weight": 0.018,
+            "kcal_share_pct": 1.8
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 144.2,
+            "weight": 0.198,
+            "kcal_share_pct": 19.8
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 244.3,
+            "weight": 0.163,
+            "kcal_share_pct": 16.3
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 125.6,
+            "weight": 0.075,
+            "kcal_share_pct": 7.5
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 90.9,
+            "weight": 0.155,
+            "kcal_share_pct": 15.5
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:巴西;全球大豆/肉类出口龙头",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.5,
+        "desc": "农业出口巨头,粮食极度盈余",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西农业部 MAPA(农业出口大国)",
+            "url": "https://www.gov.br/agricultura/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "本土多元高产替代性极好",
+        "policy_refs": [
+          {
+            "label": "巴西农业部 MAPA(农业出口大国)",
+            "url": "https://www.gov.br/agricultura/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "粮食安全非议题反而是出口筹码",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西农业部 MAPA(农业出口大国)",
+            "url": "https://www.gov.br/agricultura/"
+          }
+        ]
+      },
+      "score": 0.1
+    },
+    "africa::d02": {
+      "physical_gap": {
+        "value": 0.261,
+        "self_sufficiency": 73.9,
+        "desc": "六品类卡路里加权粮食自给率73.9%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 68.2,
+            "weight": 0.679,
+            "kcal_share_pct": 67.9
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 99.9,
+            "weight": 0.043,
+            "kcal_share_pct": 4.3
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 91.0,
+            "weight": 0.046,
+            "kcal_share_pct": 4.6
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 61.7,
+            "weight": 0.085,
+            "kcal_share_pct": 8.5
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 102.8,
+            "weight": 0.095,
+            "kcal_share_pct": 9.5
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 79.5,
+            "weight": 0.053,
+            "kcal_share_pct": 5.3
+          }
+        ],
+        "data_year": 2023,
+        "note": "代表体:非洲整体;多国主粮进口依赖",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "整体粮食缺口大,进口依赖上升",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "非盟 CAADP 全面非洲农业发展计划",
+            "url": "https://au.int/en/caadp"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "农业生产率低+基建薄弱",
+        "policy_refs": [
+          {
+            "label": "非盟 CAADP 全面非洲农业发展计划",
+            "url": "https://au.int/en/caadp"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "粮食安全=发展与稳定核心但资金受限",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "非盟 CAADP 全面非洲农业发展计划",
+            "url": "https://au.int/en/caadp"
+          }
+        ]
+      },
+      "score": 1.17
     }
   }
 }
