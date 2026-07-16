@@ -149,9 +149,11 @@
     "39ed8689-fc19-8160-9f42-ceb4e714ac4f",
     "39ed8689-fc19-8112-be43-e1149449a166",
     "39fd8689-fc19-8176-8224-cd68c04e4118",
-    "39fd8689-fc19-8197-ad1f-c198bd07ffc3"
+    "39fd8689-fc19-8197-ad1f-c198bd07ffc3",
+    "39fd8689-fc19-81d2-a21a-fe04d957903a"
   ],
   "page_titles": {
+    "39fd8689-fc19-81d2-a21a-fe04d957903a": "低秩近似（Low-Rank Approximation）——用几根主轴，重画一整张矩阵",
     "39fd8689-fc19-8197-ad1f-c198bd07ffc3": "双向 RNN（Bidirectional RNN）——让模型既回头看，又提前看",
     "39fd8689-fc19-8176-8224-cd68c04e4118": "view / reshape / contiguous——改变张量形状而不搬动数据的魔术",
     "39ed8689-fc19-8112-be43-e1149449a166": "置换等变性（Permutation Equivariance）——自注意力天生看不见语序的数学本质",
@@ -303,7 +305,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 41,
+  "cursor": 113,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -324,6 +326,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-16T14:10:42+0800",
-  "last_order_refresh": "2026-07-16T14:13:39+0800"
+  "last_review": "2026-07-16T20:10:32+0800",
+  "last_order_refresh": "2026-07-16T20:13:14+0800"
 }
