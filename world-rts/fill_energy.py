@@ -12,24 +12,29 @@ OWID = "/tmp/owid_energy.csv"
 BASE = os.path.expanduser("~/hermes-workspace/world-rts")
 MATRIX = os.path.join(BASE, "data", "matrix.json")
 
-# 阵营 → OWID country 名(用代表经济体，多国阵营取主导体或加注)
+# 阵营 → OWID country 名 (14单一主权棋手)
 FAC_MAP = {
     "us":"United States", "cn":"China", "eu":"European Union (27)",
-    "ru":"Russia", "in":"India", "jpkr":"Japan", "gulf":"Saudi Arabia",
-    "asean":"Indonesia", "latam":"Brazil", "africa":"Africa",
+    "ru":"Russia", "in":"India", "jp":"Japan", "kr":"South Korea",
+    "sa":"Saudi Arabia", "br":"Brazil", "id":"Indonesia",
+    "mx":"Mexico", "ng":"Nigeria", "za":"South Africa", "vn":"Vietnam",
 }
 # 项2/3/4 赋档(政策判断)+ note。(sr, irr, sec, sr_desc, irr_desc, sec_desc, note)
 JUDGE = {
-    "us":   (0.8,1.0,1.5,"能源独立既定国策且已实现","多元自产+盟友供给易替代","能源已自主非生存级","代表体:美国本土"),
-    "cn":   (1.0,2.0,3.0,"能源安全写入十四五,油气进口通道核心关切","石油进口依赖中东+马六甲海运,替代难","能源安全=生存级,战略储备+多元化举国推进","核电燃料铀约60%+依赖进口"),
-    "eu":   (1.0,2.5,3.0,"2022俄气断供后能源安全升至最高战略","俄气断供后LNG替代成本高周期长","REPowerEU=生存级去俄化,不计成本","代表体:EU27整体;核电铀依赖俄/哈"),
-    "ru":   (0.8,1.0,2.0,"能源是财政命脉与地缘武器","能源极度自给无需替代","安全关切在出口通道非供给端","净出口国,物理缺口触0.2下限"),
-    "in":   (1.0,2.0,2.5,"能源安全是印度增长关键约束","油气进口依赖中东,替代有限","能源进口安全战略级但未到举国","代表体:印度本土"),
-    "jpkr": (1.0,3.0,3.0,"资源贫国,能源安全=国家生存基础","化石无本土替代,核电是唯一自主选项","能源=生存级,战略储备+核电复兴","代表体:日本;核电铀100%进口"),
-    "gulf": (0.9,1.0,1.5,"油气是立国根基但供给端无瓶颈","能源极度盈余","安全关切在后石油转型非供给","代表体:沙特;净出口触0.2下限"),
-    "asean":(0.7,1.5,2.0,"区域整体能源盈余但内部分化","区域内可调剂但跨国电网不足","能源安全区域协调中未到举国","代表体:印尼(最大动力煤出口国);新马依赖进口"),
-    "latam":(0.6,1.0,1.5,"能源基本自给非核心战略瓶颈","本土多元能源结构替代性好","能源安全非紧迫议题","代表体:巴西(深海油+水电+乙醇);净出口触0.2下限"),
-    "africa":(0.7,2.0,2.0,"能源可及性是发展瓶颈(电力普及率低)","基建薄弱制约本土能源转化","能源发展战略优先但资金受限","代表体:非洲整体;产油国盈余but多数电力短缺"),
+    "us":(0.8,1.0,1.5,"能源独立既定国策且已实现","多元自产+盟友供给易替代","能源已自主非生存级","页岩革命后能源净出口国"),
+    "cn":(1.0,2.0,3.0,"能源安全写入十四五,油气进口通道核心关切","石油进口依赖中东+马六甲海运,替代难","能源安全=生存级,战略储备+多元化举国推进","核电燃料铀约60%+依赖进口"),
+    "eu":(1.0,2.5,3.0,"2022俄气断供后能源安全升至最高战略","俄气断供后LNG替代成本高周期长","REPowerEU=生存级去俄化,不计成本","EU27整体;核电铀依赖俄/哈"),
+    "ru":(0.8,1.0,2.0,"能源是财政命脉与地缘武器","能源极度自给无需替代","安全关切在出口通道非供给端","净出口国,物理缺口触0.2下限"),
+    "in":(1.0,2.0,2.5,"能源安全是印度增长关键约束","油气进口依赖中东,替代有限","能源进口安全战略级但未到举国","石油对外依存度超85%"),
+    "jp":(1.0,3.0,3.0,"资源贫国,能源安全=国家生存基础","化石无本土替代,核电是唯一自主选项","能源=生存级,核电复兴+战略储备","化石几乎全进口,自给率全球最低之一;核电铀100%进口"),
+    "kr":(1.0,3.0,3.0,"资源贫国,油气煤高度依赖进口","化石无本土替代,核电是主要本土贡献","能源=生存级安全国策","油气煤高度依赖进口,核电本土主力"),
+    "sa":(0.9,1.0,1.5,"油气是立国根基但供给端无瓶颈","能源极度盈余","安全关切在后石油转型(Vision2030)非供给","世界级油气出口国;净出口触0.2下限"),
+    "br":(0.6,1.0,1.5,"能源基本自给非核心战略瓶颈","深海油+水电+乙醇多元替代性好","能源安全非紧迫议题","深海油+水电+乙醇多元;净出口触0.2下限"),
+    "id":(0.8,1.5,2.0,"最大动力煤出口国但油气转进口","煤盈余但石油已净进口,替代中","能源安全上升(油气进口增)","全球最大动力煤出口国之一;石油净进口"),
+    "mx":(0.8,1.5,2.0,"曾能源自给,近年油气转net进口","炼油能力不足需进口成品油","能源主权是政治议题(Pemex国有)","原油出口但成品油/天然气依赖美国进口"),
+    "ng":(0.7,1.5,2.0,"产油国但炼油瘫痪,成品油全进口","原油出口却进口成品油,替代畸形","能源是财政命脉但下游瘫痪","非洲最大产油国之一;炼油能力瘫痪,成品油依赖进口"),
+    "za":(0.9,2.0,2.5,"煤电为主但电力危机严重(限电)","煤自给但电网老化,替代难","能源安全=经济生存(Eskom危机)","煤炭自给但Eskom限电危机,电力严重短缺"),
+    "vn":(0.9,1.5,2.0,"曾能源出口国近年转净进口","煤油气均转进口,增长快耗能高","能源安全随工业化上升","制造业崛起耗能激增,煤油气转净进口"),
 }
 
 CATS = [("石油","oil_consumption","oil_production"),
@@ -57,11 +62,18 @@ POLICY_REFS = {
     "ru":   [{"label":"俄罗斯联邦能源部 Minenergo(《至2035能源战略》主管)","url":"https://minenergo.gov.ru/"}],
     "in":   [{"label":"印度国家绿氢使命 National Green Hydrogen Mission(MNRE,2023)","url":"https://mnre.gov.in/national-green-hydrogen-mission/"},
              {"label":"NITI Aayog(National Energy Policy 主管)","url":"https://www.niti.gov.in/"}],
-    "jpkr": [{"label":"日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)","url":"https://www.enecho.meti.go.jp/en/category/others/basic_plan/"}],
-    "gulf": [{"label":"Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)","url":"https://www.vision2030.gov.sa/en"}],
-    "asean":[{"label":"印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)","url":"https://www.esdm.go.id/"}],
-    "latam":[{"label":"巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)","url":"https://www.epe.gov.br/"}],
-    "africa":[{"label":"非盟 Agenda 2063 官方页(含能源一体化 PIDA)","url":"https://au.int/en/agenda2063/overview"}],
+    "jp": [{"label":"日本能源基本计划 Strategic Energy Plan(经产省METI/资源能源厅)","url":"https://www.enecho.meti.go.jp/en/category/others/basic_plan/"}],
+    "kr": [{"label":"韩国产业通商资源部 MOTIE(能源基本计划主管)","url":"https://www.motie.go.kr/"},
+           {"label":"韩国能源经济研究院 KEEI","url":"https://www.keei.re.kr/"}],
+    "sa": [{"label":"Saudi Vision 2030 官方门户(后石油转型;Cloudflare需浏览器)","url":"https://www.vision2030.gov.sa/en"}],
+    "br": [{"label":"巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)","url":"https://www.epe.gov.br/"}],
+    "id": [{"label":"印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)","url":"https://www.esdm.go.id/"}],
+    "mx": [{"label":"墨西哥能源部 SENER","url":"https://www.gob.mx/sener"},
+           {"label":"墨西哥国家石油公司 Pemex","url":"https://www.pemex.com/"}],
+    "ng": [{"label":"尼日利亚石油资源部 / NNPC(国家石油公司)","url":"https://www.nnpcgroup.com/"}],
+    "za": [{"label":"南非矿产资源与能源部 DMRE","url":"https://www.dmr.gov.za/"},
+           {"label":"南非电力公司 Eskom(限电危机)","url":"https://www.eskom.co.za/"}],
+    "vn": [{"label":"越南工贸部 MOIT(第八次电力规划PDP8主管)","url":"https://moit.gov.vn/en/"}],
 }
 
 def fnum(row,k):
@@ -102,8 +114,11 @@ def build_breakdown(country):
 m=json.load(open(MATRIX,encoding="utf-8"))
 for fid,country in FAC_MAP.items():
     wss,yr,bd=build_breakdown(country)
-    if wss is None:
-        print(f"⚠ {fid} 无数据"); continue
+    if wss is None or not bd or len(bd)<3:
+        # 拆解品类不足3项=OWID商业能源数据严重不全(如尼日利亚传统生物质为主未计入)
+        # 诚实标注待核,不强行填0或假数据
+        print(f"⚠ {fid}({country}) 拆解仅{len(bd) if bd else 0}项,数据不全→标注待核,不灌假数据")
+        continue
     ss_cap=min(wss,100)  # 净出口封顶100
     pg=round(max(0.2,min(1.0,(100-ss_cap)/100)),3)  # 0.2下限
     sr,irr,sec,srd,irrd,secd,note=JUDGE[fid]

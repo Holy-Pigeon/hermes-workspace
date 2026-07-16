@@ -9,7 +9,7 @@
       9
     ],
     "last_updated": "2026-07-14",
-    "factions_count": 10,
+    "factions_count": 14,
     "dimensions_count": 22
   },
   "layers": [
@@ -221,29 +221,49 @@
       "flag": "🇮🇳"
     },
     {
-      "id": "jpkr",
-      "name": "日韩同盟",
+      "id": "jp",
+      "name": "日本",
       "flag": "🇯🇵"
     },
     {
-      "id": "gulf",
-      "name": "海湾",
+      "id": "kr",
+      "name": "韩国",
+      "flag": "🇰🇷"
+    },
+    {
+      "id": "sa",
+      "name": "沙特",
       "flag": "🇸🇦"
     },
     {
-      "id": "asean",
-      "name": "东盟",
-      "flag": "🌏"
+      "id": "br",
+      "name": "巴西",
+      "flag": "🇧🇷"
     },
     {
-      "id": "latam",
-      "name": "拉美",
-      "flag": "🌎"
+      "id": "id",
+      "name": "印尼",
+      "flag": "🇮🇩"
     },
     {
-      "id": "africa",
-      "name": "非洲",
-      "flag": "🌍"
+      "id": "mx",
+      "name": "墨西哥",
+      "flag": "🇲🇽"
+    },
+    {
+      "id": "ng",
+      "name": "尼日利亚",
+      "flag": "🇳🇬"
+    },
+    {
+      "id": "za",
+      "name": "南非",
+      "flag": "🇿🇦"
+    },
+    {
+      "id": "vn",
+      "name": "越南",
+      "flag": "🇻🇳"
     }
   ],
   "cells": {
@@ -291,7 +311,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:美国本土",
+        "note": "页岩革命后能源净出口国",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -495,7 +515,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:EU27整体;核电铀依赖俄/哈",
+        "note": "EU27整体;核电铀依赖俄/哈",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -679,7 +699,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:印度本土",
+        "note": "石油对外依存度超85%",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -737,7 +757,7 @@
       },
       "score": 2.02
     },
-    "jpkr::d01": {
+    "jp::d01": {
       "physical_gap": {
         "value": 0.861,
         "self_sufficiency": 13.9,
@@ -781,7 +801,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:日本;核电铀100%进口",
+        "note": "化石几乎全进口,自给率全球最低之一;核电铀100%进口",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -816,7 +836,7 @@
       },
       "security_amp": {
         "value": 3.0,
-        "desc": "能源=生存级,战略储备+核电复兴",
+        "desc": "能源=生存级,核电复兴+战略储备",
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
@@ -827,7 +847,109 @@
       },
       "score": 7.75
     },
-    "gulf::d01": {
+    "kr::d01": {
+      "physical_gap": {
+        "value": 0.845,
+        "self_sufficiency": 15.5,
+        "desc": "六项加权自给率15.5%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 0.0,
+            "weight": 0.426,
+            "consumption_twh": 1540
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 0.0,
+            "weight": 0.176,
+            "consumption_twh": 636
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 0.4,
+            "weight": 0.219,
+            "consumption_twh": 792
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.127,
+            "consumption_twh": 460
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.003,
+            "consumption_twh": 10
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.024,
+            "consumption_twh": 88
+          }
+        ],
+        "data_year": 2024,
+        "note": "油气煤高度依赖进口,核电本土主力",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "资源贫国,油气煤高度依赖进口",
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国产业通商资源部 MOTIE(能源基本计划主管)",
+            "url": "https://www.motie.go.kr/"
+          },
+          {
+            "label": "韩国能源经济研究院 KEEI",
+            "url": "https://www.keei.re.kr/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "化石无本土替代,核电是主要本土贡献",
+        "policy_refs": [
+          {
+            "label": "韩国产业通商资源部 MOTIE(能源基本计划主管)",
+            "url": "https://www.motie.go.kr/"
+          },
+          {
+            "label": "韩国能源经济研究院 KEEI",
+            "url": "https://www.keei.re.kr/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "能源=生存级安全国策",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国产业通商资源部 MOTIE(能源基本计划主管)",
+            "url": "https://www.motie.go.kr/"
+          },
+          {
+            "label": "韩国能源经济研究院 KEEI",
+            "url": "https://www.keei.re.kr/"
+          }
+        ]
+      },
+      "score": 7.61
+    },
+    "sa::d01": {
       "physical_gap": {
         "value": 0.2,
         "self_sufficiency": 217.9,
@@ -859,7 +981,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:沙特;净出口触0.2下限",
+        "note": "世界级油气出口国;净出口触0.2下限",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -894,7 +1016,7 @@
       },
       "security_amp": {
         "value": 1.5,
-        "desc": "安全关切在后石油转型非供给",
+        "desc": "安全关切在后石油转型(Vision2030)非供给",
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
@@ -905,91 +1027,7 @@
       },
       "score": 0.27
     },
-    "asean::d01": {
-      "physical_gap": {
-        "value": 0.2,
-        "self_sufficiency": 195.8,
-        "desc": "六项加权自给率195.8%(净出口封顶100,物理缺口下限0.2)",
-        "breakdown": [
-          {
-            "item": "石油",
-            "self_sufficiency": 39.6,
-            "weight": 0.294,
-            "consumption_twh": 879
-          },
-          {
-            "item": "天然气",
-            "self_sufficiency": 151.0,
-            "weight": 0.158,
-            "consumption_twh": 473
-          },
-          {
-            "item": "煤炭",
-            "self_sufficiency": 359.5,
-            "weight": 0.439,
-            "consumption_twh": 1311
-          },
-          {
-            "item": "水电",
-            "self_sufficiency": 100.0,
-            "weight": 0.022,
-            "consumption_twh": 65
-          },
-          {
-            "item": "风光",
-            "self_sufficiency": 100.0,
-            "weight": 0.001,
-            "consumption_twh": 3
-          }
-        ],
-        "data_year": 2024,
-        "note": "代表体:印尼(最大动力煤出口国);新马依赖进口",
-        "sources": [
-          {
-            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
-            "url": "https://github.com/owid/energy-data"
-          },
-          {
-            "label": "Energy Institute Statistical Review of World Energy 2024",
-            "url": "https://www.energyinst.org/statistical-review"
-          }
-        ]
-      },
-      "strategic_relevance": {
-        "value": 0.7,
-        "desc": "区域整体能源盈余但内部分化",
-        "source": "基于官方能源战略文件判断",
-        "policy_refs": [
-          {
-            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
-            "url": "https://www.esdm.go.id/"
-          }
-        ]
-      },
-      "irreplaceability": {
-        "value": 1.5,
-        "desc": "区域内可调剂但跨国电网不足",
-        "policy_refs": [
-          {
-            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
-            "url": "https://www.esdm.go.id/"
-          }
-        ]
-      },
-      "security_amp": {
-        "value": 2.0,
-        "desc": "能源安全区域协调中未到举国",
-        "source": "基于官方战略文件判断",
-        "policy_refs": [
-          {
-            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
-            "url": "https://www.esdm.go.id/"
-          }
-        ]
-      },
-      "score": 0.42
-    },
-    "latam::d01": {
+    "br::d01": {
       "physical_gap": {
         "value": 0.2,
         "self_sufficiency": 98.5,
@@ -1033,7 +1071,7 @@
           }
         ],
         "data_year": 2024,
-        "note": "代表体:巴西(深海油+水电+乙醇);净出口触0.2下限",
+        "note": "深海油+水电+乙醇多元;净出口触0.2下限",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -1058,7 +1096,7 @@
       },
       "irreplaceability": {
         "value": 1.0,
-        "desc": "本土多元能源结构替代性好",
+        "desc": "深海油+水电+乙醇多元替代性好",
         "policy_refs": [
           {
             "label": "巴西能源研究公司 EPE(十年能源扩展计划 PDE 主管)",
@@ -1079,51 +1117,45 @@
       },
       "score": 0.18
     },
-    "africa::d01": {
+    "id::d01": {
       "physical_gap": {
         "value": 0.2,
-        "self_sufficiency": 142.4,
-        "desc": "六项加权自给率142.4%(净出口封顶100,物理缺口下限0.2)",
+        "self_sufficiency": 195.8,
+        "desc": "六项加权自给率195.8%(净出口封顶100,物理缺口下限0.2)",
         "breakdown": [
           {
             "item": "石油",
-            "self_sufficiency": 157.9,
-            "weight": 0.414,
-            "consumption_twh": 2544
+            "self_sufficiency": 39.6,
+            "weight": 0.294,
+            "consumption_twh": 879
           },
           {
             "item": "天然气",
-            "self_sufficiency": 134.6,
-            "weight": 0.29,
-            "consumption_twh": 1780
+            "self_sufficiency": 151.0,
+            "weight": 0.158,
+            "consumption_twh": 473
           },
           {
             "item": "煤炭",
-            "self_sufficiency": 148.6,
-            "weight": 0.195,
-            "consumption_twh": 1195
-          },
-          {
-            "item": "核电",
-            "self_sufficiency": 100.0,
-            "weight": 0.003,
-            "consumption_twh": 19
+            "self_sufficiency": 359.5,
+            "weight": 0.439,
+            "consumption_twh": 1311
           },
           {
             "item": "水电",
             "self_sufficiency": 100.0,
-            "weight": 0.068,
-            "consumption_twh": 415
+            "weight": 0.022,
+            "consumption_twh": 65
           },
           {
             "item": "风光",
             "self_sufficiency": 100.0,
-            "weight": 0.02,
-            "consumption_twh": 122
+            "weight": 0.001,
+            "consumption_twh": 3
           }
         ],
         "data_year": 2024,
-        "note": "代表体:非洲整体;产油国盈余but多数电力短缺",
+        "note": "全球最大动力煤出口国之一;石油净进口",
         "sources": [
           {
             "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
@@ -1136,38 +1168,326 @@
         ]
       },
       "strategic_relevance": {
-        "value": 0.7,
-        "desc": "能源可及性是发展瓶颈(电力普及率低)",
+        "value": 0.8,
+        "desc": "最大动力煤出口国但油气转进口",
         "source": "基于官方能源战略文件判断",
         "policy_refs": [
           {
-            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
-            "url": "https://au.int/en/agenda2063/overview"
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
           }
         ]
       },
       "irreplaceability": {
-        "value": 2.0,
-        "desc": "基建薄弱制约本土能源转化",
+        "value": 1.5,
+        "desc": "煤盈余但石油已净进口,替代中",
         "policy_refs": [
           {
-            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
-            "url": "https://au.int/en/agenda2063/overview"
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
           }
         ]
       },
       "security_amp": {
         "value": 2.0,
-        "desc": "能源发展战略优先但资金受限",
+        "desc": "能源安全上升(油气进口增)",
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
-            "label": "非盟 Agenda 2063 官方页(含能源一体化 PIDA)",
-            "url": "https://au.int/en/agenda2063/overview"
+            "label": "印尼能源与矿产资源部 ESDM(国家能源总规划 RUEN 主管)",
+            "url": "https://www.esdm.go.id/"
           }
         ]
       },
-      "score": 0.56
+      "score": 0.48
+    },
+    "mx::d01": {
+      "physical_gap": {
+        "value": 0.259,
+        "self_sufficiency": 74.1,
+        "desc": "六项加权自给率74.1%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 112.0,
+            "weight": 0.433,
+            "consumption_twh": 1001
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 35.7,
+            "weight": 0.434,
+            "consumption_twh": 1003
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 45.7,
+            "weight": 0.034,
+            "consumption_twh": 78
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.013,
+            "consumption_twh": 30
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.025,
+            "consumption_twh": 57
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.048,
+            "consumption_twh": 111
+          }
+        ],
+        "data_year": 2024,
+        "note": "原油出口但成品油/天然气依赖美国进口",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "曾能源自给,近年油气转net进口",
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥能源部 SENER",
+            "url": "https://www.gob.mx/sener"
+          },
+          {
+            "label": "墨西哥国家石油公司 Pemex",
+            "url": "https://www.pemex.com/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "炼油能力不足需进口成品油",
+        "policy_refs": [
+          {
+            "label": "墨西哥能源部 SENER",
+            "url": "https://www.gob.mx/sener"
+          },
+          {
+            "label": "墨西哥国家石油公司 Pemex",
+            "url": "https://www.pemex.com/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "能源主权是政治议题(Pemex国有)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥能源部 SENER",
+            "url": "https://www.gob.mx/sener"
+          },
+          {
+            "label": "墨西哥国家石油公司 Pemex",
+            "url": "https://www.pemex.com/"
+          }
+        ]
+      },
+      "score": 0.62
+    },
+    "za::d01": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 118.2,
+        "desc": "六项加权自给率118.2%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 0.0,
+            "weight": 0.197,
+            "consumption_twh": 268
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 0.0,
+            "weight": 0.035,
+            "consumption_twh": 48
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 158.3,
+            "weight": 0.717,
+            "consumption_twh": 976
+          },
+          {
+            "item": "核电",
+            "self_sufficiency": 100.0,
+            "weight": 0.014,
+            "consumption_twh": 19
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.002,
+            "consumption_twh": 3
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.032,
+            "consumption_twh": 43
+          }
+        ],
+        "data_year": 2024,
+        "note": "煤炭自给但Eskom限电危机,电力严重短缺",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "煤电为主但电力危机严重(限电)",
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE",
+            "url": "https://www.dmr.gov.za/"
+          },
+          {
+            "label": "南非电力公司 Eskom(限电危机)",
+            "url": "https://www.eskom.co.za/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "煤自给但电网老化,替代难",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE",
+            "url": "https://www.dmr.gov.za/"
+          },
+          {
+            "label": "南非电力公司 Eskom(限电危机)",
+            "url": "https://www.eskom.co.za/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "能源安全=经济生存(Eskom危机)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE",
+            "url": "https://www.dmr.gov.za/"
+          },
+          {
+            "label": "南非电力公司 Eskom(限电危机)",
+            "url": "https://www.eskom.co.za/"
+          }
+        ]
+      },
+      "score": 0.9
+    },
+    "vn::d01": {
+      "physical_gap": {
+        "value": 0.488,
+        "self_sufficiency": 51.2,
+        "desc": "六项加权自给率51.2%(净出口封顶100,物理缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "石油",
+            "self_sufficiency": 25.4,
+            "weight": 0.263,
+            "consumption_twh": 389
+          },
+          {
+            "item": "天然气",
+            "self_sufficiency": 100.0,
+            "weight": 0.041,
+            "consumption_twh": 61
+          },
+          {
+            "item": "煤炭",
+            "self_sufficiency": 41.2,
+            "weight": 0.47,
+            "consumption_twh": 693
+          },
+          {
+            "item": "水电",
+            "self_sufficiency": 100.0,
+            "weight": 0.147,
+            "consumption_twh": 216
+          },
+          {
+            "item": "风光",
+            "self_sufficiency": 100.0,
+            "weight": 0.064,
+            "consumption_twh": 94
+          }
+        ],
+        "data_year": 2024,
+        "note": "制造业崛起耗能激增,煤油气转净进口",
+        "sources": [
+          {
+            "label": "OWID Energy Data (←Energy Institute Statistical Review 2024 + EIA)",
+            "url": "https://github.com/owid/energy-data"
+          },
+          {
+            "label": "Energy Institute Statistical Review of World Energy 2024",
+            "url": "https://www.energyinst.org/statistical-review"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "曾能源出口国近年转净进口",
+        "source": "基于官方能源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南工贸部 MOIT(第八次电力规划PDP8主管)",
+            "url": "https://moit.gov.vn/en/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "煤油气均转进口,增长快耗能高",
+        "policy_refs": [
+          {
+            "label": "越南工贸部 MOIT(第八次电力规划PDP8主管)",
+            "url": "https://moit.gov.vn/en/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "能源安全随工业化上升",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南工贸部 MOIT(第八次电力规划PDP8主管)",
+            "url": "https://moit.gov.vn/en/"
+          }
+        ]
+      },
+      "score": 1.32
     },
     "us::d02": {
       "physical_gap": {
@@ -1631,7 +1951,7 @@
       },
       "score": 0.75
     },
-    "jpkr::d02": {
+    "kr::d02": {
       "physical_gap": {
         "value": 0.593,
         "self_sufficiency": 40.7,
@@ -1675,7 +1995,7 @@
           }
         ],
         "data_year": 2023,
-        "note": "FAO FBS缺日本数据→代表体用韩国;日韩均全球最低粮食自给率之一",
+        "note": "韩国;谷物自给全球最低之一(日本FAO缺数据单列待核)",
         "sources": [
           {
             "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
@@ -1693,8 +2013,8 @@
         "source": "基于官方粮食安全战略文件判断",
         "policy_refs": [
           {
-            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
-            "url": "https://www.maff.go.jp/e/"
+            "label": "韩国农林畜产食品部 MAFRA(粮食自给率目标主管)",
+            "url": "https://www.mafra.go.kr/"
           }
         ]
       },
@@ -1703,8 +2023,8 @@
         "desc": "耕地稀缺无本土替代空间",
         "policy_refs": [
           {
-            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
-            "url": "https://www.maff.go.jp/e/"
+            "label": "韩国农林畜产食品部 MAFRA(粮食自给率目标主管)",
+            "url": "https://www.mafra.go.kr/"
           }
         ]
       },
@@ -1714,14 +2034,14 @@
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
-            "label": "日本粮食·农业·农村基本计划(农林水产省MAFF)",
-            "url": "https://www.maff.go.jp/e/"
+            "label": "韩国农林畜产食品部 MAFRA(粮食自给率目标主管)",
+            "url": "https://www.mafra.go.kr/"
           }
         ]
       },
       "score": 4.45
     },
-    "gulf::d02": {
+    "sa::d02": {
       "physical_gap": {
         "value": 0.695,
         "self_sufficiency": 30.5,
@@ -1765,7 +2085,7 @@
           }
         ],
         "data_year": 2023,
-        "note": "代表体:沙特;粮食自给率极低",
+        "note": "沙特;粮食自给率极低",
         "sources": [
           {
             "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
@@ -1783,7 +2103,7 @@
         "source": "基于官方粮食安全战略文件判断",
         "policy_refs": [
           {
-            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "label": "沙特环境水利农业部 MEWA(农业与粮食安全战略)",
             "url": "https://www.mewa.gov.sa/en"
           }
         ]
@@ -1793,7 +2113,7 @@
         "desc": "无耕地无淡水,本土生产极限低",
         "policy_refs": [
           {
-            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "label": "沙特环境水利农业部 MEWA(农业与粮食安全战略)",
             "url": "https://www.mewa.gov.sa/en"
           }
         ]
@@ -1804,104 +2124,14 @@
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
-            "label": "沙特农业与粮食安全战略(环境水利农业部MEWA)",
+            "label": "沙特环境水利农业部 MEWA(农业与粮食安全战略)",
             "url": "https://www.mewa.gov.sa/en"
           }
         ]
       },
       "score": 6.25
     },
-    "asean::d02": {
-      "physical_gap": {
-        "value": 0.2,
-        "self_sufficiency": 82.4,
-        "desc": "六品类卡路里加权粮食自给率82.4%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
-        "breakdown": [
-          {
-            "item": "谷物",
-            "self_sufficiency": 87.0,
-            "weight": 0.605,
-            "kcal_share_pct": 60.5
-          },
-          {
-            "item": "大豆油料",
-            "self_sufficiency": 97.0,
-            "weight": 0.078,
-            "kcal_share_pct": 7.8
-          },
-          {
-            "item": "肉类",
-            "self_sufficiency": 94.4,
-            "weight": 0.036,
-            "kcal_share_pct": 3.6
-          },
-          {
-            "item": "糖",
-            "self_sufficiency": 42.7,
-            "weight": 0.126,
-            "kcal_share_pct": 12.6
-          },
-          {
-            "item": "蔬果",
-            "self_sufficiency": 98.3,
-            "weight": 0.075,
-            "kcal_share_pct": 7.5
-          },
-          {
-            "item": "奶蛋鱼",
-            "self_sufficiency": 75.4,
-            "weight": 0.08,
-            "kcal_share_pct": 8.0
-          }
-        ],
-        "data_year": 2023,
-        "note": "代表体:印尼;人口大国口粮压力",
-        "sources": [
-          {
-            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
-            "url": "https://www.fao.org/faostat/en/#data/FBS"
-          },
-          {
-            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
-            "url": "https://fas.usda.gov/data/production"
-          }
-        ]
-      },
-      "strategic_relevance": {
-        "value": 0.7,
-        "desc": "区域整体近自给但内部分化",
-        "source": "基于官方粮食安全战略文件判断",
-        "policy_refs": [
-          {
-            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
-            "url": "https://badanpangan.go.id/"
-          }
-        ]
-      },
-      "irreplaceability": {
-        "value": 1.5,
-        "desc": "热带作物盈余但小麦全进口",
-        "policy_refs": [
-          {
-            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
-            "url": "https://badanpangan.go.id/"
-          }
-        ]
-      },
-      "security_amp": {
-        "value": 2.0,
-        "desc": "粮食安全区域协调,印尼大米自给波动",
-        "source": "基于官方战略文件判断",
-        "policy_refs": [
-          {
-            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
-            "url": "https://badanpangan.go.id/"
-          }
-        ]
-      },
-      "score": 0.42
-    },
-    "latam::d02": {
+    "br::d02": {
       "physical_gap": {
         "value": 0.2,
         "self_sufficiency": 156.3,
@@ -1945,7 +2175,7 @@
           }
         ],
         "data_year": 2023,
-        "note": "代表体:巴西;全球大豆/肉类出口龙头",
+        "note": "巴西;全球大豆/肉类出口龙头",
         "sources": [
           {
             "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
@@ -1991,51 +2221,141 @@
       },
       "score": 0.1
     },
-    "africa::d02": {
+    "id::d02": {
       "physical_gap": {
-        "value": 0.261,
-        "self_sufficiency": 73.9,
-        "desc": "六品类卡路里加权粮食自给率73.9%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "value": 0.2,
+        "self_sufficiency": 82.4,
+        "desc": "六品类卡路里加权粮食自给率82.4%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
         "breakdown": [
           {
             "item": "谷物",
-            "self_sufficiency": 68.2,
-            "weight": 0.679,
-            "kcal_share_pct": 67.9
+            "self_sufficiency": 87.0,
+            "weight": 0.605,
+            "kcal_share_pct": 60.5
           },
           {
             "item": "大豆油料",
-            "self_sufficiency": 99.9,
-            "weight": 0.043,
-            "kcal_share_pct": 4.3
+            "self_sufficiency": 97.0,
+            "weight": 0.078,
+            "kcal_share_pct": 7.8
           },
           {
             "item": "肉类",
-            "self_sufficiency": 91.0,
-            "weight": 0.046,
-            "kcal_share_pct": 4.6
+            "self_sufficiency": 94.4,
+            "weight": 0.036,
+            "kcal_share_pct": 3.6
           },
           {
             "item": "糖",
-            "self_sufficiency": 61.7,
-            "weight": 0.085,
-            "kcal_share_pct": 8.5
+            "self_sufficiency": 42.7,
+            "weight": 0.126,
+            "kcal_share_pct": 12.6
           },
           {
             "item": "蔬果",
-            "self_sufficiency": 102.8,
-            "weight": 0.095,
-            "kcal_share_pct": 9.5
+            "self_sufficiency": 98.3,
+            "weight": 0.075,
+            "kcal_share_pct": 7.5
           },
           {
             "item": "奶蛋鱼",
-            "self_sufficiency": 79.5,
-            "weight": 0.053,
-            "kcal_share_pct": 5.3
+            "self_sufficiency": 75.4,
+            "weight": 0.08,
+            "kcal_share_pct": 8.0
           }
         ],
         "data_year": 2023,
-        "note": "代表体:非洲整体;多国主粮进口依赖",
+        "note": "印尼;2.7亿人口,大米自给+小麦全进口",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "人口大国口粮压力,大米自给波动",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "热带作物盈余但小麦全进口",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "粮食安全国策,Bulog储备调控",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼国家粮食局 Bapanas(粮食安全主管)",
+            "url": "https://badanpangan.go.id/"
+          }
+        ]
+      },
+      "score": 0.42
+    },
+    "mx::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 80.1,
+        "desc": "六品类卡路里加权粮食自给率80.1%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 63.3,
+            "weight": 0.5,
+            "kcal_share_pct": 50.0
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 27.6,
+            "weight": 0.008,
+            "kcal_share_pct": 0.8
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 79.6,
+            "weight": 0.136,
+            "kcal_share_pct": 13.6
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 105.8,
+            "weight": 0.154,
+            "kcal_share_pct": 15.4
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 140.2,
+            "weight": 0.087,
+            "kcal_share_pct": 8.7
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 77.7,
+            "weight": 0.115,
+            "kcal_share_pct": 11.5
+          }
+        ],
+        "data_year": 2023,
+        "note": "墨西哥;玉米/谷物高度依赖美国进口",
         "sources": [
           {
             "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
@@ -2049,37 +2369,307 @@
       },
       "strategic_relevance": {
         "value": 0.9,
-        "desc": "整体粮食缺口大,进口依赖上升",
+        "desc": "玉米原产国却进口玉米,粮食主权敏感",
         "source": "基于官方粮食安全战略文件判断",
         "policy_refs": [
           {
-            "label": "非盟 CAADP 全面非洲农业发展计划",
-            "url": "https://au.int/en/caadp"
+            "label": "墨西哥农业与农村发展部 SADER",
+            "url": "https://www.gob.mx/agricultura"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "主粮玉米/小麦依赖美国进口",
+        "policy_refs": [
+          {
+            "label": "墨西哥农业与农村发展部 SADER",
+            "url": "https://www.gob.mx/agricultura"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "粮食主权是政治议题(对美依赖)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥农业与农村发展部 SADER",
+            "url": "https://www.gob.mx/agricultura"
+          }
+        ]
+      },
+      "score": 0.54
+    },
+    "ng::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 81.8,
+        "desc": "六品类卡路里加权粮食自给率81.8%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 82.2,
+            "weight": 0.672,
+            "kcal_share_pct": 67.2
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 100.3,
+            "weight": 0.109,
+            "kcal_share_pct": 10.9
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 99.4,
+            "weight": 0.026,
+            "kcal_share_pct": 2.6
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 2.9,
+            "weight": 0.056,
+            "kcal_share_pct": 5.6
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 99.2,
+            "weight": 0.116,
+            "kcal_share_pct": 11.6
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 64.3,
+            "weight": 0.022,
+            "kcal_share_pct": 2.2
+          }
+        ],
+        "data_year": 2023,
+        "note": "尼日利亚;2亿+人口,主粮进口依赖上升",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "人口第一大国,主粮缺口扩大",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "尼日利亚农业与粮食安全部 FMAFS",
+            "url": "https://fmard.gov.ng/"
           }
         ]
       },
       "irreplaceability": {
         "value": 2.0,
-        "desc": "农业生产率低+基建薄弱",
+        "desc": "农业生产率低+安全局势制约",
         "policy_refs": [
           {
-            "label": "非盟 CAADP 全面非洲农业发展计划",
-            "url": "https://au.int/en/caadp"
+            "label": "尼日利亚农业与粮食安全部 FMAFS",
+            "url": "https://fmard.gov.ng/"
           }
         ]
       },
       "security_amp": {
         "value": 2.5,
-        "desc": "粮食安全=发展与稳定核心但资金受限",
+        "desc": "粮食安全=社会稳定核心",
         "source": "基于官方战略文件判断",
         "policy_refs": [
           {
-            "label": "非盟 CAADP 全面非洲农业发展计划",
-            "url": "https://au.int/en/caadp"
+            "label": "尼日利亚农业与粮食安全部 FMAFS",
+            "url": "https://fmard.gov.ng/"
           }
         ]
       },
-      "score": 1.17
+      "score": 1.0
+    },
+    "za::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 103.8,
+        "desc": "六品类卡路里加权粮食自给率103.8%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 101.2,
+            "weight": 0.617,
+            "kcal_share_pct": 61.7
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 118.6,
+            "weight": 0.011,
+            "kcal_share_pct": 1.1
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 94.0,
+            "weight": 0.136,
+            "kcal_share_pct": 13.6
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 114.3,
+            "weight": 0.139,
+            "kcal_share_pct": 13.9
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 164.6,
+            "weight": 0.034,
+            "kcal_share_pct": 3.4
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 92.3,
+            "weight": 0.063,
+            "kcal_share_pct": 6.3
+          }
+        ],
+        "data_year": 2023,
+        "note": "南非;撒南非洲少数粮食净出口国",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "非洲粮仓,谷物基本自给",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非农业部 DALRRD",
+            "url": "https://www.dalrrd.gov.za/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "本土农业强,替代性好",
+        "policy_refs": [
+          {
+            "label": "南非农业部 DALRRD",
+            "url": "https://www.dalrrd.gov.za/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "粮食安全区域枢纽非瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非农业部 DALRRD",
+            "url": "https://www.dalrrd.gov.za/"
+          }
+        ]
+      },
+      "score": 0.21
+    },
+    "vn::d02": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 87.0,
+        "desc": "六品类卡路里加权粮食自给率87.0%(权重=各品类卡路里供应占比,贴合粮食安全语义;净出口封顶100,缺口下限0.2)",
+        "breakdown": [
+          {
+            "item": "谷物",
+            "self_sufficiency": 88.5,
+            "weight": 0.592,
+            "kcal_share_pct": 59.2
+          },
+          {
+            "item": "大豆油料",
+            "self_sufficiency": 55.3,
+            "weight": 0.043,
+            "kcal_share_pct": 4.3
+          },
+          {
+            "item": "肉类",
+            "self_sufficiency": 93.5,
+            "weight": 0.122,
+            "kcal_share_pct": 12.2
+          },
+          {
+            "item": "糖",
+            "self_sufficiency": 66.8,
+            "weight": 0.093,
+            "kcal_share_pct": 9.3
+          },
+          {
+            "item": "蔬果",
+            "self_sufficiency": 97.7,
+            "weight": 0.101,
+            "kcal_share_pct": 10.1
+          },
+          {
+            "item": "奶蛋鱼",
+            "self_sufficiency": 96.3,
+            "weight": 0.048,
+            "kcal_share_pct": 4.8
+          }
+        ],
+        "data_year": 2023,
+        "note": "越南;全球前三大米出口国",
+        "sources": [
+          {
+            "label": "FAOSTAT Food Balance Sheets 2023(联合国粮农组织,官方bulk)",
+            "url": "https://www.fao.org/faostat/en/#data/FBS"
+          },
+          {
+            "label": "USDA Foreign Agricultural Service PSD(交叉参考)",
+            "url": "https://fas.usda.gov/data/production"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.6,
+        "desc": "大米出口大国,主粮盈余",
+        "source": "基于官方粮食安全战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南农业与农村发展部 MARD",
+            "url": "https://www.mard.gov.vn/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "水稻高产替代性好",
+        "policy_refs": [
+          {
+            "label": "越南农业与农村发展部 MARD",
+            "url": "https://www.mard.gov.vn/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "粮食安全是出口筹码非瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南农业与农村发展部 MARD",
+            "url": "https://www.mard.gov.vn/"
+          }
+        ]
+      },
+      "score": 0.18
     }
   }
 }
