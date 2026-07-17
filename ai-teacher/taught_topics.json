@@ -754,8 +754,13 @@
       "topic": "AdaGrad 与 RMSProp——自适应学习率的两位奠基者",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-17T08:03:00+08:00"
+    },
+    {
+      "topic": "InfoNCE 与对比学习——不靠标签，靠拉近正例、推远负例学表示",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-07-17T14:03:00+08:00"
     }
   ],
-  "total_count": 151,
-  "last_updated": "2026-07-17T08:03:00+08:00"
+  "total_count": 152,
+  "last_updated": "2026-07-17T14:03:00+08:00"
 }
