@@ -749,8 +749,13 @@
       "topic": "低秩近似（Low-Rank Approximation）——用几根主轴，重画一整张矩阵",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-07-16T20:03:00+08:00"
+    },
+    {
+      "topic": "AdaGrad 与 RMSProp——自适应学习率的两位奠基者",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-07-17T08:03:00+08:00"
     }
   ],
-  "total_count": 150,
-  "last_updated": "2026-07-16T20:03:00+08:00"
+  "total_count": 151,
+  "last_updated": "2026-07-17T08:03:00+08:00"
 }
