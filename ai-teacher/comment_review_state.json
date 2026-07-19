@@ -155,9 +155,11 @@
     "3a0d8689-fc19-815d-924d-d4f7e8e70b6d",
     "3a1d8689-fc19-81ff-956c-e1535e325957",
     "3a1d8689-fc19-812d-9423-f0ec908bbf65",
-    "3a2d8689-fc19-813c-9c40-cd75b3b4d3cf"
+    "3a2d8689-fc19-813c-9c40-cd75b3b4d3cf",
+    "3a2d8689-fc19-811d-b149-eb142b06b7a9"
   ],
   "page_titles": {
+    "3a2d8689-fc19-811d-b149-eb142b06b7a9": "条件熵（Conditional Entropy）——知道了一个变量，另一个还剩多少不确定性",
     "3a2d8689-fc19-813c-9c40-cd75b3b4d3cf": "N-gram 语言模型——用前几个词预测下一个词的统计起点",
     "3a1d8689-fc19-812d-9423-f0ec908bbf65": "条件数（Condition Number）——衡量一个矩阵放大误差的能力",
     "3a1d8689-fc19-81ff-956c-e1535e325957": "Gram 矩阵（Gram Matrix）——把一堆向量之间的两两关系一次性装进一张表",
@@ -315,7 +317,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 69,
+  "cursor": 141,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -336,6 +338,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-19T08:10:30+0800",
-  "last_order_refresh": "2026-07-19T08:13:25+0800"
+  "last_review": "2026-07-19T14:10:26+0800",
+  "last_order_refresh": "2026-07-19T14:13:31+0800"
 }
