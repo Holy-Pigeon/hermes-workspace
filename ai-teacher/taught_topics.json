@@ -789,8 +789,13 @@
       "topic": "Nesterov 加速梯度（NAG）——先探一步再跳，比动量更聪明的预判",
       "category": "类目 8：优化算法",
       "taught_at": "2026-07-20T08:03:00+08:00"
+    },
+    {
+      "topic": "类别分布（Categorical Distribution）——大语言模型每一步输出的真身",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-20T14:03:00+08:00"
     }
   ],
-  "total_count": 158,
-  "last_updated": "2026-07-20T08:03:00+08:00"
+  "total_count": 159,
+  "last_updated": "2026-07-20T14:03:00+08:00"
 }
