@@ -2670,6 +2670,3426 @@
         ]
       },
       "score": 0.18
+    },
+    "us::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 96.2,
+        "desc": "水资源安全综合分96.2(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均8437m³/人,取用占内部资源15.8%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 8437.2,
+            "unit": "m³/人",
+            "score": 100.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 15.77,
+            "unit": "%",
+            "score": 93.6,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均8437m3充裕;西部科罗拉多河/西南干旱是区域问题,非全国瓶颈",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.5,
+        "desc": "水资源整体充裕,区域性缺水(西南)",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "US Bureau of Reclamation 垦务局(西部水资源主管)",
+            "url": "https://www.usbr.gov/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "内部资源丰富多元",
+        "policy_refs": [
+          {
+            "label": "US Bureau of Reclamation 垦务局(西部水资源主管)",
+            "url": "https://www.usbr.gov/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水非国家安全瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "US Bureau of Reclamation 垦务局(西部水资源主管)",
+            "url": "https://www.usbr.gov/"
+          }
+        ]
+      },
+      "score": 0.1
+    },
+    "cn::d03": {
+      "physical_gap": {
+        "value": 0.298,
+        "self_sufficiency": 70.2,
+        "desc": "水资源安全综合分70.2(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均1992m³/人,取用占内部资源20.2%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 1991.9,
+            "unit": "m³/人",
+            "score": 42.6,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 20.21,
+            "unit": "%",
+            "score": 88.7,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均1992m3中等偏紧;华北平原严重超采,跨境依赖低(多为上游)",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "北方缺水+南水北调是长期国策",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《国家水网建设规划纲要》/南水北调(水利部)",
+            "url": "http://www.mwr.gov.cn/"
+          },
+          {
+            "label": "最严格水资源管理制度『三条红线』(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "水资源时空分布极不均,工程调水",
+        "policy_refs": [
+          {
+            "label": "《国家水网建设规划纲要》/南水北调(水利部)",
+            "url": "http://www.mwr.gov.cn/"
+          },
+          {
+            "label": "最严格水资源管理制度『三条红线』(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "水安全写入国策(南水北调/三条红线)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "《国家水网建设规划纲要》/南水北调(水利部)",
+            "url": "http://www.mwr.gov.cn/"
+          },
+          {
+            "label": "最严格水资源管理制度『三条红线』(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "score": 0.72
+    },
+    "eu::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 86.6,
+        "desc": "水资源安全综合分86.6(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均3040m³/人,取用占内部资源13.7%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 3040.5,
+            "unit": "m³/人",
+            "score": 72.6,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 13.69,
+            "unit": "%",
+            "score": 95.9,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均3040m3;南欧(西/意/希)季节性干旱是区域问题",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.5,
+        "desc": "整体水资源平衡,南欧地中海区缺水",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "EU Water Framework Directive 水框架指令(欧盟环境总司)",
+            "url": "https://environment.ec.europa.eu/topics/water/water-framework-directive_en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "内部资源充足",
+        "policy_refs": [
+          {
+            "label": "EU Water Framework Directive 水框架指令(欧盟环境总司)",
+            "url": "https://environment.ec.europa.eu/topics/water/water-framework-directive_en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水非欧盟级安全瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "EU Water Framework Directive 水框架指令(欧盟环境总司)",
+            "url": "https://environment.ec.europa.eu/topics/water/water-framework-directive_en"
+          }
+        ]
+      },
+      "score": 0.1
+    },
+    "ru::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 100.0,
+        "desc": "水资源安全综合分100.0(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均29895m³/人,取用占内部资源1.5%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 29895.3,
+            "unit": "m³/人",
+            "score": 100.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 1.5,
+            "unit": "%",
+            "score": 100.0,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均29895m3全球顶级;水是战略盈余资产",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.3,
+        "desc": "水资源极度充裕,全球前列",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦水资源署 Rosvodresursy",
+            "url": "https://voda.gov.ru/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "内部资源海量(贝加尔湖等)",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦水资源署 Rosvodresursy",
+            "url": "https://voda.gov.ru/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水完全非瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯联邦水资源署 Rosvodresursy",
+            "url": "https://voda.gov.ru/"
+          }
+        ]
+      },
+      "score": 0.06
+    },
+    "in::d03": {
+      "physical_gap": {
+        "value": 0.573,
+        "self_sufficiency": 42.7,
+        "desc": "水资源安全综合分42.7(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均1014m³/人,取用占内部资源44.8%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 1014.4,
+            "unit": "m³/人",
+            "score": 14.7,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 44.78,
+            "unit": "%",
+            "score": 61.4,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均1014m3低于缺水线;water stress 45%高压;部分河流上游在中国(布拉马普特拉),跨境依赖待核",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "14亿人口+农业90%耗水,水压力极高",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度 Jal Shakti 水利部(地下水/河流分水主管)",
+            "url": "https://jalshakti-dowr.gov.in/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "地下水超采+季风依赖,替代难",
+        "policy_refs": [
+          {
+            "label": "印度 Jal Shakti 水利部(地下水/河流分水主管)",
+            "url": "https://jalshakti-dowr.gov.in/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "水安全=生存级(地下水危机/河流分水)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度 Jal Shakti 水利部(地下水/河流分水主管)",
+            "url": "https://jalshakti-dowr.gov.in/"
+          }
+        ]
+      },
+      "score": 2.58
+    },
+    "jp::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 87.9,
+        "desc": "水资源安全综合分87.9(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均3437m³/人,取用占内部资源18.5%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 3436.6,
+            "unit": "m³/人",
+            "score": 83.9,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 18.53,
+            "unit": "%",
+            "score": 90.5,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均3437m3充裕;岛国降水丰沛,无跨境依赖",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.4,
+        "desc": "降水丰沛水资源充足",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本国土交通省水管理·国土保全局",
+            "url": "https://www.mlit.go.jp/mizukokudo/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "内部资源充足",
+        "policy_refs": [
+          {
+            "label": "日本国土交通省水管理·国土保全局",
+            "url": "https://www.mlit.go.jp/mizukokudo/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水非安全瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本国土交通省水管理·国土保全局",
+            "url": "https://www.mlit.go.jp/mizukokudo/"
+          }
+        ]
+      },
+      "score": 0.08
+    },
+    "kr::d03": {
+      "physical_gap": {
+        "value": 0.547,
+        "self_sufficiency": 45.3,
+        "desc": "水资源安全综合分45.3(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均1255m³/人,取用占内部资源45.0%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 1255.0,
+            "unit": "m³/人",
+            "score": 21.6,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 45.02,
+            "unit": "%",
+            "score": 61.1,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均1255m3低于缺水线;water stress 45%高压;半岛无重大上游依赖",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "人均水资源低+高取用率,压力显著",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国环境部 K-water 水资源公社",
+            "url": "https://www.kwater.or.kr/eng/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "国土狭小水库调节有限",
+        "policy_refs": [
+          {
+            "label": "韩国环境部 K-water 水资源公社",
+            "url": "https://www.kwater.or.kr/eng/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "水安全是长期治理议题",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国环境部 K-water 水资源公社",
+            "url": "https://www.kwater.or.kr/eng/"
+          }
+        ]
+      },
+      "score": 1.97
+    },
+    "sa::d03": {
+      "physical_gap": {
+        "value": 1.0,
+        "self_sufficiency": 0.0,
+        "desc": "水资源安全综合分0.0(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均75m³/人,取用占内部资源974.2%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 74.6,
+            "unit": "m³/人",
+            "score": 0.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 974.17,
+            "unit": "%",
+            "score": 0.0,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均仅75m3全球垫底;water stress 974%严重超采(取用远超再生);60%+饮用水靠海水淡化",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "沙漠国家,几乎无淡水,靠海水淡化续命",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特环境水利农业部 MEWA(海水淡化战略)",
+            "url": "https://www.mewa.gov.sa/en"
+          },
+          {
+            "label": "沙特海水淡化总公司 SWCC/SWPC",
+            "url": "https://www.swpc.sa/en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "无地表径流,化石地下水枯竭在即,唯一替代=淡化(高耗能)",
+        "policy_refs": [
+          {
+            "label": "沙特环境水利农业部 MEWA(海水淡化战略)",
+            "url": "https://www.mewa.gov.sa/en"
+          },
+          {
+            "label": "沙特海水淡化总公司 SWCC/SWPC",
+            "url": "https://www.swpc.sa/en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "水=生存级绝对安全,国家存续命脉",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特环境水利农业部 MEWA(海水淡化战略)",
+            "url": "https://www.mewa.gov.sa/en"
+          },
+          {
+            "label": "沙特海水淡化总公司 SWCC/SWPC",
+            "url": "https://www.swpc.sa/en"
+          }
+        ]
+      },
+      "score": 9.0
+    },
+    "br::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 100.0,
+        "desc": "水资源安全综合分100.0(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均26918m³/人,取用占内部资源1.2%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 26917.9,
+            "unit": "m³/人",
+            "score": 100.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 1.2,
+            "unit": "%",
+            "score": 100.0,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均26918m3全球第二;水极度盈余",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.3,
+        "desc": "水资源全球最丰富之一",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西国家水资源与卫生署 ANA",
+            "url": "https://www.gov.br/ana/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "亚马逊流域海量",
+        "policy_refs": [
+          {
+            "label": "巴西国家水资源与卫生署 ANA",
+            "url": "https://www.gov.br/ana/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水是战略盈余",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西国家水资源与卫生署 ANA",
+            "url": "https://www.gov.br/ana/"
+          }
+        ]
+      },
+      "score": 0.06
+    },
+    "id::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 99.3,
+        "desc": "水资源安全综合分99.3(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均7240m³/人,取用占内部资源11.0%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 7239.9,
+            "unit": "m³/人",
+            "score": 100.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 11.03,
+            "unit": "%",
+            "score": 98.9,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均7240m3充裕;区域(爪哇岛)人口密集有局部压力",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.4,
+        "desc": "热带岛国降水充沛",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼公共工程与住房部(水资源总司)",
+            "url": "https://www.pu.go.id/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "内部资源丰富",
+        "policy_refs": [
+          {
+            "label": "印尼公共工程与住房部(水资源总司)",
+            "url": "https://www.pu.go.id/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "水非国家瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼公共工程与住房部(水资源总司)",
+            "url": "https://www.pu.go.id/"
+          }
+        ]
+      },
+      "score": 0.08
+    },
+    "mx::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 82.7,
+        "desc": "水资源安全综合分82.7(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均3180m³/人,取用占内部资源22.0%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 3180.1,
+            "unit": "m³/人",
+            "score": 76.6,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 21.96,
+            "unit": "%",
+            "score": 86.7,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均3180m3中等;北部/墨西哥城缺水,与美国科罗拉多河分水协定",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "北部干旱+城市缺水,区域性紧张",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥国家水资源委员会 CONAGUA",
+            "url": "https://www.gob.mx/conagua"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "南北分布不均",
+        "policy_refs": [
+          {
+            "label": "墨西哥国家水资源委员会 CONAGUA",
+            "url": "https://www.gob.mx/conagua"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "水安全区域治理议题",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥国家水资源委员会 CONAGUA",
+            "url": "https://www.gob.mx/conagua"
+          }
+        ]
+      },
+      "score": 0.31
+    },
+    "ng::d03": {
+      "physical_gap": {
+        "value": 0.344,
+        "self_sufficiency": 65.6,
+        "desc": "水资源安全综合分65.6(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均990m³/人,取用占内部资源5.6%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 990.4,
+            "unit": "m³/人",
+            "score": 14.0,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 5.64,
+            "unit": "%",
+            "score": 100.0,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均990m3低;water stress仅5.6%(取水能力不足非水多);乍得湖生态危机",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.6,
+        "desc": "人均水偏低+基建薄弱,取水能力受限",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "尼日利亚水资源与卫生部 FMWRS",
+            "url": "https://water.gov.ng/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "乍得湖萎缩+水基建不足",
+        "policy_refs": [
+          {
+            "label": "尼日利亚水资源与卫生部 FMWRS",
+            "url": "https://water.gov.ng/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "水安全与发展绑定",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "尼日利亚水资源与卫生部 FMWRS",
+            "url": "https://water.gov.ng/"
+          }
+        ]
+      },
+      "score": 0.46
+    },
+    "za::d03": {
+      "physical_gap": {
+        "value": 0.623,
+        "self_sufficiency": 37.7,
+        "desc": "水资源安全综合分37.7(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均718m³/人,取用占内部资源47.1%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 718.2,
+            "unit": "m³/人",
+            "score": 6.2,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 47.12,
+            "unit": "%",
+            "score": 58.8,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均718m3严重缺水;water stress 47%高压;2018开普敦Day Zero危机",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "半干旱国家,开普敦曾濒临Day Zero",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非水利与卫生部 DWS",
+            "url": "https://www.dws.gov.za/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "水资源本就稀缺+分布不均",
+        "policy_refs": [
+          {
+            "label": "南非水利与卫生部 DWS",
+            "url": "https://www.dws.gov.za/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "水安全=战略级(缺水危机反复)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非水利与卫生部 DWS",
+            "url": "https://www.dws.gov.za/"
+          }
+        ]
+      },
+      "score": 2.24
+    },
+    "vn::d03": {
+      "physical_gap": {
+        "value": 0.2,
+        "self_sufficiency": 87.0,
+        "desc": "水资源安全综合分87.0(water stress 60%权重+人均可再生水40%;缺口下限0.2)。人均3606m³/人,取用占内部资源22.8%",
+        "breakdown": [
+          {
+            "item": "人均内部可再生水",
+            "value": 3605.7,
+            "unit": "m³/人",
+            "score": 88.7,
+            "anchor": "缺水线1700,绝对缺水500"
+          },
+          {
+            "item": "淡水取用/内部资源(water stress)",
+            "value": 22.78,
+            "unit": "%",
+            "score": 85.8,
+            "anchor": "充裕≤10%,枯竭≥100%"
+          }
+        ],
+        "data_year": 2022,
+        "note": "人均3606m3看似充足但严重依赖跨境河流:湄公河上游(中国/老挝水坝)+红河上游(中国),外部依赖度高,枯水期受制于人",
+        "sources": [
+          {
+            "label": "World Bank 世界发展指标(数据溯源 FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.INTR.PC"
+          },
+          {
+            "label": "World Bank 淡水取用占内部资源比 ER.H2O.FWTL.ZS(FAO AQUASTAT)",
+            "url": "https://data.worldbank.org/indicator/ER.H2O.FWTL.ZS"
+          },
+          {
+            "label": "FAO AQUASTAT 全球水资源数据库(一手源)",
+            "url": "https://data.apps.fao.org/aquastat/"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "湄公河/红河下游,上游截流风险高",
+        "source": "基于官方水资源战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南农业与环境部(水资源管理)/湄公河委员会 MRC",
+            "url": "https://www.mrcmekong.org/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.5,
+        "desc": "水量充足但命脉在他国上游",
+        "policy_refs": [
+          {
+            "label": "越南农业与环境部(水资源管理)/湄公河委员会 MRC",
+            "url": "https://www.mrcmekong.org/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "水安全=地缘敏感(跨境河流依赖)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南农业与环境部(水资源管理)/湄公河委员会 MRC",
+            "url": "https://www.mrcmekong.org/"
+          }
+        ]
+      },
+      "score": 0.8
+    },
+    "us::d04": {
+      "physical_gap": {
+        "value": 0.907,
+        "self_sufficiency": 11.6,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(锂,soft+0.77)+最强王牌(soft+0.48)=+0.77(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.907(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 0.81,
+            "sev": 0.808,
+            "mining_share": 12,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "锂",
+        "data_year": 2024,
+        "note": "开采部分自主(稀土MP/铜)但精炼几乎全靠中国;镓锗铟石墨NIR=100%",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "关键矿产供应链安全=国家安全,IRA/国防生产法专项",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "美国《通胀削减法案》IRA关键矿产条款(白宫)",
+            "url": "https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/"
+          },
+          {
+            "label": "美国地质调查局关键矿产清单 USGS Critical Minerals List",
+            "url": "https://www.usgs.gov/news/national-news-release/us-geological-survey-releases-2022-list-critical-minerals"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.5,
+        "desc": "精炼环节高度依赖中国,重建产能需5-10年",
+        "policy_refs": [
+          {
+            "label": "美国《通胀削减法案》IRA关键矿产条款(白宫)",
+            "url": "https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/"
+          },
+          {
+            "label": "美国地质调查局关键矿产清单 USGS Critical Minerals List",
+            "url": "https://www.usgs.gov/news/national-news-release/us-geological-survey-releases-2022-list-critical-minerals"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "写入国安战略+IRA补贴+国防储备,生存级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "美国《通胀削减法案》IRA关键矿产条款(白宫)",
+            "url": "https://www.whitehouse.gov/cleanenergy/inflation-reduction-act-guidebook/"
+          },
+          {
+            "label": "美国地质调查局关键矿产清单 USGS Critical Minerals List",
+            "url": "https://www.usgs.gov/news/national-news-release/us-geological-survey-releases-2022-list-critical-minerals"
+          }
+        ]
+      },
+      "score": 6.8
+    },
+    "cn::d04": {
+      "physical_gap": {
+        "value": 0.488,
+        "self_sufficiency": 64.0,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(铌,soft+0.44)+最强王牌(soft-0.72)=-0.28(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.488(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": -0.1,
+            "sev": -0.086,
+            "mining_share": 18,
+            "refining_share": 65,
+            "weight": 2.5,
+            "role": "控制方"
+          },
+          {
+            "mineral": "钴",
+            "net": -0.01,
+            "sev": -0.009,
+            "mining_share": 0,
+            "refining_share": 68,
+            "weight": 2.0,
+            "role": "自足"
+          },
+          {
+            "mineral": "镍",
+            "net": 0.52,
+            "sev": 0.26,
+            "mining_share": 0,
+            "refining_share": 20,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": -0.69,
+            "sev": -0.693,
+            "mining_share": 69,
+            "refining_share": 90,
+            "weight": 3.0,
+            "role": "控制方"
+          },
+          {
+            "mineral": "石墨",
+            "net": -0.83,
+            "sev": -0.551,
+            "mining_share": 77,
+            "refining_share": 98,
+            "weight": 2.0,
+            "role": "控制方"
+          },
+          {
+            "mineral": "镓",
+            "net": -0.97,
+            "sev": -0.806,
+            "mining_share": 98,
+            "refining_share": 98,
+            "weight": 2.5,
+            "role": "控制方"
+          },
+          {
+            "mineral": "锗",
+            "net": -0.47,
+            "sev": -0.389,
+            "mining_share": 68,
+            "refining_share": 68,
+            "weight": 2.5,
+            "role": "控制方"
+          },
+          {
+            "mineral": "铟",
+            "net": -0.28,
+            "sev": -0.189,
+            "mining_share": 60,
+            "refining_share": 55,
+            "weight": 2.0,
+            "role": "控制方"
+          },
+          {
+            "mineral": "铜",
+            "net": 0.0,
+            "sev": 0.0,
+            "mining_share": 8,
+            "refining_share": 45,
+            "weight": 1.0,
+            "role": "自足"
+          },
+          {
+            "mineral": "铀",
+            "net": 0.69,
+            "sev": 0.344,
+            "mining_share": 0,
+            "refining_share": 13,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [
+          "稀土",
+          "石墨",
+          "镓",
+          "锗",
+          "铟"
+        ],
+        "pain": "铌",
+        "data_year": 2024,
+        "note": "★净控制方:稀土精炼90%/镓98%/石墨98%/锂65%/钴68%,矿产维度对中国是筹码非瓶颈",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "矿产精炼垄断=中国的战略进攻武器而非瓶颈",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "中国稀土/镓锗/石墨出口管制公告(商务部)",
+            "url": "http://www.mofcom.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国出口管制法》(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.0,
+        "desc": "本土精炼产能全球主导,资源端海外锁矿",
+        "policy_refs": [
+          {
+            "label": "中国稀土/镓锗/石墨出口管制公告(商务部)",
+            "url": "http://www.mofcom.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国出口管制法》(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.0,
+        "desc": "矿产是中国反制筹码(2023镓锗/2023石墨/2025出口管制)",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "中国稀土/镓锗/石墨出口管制公告(商务部)",
+            "url": "http://www.mofcom.gov.cn/"
+          },
+          {
+            "label": "《中华人民共和国出口管制法》(gov.cn)",
+            "url": "https://www.gov.cn/"
+          }
+        ]
+      },
+      "score": 0.49
+    },
+    "eu::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "开采精炼两端皆薄弱,高度依赖进口,CRMA(2024)立法自救",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "欧盟关键原材料法案CRMA立法应对,极度焦虑",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "欧盟《关键原材料法案》CRMA(欧盟委员会)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/critical-raw-materials_en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "两端几乎全缺,无本土精炼",
+        "policy_refs": [
+          {
+            "label": "欧盟《关键原材料法案》CRMA(欧盟委员会)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/critical-raw-materials_en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "CRMA设2030自主目标,战略级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "欧盟《关键原材料法案》CRMA(欧盟委员会)",
+            "url": "https://commission.europa.eu/strategy-and-policy/priorities-2019-2024/european-green-deal/critical-raw-materials_en"
+          }
+        ]
+      },
+      "score": 7.07
+    },
+    "ru::d04": {
+      "physical_gap": {
+        "value": 0.947,
+        "self_sufficiency": 6.7,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.87)+最强王牌(soft+0.05)=+0.87(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.947(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 0.0,
+            "sev": 0.0,
+            "mining_share": 0,
+            "refining_share": 44,
+            "weight": 1.5,
+            "role": "自足"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 0.0,
+            "sev": 0.0,
+            "mining_share": 25,
+            "refining_share": 30,
+            "weight": 1.5,
+            "role": "自足"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★铀浓缩全球约44%(核燃料真卡点),镍/钯有资源;部分领域是控制方",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.8,
+        "desc": "铀浓缩是俄战略筹码,其他矿产中等",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯国家原子能公司 Rosatom(铀浓缩)",
+            "url": "https://www.rosatom.ru/en/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "铀浓缩全球44%是王牌,镍钯有资源",
+        "policy_refs": [
+          {
+            "label": "俄罗斯国家原子能公司 Rosatom(铀浓缩)",
+            "url": "https://www.rosatom.ru/en/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "铀浓缩=对西方核电的反制杠杆",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "俄罗斯国家原子能公司 Rosatom(铀浓缩)",
+            "url": "https://www.rosatom.ru/en/"
+          }
+        ]
+      },
+      "score": 2.27
+    },
+    "in::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "开采精炼两端薄弱,重度依赖进口,2023公布30种关键矿产清单",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.9,
+        "desc": "印度关键矿产使命KABIL海外找矿,起步晚",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家关键矿产使命 National Critical Mineral Mission(矿业部)",
+            "url": "https://mines.gov.in/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.5,
+        "desc": "本土资源有限精炼几乎无,依赖进口",
+        "policy_refs": [
+          {
+            "label": "印度国家关键矿产使命 National Critical Mineral Mission(矿业部)",
+            "url": "https://mines.gov.in/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.5,
+        "desc": "国家关键矿产使命(2025)战略级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印度国家关键矿产使命 National Critical Mineral Mission(矿业部)",
+            "url": "https://mines.gov.in/"
+          }
+        ]
+      },
+      "score": 5.3
+    },
+    "jp::d04": {
+      "physical_gap": {
+        "value": 0.944,
+        "self_sufficiency": 7.0,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.944(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 0.71,
+            "sev": 0.475,
+            "mining_share": 0,
+            "refining_share": 12,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★两端几乎全缺,资源极度贫乏;靠JOGMEC储备/海外权益/城市矿山回收续命,是被卡最狠的阵营之一",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "资源小国,矿产安全=生存级国策(JOGMEC举国储备)",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本金属矿产资源机构 JOGMEC(国家储备/海外权益)",
+            "url": "https://www.jogmec.go.jp/english/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "国土无矿+精炼有限,唯靠海外权益+储备+回收",
+        "policy_refs": [
+          {
+            "label": "日本金属矿产资源机构 JOGMEC(国家储备/海外权益)",
+            "url": "https://www.jogmec.go.jp/english/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "JOGMEC国家储备+海外锁矿,生存级安全化",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "日本金属矿产资源机构 JOGMEC(国家储备/海外权益)",
+            "url": "https://www.jogmec.go.jp/english/"
+          }
+        ]
+      },
+      "score": 8.5
+    },
+    "kr::d04": {
+      "physical_gap": {
+        "value": 0.945,
+        "self_sufficiency": 6.9,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.45)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.945(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 0.57,
+            "sev": 0.379,
+            "mining_share": 0,
+            "refining_share": 18,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★电池/半导体强国但上游矿产两端皆缺,极度依赖进口(尤其对中国);仅铟等少数二级精炼",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 1.0,
+        "desc": "资源小国,电池强国却卡在上游矿,生存级焦虑",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国《国家资源安全特别法》/韩国矿业公社 KOMIR",
+            "url": "https://www.komir.or.kr/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 3.0,
+        "desc": "本土无矿,精炼有限(铟等少数),重度依赖",
+        "policy_refs": [
+          {
+            "label": "韩国《国家资源安全特别法》/韩国矿业公社 KOMIR",
+            "url": "https://www.komir.or.kr/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 3.0,
+        "desc": "国家资源安全特别法+海外资源开发,生存级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "韩国《国家资源安全特别法》/韩国矿业公社 KOMIR",
+            "url": "https://www.komir.or.kr/"
+          }
+        ]
+      },
+      "score": 8.5
+    },
+    "sa::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "矿产开采精炼基础薄弱(除磷酸盐),靠主权基金Manara海外投矿布局",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "石油美元转矿产,Manara海外投矿+本土磷酸盐",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特工业与矿产资源部 MIM / Vision2030矿业",
+            "url": "https://www.mim.gov.sa/en"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "本土磷酸盐/部分金属,精炼起步",
+        "policy_refs": [
+          {
+            "label": "沙特工业与矿产资源部 MIM / Vision2030矿业",
+            "url": "https://www.mim.gov.sa/en"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "Vision2030矿业列第三支柱,战略级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "沙特工业与矿产资源部 MIM / Vision2030矿业",
+            "url": "https://www.mim.gov.sa/en"
+          }
+        ]
+      },
+      "score": 2.64
+    },
+    "br::d04": {
+      "physical_gap": {
+        "value": 0.802,
+        "self_sufficiency": 24.8,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft-0.36)=+0.51(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.802(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": -0.75,
+            "sev": -0.375,
+            "mining_share": 85,
+            "refining_share": 85,
+            "weight": 1.5,
+            "role": "控制方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [
+          "铌"
+        ],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★铌全球垄断(未列入本清单)+铁矿资源强;但战略金属精炼端弱,资源型定位",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.6,
+        "desc": "资源大国,铁矿铌资源丰富但精炼弱",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西矿业与能源部 MME",
+            "url": "https://www.gov.br/mme/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "铌全球主导+铁矿,但锂钴镍精炼弱",
+        "policy_refs": [
+          {
+            "label": "巴西矿业与能源部 MME",
+            "url": "https://www.gov.br/mme/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "资源是出口筹码,精炼非重点",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "巴西矿业与能源部 MME",
+            "url": "https://www.gov.br/mme/"
+          }
+        ]
+      },
+      "score": 1.08
+    },
+    "id::d04": {
+      "physical_gap": {
+        "value": 0.945,
+        "self_sufficiency": 6.9,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.00)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.945(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 0.9,
+            "sev": 0.603,
+            "mining_share": 6,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": -0.15,
+            "sev": -0.075,
+            "mining_share": 55,
+            "refining_share": 45,
+            "weight": 1.5,
+            "role": "控制方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [
+          "镍"
+        ],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★镍开采55%+精炼45%全球主导(资源武器),但镍以外其他战略矿产依赖进口",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "镍王:开采精炼双强,资源民族主义(禁原矿出口)",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(镍禁出口政策)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "镍两端全球主导55%开采,但其他矿依赖",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(镍禁出口政策)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "镍下游一体化国策(禁出口逼建厂),战略级",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "印尼能源与矿产资源部 ESDM(镍禁出口政策)",
+            "url": "https://www.esdm.go.id/"
+          }
+        ]
+      },
+      "score": 1.49
+    },
+    "mx::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "铜银萤石有资源;锂2023国有化设LitioMx但尚未规模开采",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.6,
+        "desc": "银/铜/萤石资源,锂国有化但开采未成规模",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥经济部/锂国有化 LitioMx",
+            "url": "https://www.gob.mx/litiomx"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "铜银有资源,锂新国有化(LitioMx)未产",
+        "policy_refs": [
+          {
+            "label": "墨西哥经济部/锂国有化 LitioMx",
+            "url": "https://www.gob.mx/litiomx"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "锂国有化(2023)战略意图但产能未落地",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "墨西哥经济部/锂国有化 LitioMx",
+            "url": "https://www.gob.mx/litiomx"
+          }
+        ]
+      },
+      "score": 1.27
+    },
+    "ng::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "有锂锡钽等资源禀赋但开采无序、精炼几乎空白,实际高度依赖",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "锡钽锂等资源但开采无序+精炼几乎无",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "尼日利亚矿业与钢铁发展部",
+            "url": "https://www.minesandsteel.gov.ng/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "矿产资源存在但基建/治理制约开发",
+        "policy_refs": [
+          {
+            "label": "尼日利亚矿业与钢铁发展部",
+            "url": "https://www.minesandsteel.gov.ng/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "矿业多元化国策但落地弱",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "尼日利亚矿业与钢铁发展部",
+            "url": "https://www.minesandsteel.gov.ng/"
+          }
+        ]
+      },
+      "score": 2.64
+    },
+    "za::d04": {
+      "physical_gap": {
+        "value": 0.882,
+        "self_sufficiency": 14.7,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft-0.16)=+0.71(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.882(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": -0.4,
+            "sev": -0.2,
+            "mining_share": 70,
+            "refining_share": 60,
+            "weight": 1.5,
+            "role": "控制方"
+          }
+        ],
+        "aces": [
+          "铂族(铂钯)"
+        ],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★铂族金属PGM全球约70%(未列入本清单)+锰/铬主导;战略金属资源强国,精炼部分自主",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.5,
+        "desc": "铂族金属PGM全球垄断+锰铬,资源王牌",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE(PGM主管)",
+            "url": "https://www.dmre.gov.za/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 1.5,
+        "desc": "PGM全球~70%+锰铬,是南非的资源武器",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE(PGM主管)",
+            "url": "https://www.dmre.gov.za/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 1.5,
+        "desc": "PGM是战略出口筹码非瓶颈",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "南非矿产资源与能源部 DMRE(PGM主管)",
+            "url": "https://www.dmre.gov.za/"
+          }
+        ]
+      },
+      "score": 0.99
+    },
+    "vn::d04": {
+      "physical_gap": {
+        "value": 0.943,
+        "self_sufficiency": 7.2,
+        "desc": "12战略金属·soft极值(τ=0.15):最痛软肋(稀土,soft+0.86)+最强王牌(soft+0.47)=+0.86(+1纯依赖/-1绝对控制;开采40%精炼60%,权重调制)。映射物理缺口0.943(下限0.2)",
+        "breakdown": [
+          {
+            "mineral": "锂",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "钴",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镍",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "稀土",
+            "net": 1.0,
+            "sev": 1.0,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 3.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "石墨",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "镓",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "锗",
+            "net": 1.0,
+            "sev": 0.833,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铟",
+            "net": 1.0,
+            "sev": 0.667,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 2.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铜",
+            "net": 1.0,
+            "sev": 0.333,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.0,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铀",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铌",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          },
+          {
+            "mineral": "铂族(铂钯)",
+            "net": 1.0,
+            "sev": 0.5,
+            "mining_share": 0,
+            "refining_share": 0,
+            "weight": 1.5,
+            "role": "依赖方"
+          }
+        ],
+        "aces": [],
+        "pain": "稀土",
+        "data_year": 2024,
+        "note": "★稀土储量全球第二(2200万吨)但开采精炼几乎未启动,潜力未兑现,当前仍依赖",
+        "sources": [
+          {
+            "label": "USGS Mineral Commodity Summaries 2025(美国地质调查局,一手)",
+            "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries"
+          },
+          {
+            "label": "IEA Critical Minerals Outlook 2024(国际能源署,精炼份额权威)",
+            "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2024"
+          },
+          {
+            "label": "World Nuclear Association 铀浓缩产能(核燃料)",
+            "url": "https://world-nuclear.org/information-library/nuclear-fuel-cycle/conversion-enrichment-and-fabrication/uranium-enrichment"
+          }
+        ]
+      },
+      "strategic_relevance": {
+        "value": 0.7,
+        "desc": "稀土储量全球第二但开采精炼未成规模",
+        "source": "基于官方关键矿产战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南自然资源与环境部(稀土规划)",
+            "url": "https://monre.gov.vn/"
+          }
+        ]
+      },
+      "irreplaceability": {
+        "value": 2.0,
+        "desc": "稀土/钨/铝土有储量但加工能力弱",
+        "policy_refs": [
+          {
+            "label": "越南自然资源与环境部(稀土规划)",
+            "url": "https://monre.gov.vn/"
+          }
+        ]
+      },
+      "security_amp": {
+        "value": 2.0,
+        "desc": "稀土开发列规划但技术/资本受限",
+        "source": "基于官方战略文件判断",
+        "policy_refs": [
+          {
+            "label": "越南自然资源与环境部(稀土规划)",
+            "url": "https://monre.gov.vn/"
+          }
+        ]
+      },
+      "score": 2.64
     }
   }
 }

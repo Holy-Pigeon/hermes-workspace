@@ -355,14 +355,30 @@ async function openCell(fid,did){
       `<div class="fval">${pg.value!=null?pg.value:'—'}</div>`+
       `<div class="fdesc">${pg.desc||'—'}</div>`;
     if(pg.breakdown&&pg.breakdown.length){
-      pgHtml+=`<table class="bd-table"><thead><tr><th>品类</th><th>自给率</th><th>权重</th><th>加权</th></tr></thead><tbody>`;
-      pg.breakdown.forEach(b=>{
-        const contrib=(b.self_sufficiency*b.weight).toFixed(1);
-        const ssColor=b.self_sufficiency>=100?'#3fb950':b.self_sufficiency>=60?'#d4a017':'#e35850';
-        pgHtml+=`<tr><td>${b.item}</td><td style="color:${ssColor};font-weight:600">${b.self_sufficiency}%</td><td>${(b.weight*100).toFixed(0)}%</td><td>${contrib}</td></tr>`;
-      });
-      pgHtml+=`<tr class="bd-sum"><td>加权自给率</td><td colspan="3" style="text-align:right"><b>${pg.self_sufficiency}%</b>${pg.data_year?` · ${pg.data_year}`:''}</td></tr>`;
-      pgHtml+=`</tbody></table>`;
+      const b0=pg.breakdown[0];
+      if(b0.mineral!==undefined){
+        // 矿产维度：双端(开采/精炼)净地位表
+        pgHtml+=`<table class="bd-table"><thead><tr><th>矿产</th><th>开采%</th><th>精炼%</th><th>角色</th><th>权重</th></tr></thead><tbody>`;
+        pg.breakdown.forEach(b=>{
+          const roleColor=b.net<-0.1?'#3fb950':b.net>0.1?'#e35850':'#d4a017';
+          const roleTxt=b.role||(b.net<-0.1?'控制方':b.net>0.1?'依赖方':'自足');
+          pgHtml+=`<tr><td>${b.mineral}</td><td>${b.mining_share||0}%</td><td>${b.refining_share||0}%</td>`+
+            `<td style="color:${roleColor};font-weight:600">${roleTxt}</td><td>${b.weight.toFixed(1)}</td></tr>`;
+        });
+        const aces=(pg.aces&&pg.aces.length)?pg.aces.join(' / '):'无';
+        pgHtml+=`<tr class="bd-sum"><td>手握王牌</td><td colspan="4" style="text-align:right"><b style="color:#3fb950">${aces}</b>${pg.data_year?` · ${pg.data_year}`:''}</td></tr>`;
+        pgHtml+=`</tbody></table>`;
+      }else{
+        // 能源/粮食/水维度：自给率表
+        pgHtml+=`<table class="bd-table"><thead><tr><th>品类</th><th>自给率</th><th>权重</th><th>加权</th></tr></thead><tbody>`;
+        pg.breakdown.forEach(b=>{
+          const contrib=(b.self_sufficiency*b.weight).toFixed(1);
+          const ssColor=b.self_sufficiency>=100?'#3fb950':b.self_sufficiency>=60?'#d4a017':'#e35850';
+          pgHtml+=`<tr><td>${b.item}</td><td style="color:${ssColor};font-weight:600">${b.self_sufficiency}%</td><td>${(b.weight*100).toFixed(0)}%</td><td>${contrib}</td></tr>`;
+        });
+        pgHtml+=`<tr class="bd-sum"><td>加权自给率</td><td colspan="3" style="text-align:right"><b>${pg.self_sufficiency}%</b>${pg.data_year?` · ${pg.data_year}`:''}</td></tr>`;
+        pgHtml+=`</tbody></table>`;
+      }
     }
     if(pg.note){pgHtml+=`<div class="pg-note">⚠ ${pg.note}</div>`;}
     if(pg.sources&&pg.sources.length){
