@@ -64,6 +64,18 @@ def serve_pdf(fname):
     return send_from_directory(PDF_DIR, fname)
 
 
+@app.route("/vendor/<path:relpath>")
+def serve_vendor(relpath):
+    # serve 本地第三方库(KaTeX 等), 防目录穿越
+    if ".." in relpath:
+        abort(404)
+    vendor = os.path.join(STATIC, "vendor")
+    safe = os.path.normpath(os.path.join(vendor, relpath))
+    if not safe.startswith(vendor + os.sep) or not os.path.isfile(safe):
+        abort(404)
+    return send_from_directory(vendor, relpath)
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("AI_RESEARCH_PORT", "5056"))
     app.run(host="127.0.0.1", port=port, debug=False)

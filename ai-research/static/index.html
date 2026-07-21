@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Research 门户</title>
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<script defer src="vendor/katex/katex.min.js"></script>
 <style>
   :root{
     --bg:#0d1117; --panel:#161b22; --panel2:#1c232d; --border:#30363d;
@@ -86,6 +88,42 @@
   .tab-pane.active{display:block}
   .placeholder{color:var(--dim);padding:40px;text-align:center;font-size:14px}
 
+  /* ===== 框架笔记页签 ===== */
+  .note-claim{background:linear-gradient(135deg,rgba(88,166,255,.12),rgba(188,140,255,.12));border:1px solid rgba(88,166,255,.35);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .note-claim .big{font-size:16px;font-weight:700;line-height:1.7;color:var(--text)}
+  .note-claim .caveat{font-size:12px;color:var(--amber);margin-top:10px;padding-top:10px;border-top:1px dashed rgba(210,153,34,.3)}
+  .note-sec{margin-bottom:26px}
+  .note-h{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:var(--accent)}
+  .math-box{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+  .math-box .lbl{font-size:12px;color:var(--dim);margin-bottom:6px}
+  .math-box .katex-display{margin:.3em 0}
+  .goal-box{background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.3);border-radius:10px;padding:14px 16px}
+  .goal-box .lbl{font-size:12.5px;color:var(--green);font-weight:600;margin-bottom:8px}
+
+  /* 机制映射表 */
+  .map-table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+  .map-table th{background:var(--panel2);text-align:left;padding:10px 12px;font-size:12px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border)}
+  .map-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  .map-table tr:last-child td{border-bottom:none}
+  .map-mech{font-weight:600;color:var(--text);white-space:nowrap}
+  .map-role{color:var(--dim)}
+  .map-paper{color:var(--accent);cursor:pointer;text-decoration:none}
+  .map-paper:hover{text-decoration:underline}
+  .map-paper.na{color:var(--dim);cursor:default}
+  @media(max-width:899px){
+    .map-table,.map-table tbody,.map-table tr,.map-table td{display:block;width:100%}
+    .map-table thead{display:none}
+    .map-table tr{border:1px solid var(--border);border-radius:8px;margin-bottom:8px;padding:4px 0}
+    .map-table td{border:none;padding:5px 12px}
+    .map-mech{font-size:13.5px;color:var(--accent);padding-top:8px}
+    .map-role::before{content:"▸ ";color:var(--purple)}
+  }
+  .flow{display:flex;flex-direction:column;gap:8px}
+  .flow-item{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:8px;padding:10px 14px;font-size:13px}
+  .flow-item b{color:var(--purple)}
+  .crit{background:rgba(247,120,186,.06);border:1px solid rgba(247,120,186,.3);border-radius:10px;padding:12px 14px;font-size:12.5px;margin-top:10px}
+  .crit b{color:var(--pink)}
+
   /* ===== 站内 PDF 阅读器 modal ===== */
   .viewer{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);backdrop-filter:blur(3px)}
   .viewer.open{display:flex;flex-direction:column}
@@ -139,8 +177,53 @@
 
     <section id="tab-notes" class="tab-pane">
       <h1>框架笔记</h1>
-      <div class="subtitle">少样本学习统一框架 · 机制映射</div>
-      <div class="placeholder">此页签留作填充框架笔记与机制映射表。<br>后续可把「机制→论文」对应表放这里。</div>
+      <div class="subtitle">少样本学习 · 生成式世界模型统一框架</div>
+
+      <!-- ① 顶层命题 -->
+      <div class="note-claim">
+        <div class="big">人类快速学习 = 在已有生成式世界模型中，对潜在解释做<span style="color:var(--accent)">快速后验更新</span>，而非从头拟合。</div>
+        <div class="caveat">⚠ 这是目前解释力最强的统一框架，但<b>不是</b>已被证实的"大脑终极定律"——它更接近规范性理论（大脑"应该"这样才最优），而非机制性证明（大脑"确实"这样实现）。框架价值可采信，"已证实"存疑。</div>
+      </div>
+
+      <!-- ② 数学骨架 -->
+      <div class="note-sec">
+        <div class="note-h">② 数学骨架</div>
+        <div class="math-box"><div class="lbl">生成模型（x=观察, z=隐藏原因, θ=长期知识）</div><div data-math="p_\theta(x, z)" data-display="1"></div></div>
+        <div class="math-box"><div class="lbl">后验推断：在我已知的世界中，什么隐藏结构最可能产生眼前观察？</div><div data-math="p(z \mid x,\theta) \propto p(x \mid z,\theta)\, p(z \mid \theta)" data-display="1"></div></div>
+        <div class="goal-box">
+          <div class="lbl">★ 真正统一的不是"一个算法"，而是"一个目标"</div>
+          <div data-math="\mathcal{L} = \underbrace{\text{预测误差}}_{\text{必须解释新经验}} + \lambda \underbrace{\text{模型改变量}}_{\text{别每次推翻旧知识}}" data-display="1"></div>
+          <div style="font-size:12px;color:var(--dim);margin-top:6px">新经验能用旧结构解释 → 只更新当前信念；解释不了 → 才新建概念；新概念反复出现 → 才改造长期模型 θ。</div>
+        </div>
+      </div>
+
+      <!-- ③ 机制→论文 映射表 -->
+      <div class="note-sec">
+        <div class="note-h">③ 机制 → 论文 映射<span style="font-size:11px;color:var(--dim);font-weight:400">（点论文名跳到论文页签并高亮）</span></div>
+        <table class="map-table"><thead><tr><th>机制</th><th>在统一框架里的位置</th><th>代表论文</th></tr></thead>
+        <tbody id="map-body"></tbody></table>
+      </div>
+
+      <!-- ④ 预测误差三出路 + 批判视角 -->
+      <div class="note-sec">
+        <div class="note-h">④ 预测误差 <span data-math="\varepsilon = x - g_\theta(z)" style="font-weight:400"></span> 的三条出路</div>
+        <div class="flow">
+          <div class="flow-item"><b>① 更新当前解释 z</b> —— 观察能被旧结构解释，只调整信念（海马快更新 z_t）</div>
+          <div class="flow-item"><b>② 修改长期模型 θ</b> —— 反复出现的新证据，慢慢改造长期知识（皮层慢更新，睡眠/回放巩固）</div>
+          <div class="flow-item"><b>③ 采取行动 a*</b> —— 证据不够时主动出手，<span data-math="a^*=\arg\max_a \mathbb{E}[\text{信息增益}]"></span>，让世界给出更有区分度的信息</div>
+        </div>
+        <div class="crit"><b>读论文时的批判视角（合伙人纪律迁移）：</b>① 用 <b>S 曲线</b>替代直线思维——任何"过去增速→未来增速"的外推都要问 TAM/渗透率/竞争在哪；② 警惕<b>叙事谬误</b>——"AI 改变世界"是对的，但不代表每篇论文/每家公司都值得下注；③ 硬事实与判断分开——数字要能溯源，"我记得"不算数。</div>
+      </div>
+
+      <!-- ⑤ 待深化 -->
+      <div class="note-sec">
+        <div class="note-h">⑤ 待深化区</div>
+        <div class="pending" style="margin-top:0"><b>⏳ 框架里尚未落论文源的格子（诚实标注）</b><ul>
+          <li>主动推断（active inference）的工程化入口篇 — 待实拉核对后补</li>
+          <li>JEPA / V-JEPA（LeCun 主推的表征空间世界模型）— 待实拉核对后补</li>
+          <li>组合性单独的"新论文"暂空——目前由 Lake 系工作（BPL / MLC）承载，非独立一格</li>
+        </ul></div>
+      </div>
     </section>
   </main>
 </div>
@@ -177,6 +260,71 @@ document.querySelectorAll('[data-tab]').forEach(b=>{
 });
 
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// ===== 机制→论文 映射表数据 (paper 用标题精确匹配论文页签的条目) =====
+const MECH_MAP = [
+  {mech:"强先验 / 生成式", pos:"p(z|θ) 本身 + z=如何生成的规则", papers:["Human-level concept learning through probabilistic program induction","DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning"]},
+  {mech:"原型 / 度量学习", pos:"用少样本估计潜类别中心 z_cat", papers:["Matching Networks for One Shot Learning","Prototypical Networks for Few-shot Learning"]},
+  {mech:"元学习", pos:"学的是怎么做后验推断 / 该用什么先验", papers:["Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks","Human-like systematic generalization through a meta-learning neural network"]},
+  {mech:"组合性", pos:"z 不是原子编号, 是成分之和 (由 Lake 系承载)", papers:["Human-like systematic generalization through a meta-learning neural network"]},
+  {mech:"海马快 / 皮层慢", pos:"z_t 快更新 vs θ 慢更新, 同一模型两时间尺度", papers:["Why there are complementary learning systems in the hippocampus and neocortex","What Learning Systems do Intelligent Agents Need? Complementary Learning Systems Theory Updated"]},
+  {mech:"预测编码", pos:"ε = x - g_θ(z), 误差驱动三选一", papers:["Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects","Hybrid Predictive Coding: Inferring, Fast and Slow"]},
+  {mech:"主动推断", pos:"a*=argmax E[信息增益] (Friston 自由能谱系)", papers:["The free-energy principle: a unified brain theory?"]},
+  {mech:"ICL 上下文学习", pos:"权重不变的 few-shot, 与经典元学习分道同目标", papers:["Language Models are Few-Shot Learners"]},
+  {mech:"顶层纲领", pos:"直觉物理+组合性+因果生成模型, 框架母体", papers:["Building Machines That Learn and Think Like People"]},
+];
+
+function renderMapTable(){
+  const tb = document.getElementById('map-body');
+  if(!tb) return;
+  tb.innerHTML = MECH_MAP.map(row=>{
+    const links = row.papers.map(t=>{
+      const short = t.split(':')[0].split(' for ')[0].slice(0,42);
+      return `<div class="map-paper" onclick="jumpToPaper('${esc(t).replace(/'/g,"\\'")}')">▸ ${esc(short)}${t.length>42?'…':''}</div>`;
+    }).join('');
+    return `<tr><td class="map-mech">${esc(row.mech)}</td><td class="map-role">${esc(row.pos)}</td><td>${links}</td></tr>`;
+  }).join('');
+}
+
+// 点机制表论文 → 跳论文页签 + 高亮滚动 (方案A)
+function jumpToPaper(title){
+  switchTab('papers');
+  // 若有筛选把该篇滤掉, 先重置类型/全文为全部
+  state.type='all'; state.pdf='all';
+  document.querySelectorAll('#filters .chip').forEach(c=>{
+    c.classList.toggle('active', c.getAttribute('data-val')==='all');
+  });
+  render();
+  setTimeout(()=>{
+    const target = [...document.querySelectorAll('.paper')].find(el=>{
+      const a = el.querySelector('.p-title');
+      return a && a.textContent.trim() === title.trim();
+    });
+    if(target){
+      target.scrollIntoView({behavior:'smooth', block:'center'});
+      const orig = target.style.borderColor;
+      target.style.transition='border-color .3s, box-shadow .3s';
+      target.style.borderColor='var(--accent)';
+      target.style.boxShadow='0 0 0 2px rgba(88,166,255,.4)';
+      setTimeout(()=>{ target.style.borderColor=orig; target.style.boxShadow=''; }, 2200);
+    }
+  }, 120);
+}
+
+// KaTeX 渲染所有 data-math 元素
+function renderMath(){
+  if(typeof katex==='undefined') return;
+  document.querySelectorAll('[data-math]').forEach(el=>{
+    if(el.dataset.rendered) return;
+    try{
+      katex.render(el.getAttribute('data-math'), el, {
+        displayMode: el.getAttribute('data-display')==='1',
+        throwOnError:false
+      });
+      el.dataset.rendered='1';
+    }catch(e){ el.textContent='[公式渲染失败] '+el.getAttribute('data-math'); }
+  });
+}
 
 // ===== 站内 PDF 阅读器 =====
 function openViewer(fname, title){
@@ -272,7 +420,17 @@ async function loadPapers(){
       '<div class="loading">加载失败: '+esc(e.message)+'</div>';
   }
 }
+
+// 框架笔记页签: 渲染机制表 + KaTeX 公式 (KaTeX defer 加载, 等 window.load 保证就绪)
+function initNotes(){
+  renderMapTable();
+  renderMath();
+}
 loadPapers();
+if(document.readyState==='complete') initNotes();
+else window.addEventListener('load', initNotes);
+// 兜底: 若 KaTeX 稍晚就绪, 切到笔记页签时再补渲染一次
+document.querySelector('[data-tab="notes"]')?.addEventListener('click', ()=>setTimeout(renderMath, 50));
 </script>
 </body>
 </html>
