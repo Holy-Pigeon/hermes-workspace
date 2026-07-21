@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "title": "AI Research · 核心论文库",
+    "note": "每条 arXiv ID 经 arxiv.org 摘要页实时核对；期刊论文经 Crossref 核对 DOI。链接可跳转。",
+    "last_updated": "2026-07-21"
+  },
+  "collections": [
+    {
+      "id": "few-shot-unified",
+      "name": "少样本学习 · 生成式世界模型统一框架",
+      "desc": "以「分层生成式世界模型 + 贝叶斯后验更新 + 最小模型改动」为主线组织。人类快速学习 = 在已有生成式世界模型中对潜在解释做快速后验更新。",
+      "papers": [
+        {
+          "title": "Building Machines That Learn and Think Like People",
+          "authors": "Lake, Ullman, Tenenbaum, Gershman",
+          "year": 2016,
+          "venue": "arXiv / BBS",
+          "role": "顶层纲领：直觉物理+组合性+因果生成模型，整个框架的思想母体",
+          "url": "https://arxiv.org/abs/1604.00289",
+          "id": "arXiv:1604.00289",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "The free-energy principle: a unified brain theory?",
+          "authors": "Friston",
+          "year": 2010,
+          "venue": "Nature Reviews Neuroscience",
+          "role": "统一目标 L(用最小内部模型变化解释最多证据)的理论根",
+          "url": "https://doi.org/10.1038/nrn2787",
+          "id": "DOI:10.1038/nrn2787",
+          "verified": "Crossref DOI/作者/年份核对通过"
+        },
+        {
+          "title": "Human-level concept learning through probabilistic program induction",
+          "authors": "Lake, Salakhutdinov, Tenenbaum",
+          "year": 2015,
+          "venue": "Science",
+          "role": "强先验/程序归纳：Omniglot 的 BPL，概念=生成程序",
+          "url": "https://doi.org/10.1126/science.aab3050",
+          "id": "DOI:10.1126/science.aab3050",
+          "verified": "Crossref DOI 核对通过"
+        },
+        {
+          "title": "DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning",
+          "authors": "Ellis, Wong, Nye, Sable-Meyer, et al.",
+          "year": 2020,
+          "venue": "arXiv",
+          "role": "程序归纳+长期θ慢速积累：边解题边长出可复用概念库",
+          "url": "https://arxiv.org/abs/2006.08381",
+          "id": "arXiv:2006.08381",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Matching Networks for One Shot Learning",
+          "authors": "Vinyals, Blundell, Lillicrap, Kavukcuoglu, Wierstra",
+          "year": 2016,
+          "venue": "arXiv / NeurIPS",
+          "role": "度量学习：注意力+最近邻式一次学习",
+          "url": "https://arxiv.org/abs/1606.04080",
+          "id": "arXiv:1606.04080",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Prototypical Networks for Few-shot Learning",
+          "authors": "Snell, Swersky, Zemel",
+          "year": 2017,
+          "venue": "arXiv / NeurIPS",
+          "role": "原型学习：类中心=原型，少样本估计潜类别中心 z_cat",
+          "url": "https://arxiv.org/abs/1703.05175",
+          "id": "arXiv:1703.05175",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks",
+          "authors": "Finn, Abbeel, Levine",
+          "year": 2017,
+          "venue": "arXiv / ICML",
+          "role": "元学习：学好初始参数=学强先验，新任务几步梯度收敛",
+          "url": "https://arxiv.org/abs/1703.03400",
+          "id": "arXiv:1703.03400",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Human-like systematic generalization through a meta-learning neural network",
+          "authors": "Lake, Baroni",
+          "year": 2023,
+          "venue": "Nature",
+          "role": "关键拼图：人类组合能力可能是大量任务上元学习出来的，而非纯预置符号",
+          "url": "https://doi.org/10.1038/s41586-023-06668-3",
+          "id": "DOI:10.1038/s41586-023-06668-3",
+          "verified": "Crossref DOI 核对通过"
+        },
+        {
+          "title": "Why there are complementary learning systems in the hippocampus and neocortex",
+          "authors": "McClelland, McNaughton, O'Reilly",
+          "year": 1995,
+          "venue": "Psychological Review",
+          "role": "海马快/皮层慢：CLS 理论奠基，z_t 快更新 vs θ 慢更新",
+          "url": "https://doi.org/10.1037/0033-295X.102.3.419",
+          "id": "DOI:10.1037/0033-295X.102.3.419",
+          "verified": "Crossref DOI 核对通过"
+        },
+        {
+          "title": "What Learning Systems do Intelligent Agents Need? Complementary Learning Systems Theory Updated",
+          "authors": "Kumaran, Hassabis, McClelland",
+          "year": 2016,
+          "venue": "Trends in Cognitive Sciences",
+          "role": "CLS 现代版：把回放/巩固接到深度 RL",
+          "url": "https://doi.org/10.1016/j.tics.2016.05.004",
+          "id": "DOI:10.1016/j.tics.2016.05.004",
+          "verified": "Crossref DOI 核对通过"
+        },
+        {
+          "title": "Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects",
+          "authors": "Rao, Ballard",
+          "year": 1999,
+          "venue": "Nature Neuroscience",
+          "role": "预测误差：预测编码奠基，ε = x - g_θ(z)",
+          "url": "https://doi.org/10.1038/4580",
+          "id": "DOI:10.1038/4580",
+          "verified": "Crossref DOI 核对通过"
+        },
+        {
+          "title": "Hybrid Predictive Coding: Inferring, Fast and Slow",
+          "authors": "Tschantz, Millidge, Seth, Buckley",
+          "year": 2022,
+          "venue": "arXiv",
+          "role": "混合预测编码：把快速前馈推断与迭代推断统一",
+          "url": "https://arxiv.org/abs/2204.02169",
+          "id": "arXiv:2204.02169",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Language Models are Few-Shot Learners",
+          "authors": "Brown, Mann, Ryder, Subbiah, et al.",
+          "year": 2020,
+          "venue": "arXiv / NeurIPS",
+          "role": "ICL：把 few-shot 重定义为 in-context，与经典元学习分道但同目标",
+          "url": "https://arxiv.org/abs/2005.14165",
+          "id": "arXiv:2005.14165",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        }
+      ]
+    },
+    {
+      "id": "world-models-eng",
+      "name": "世界模型 · 工程/RL 谱系",
+      "desc": "在学到的环境模拟器内部做规划与试错（想象中训练）。",
+      "papers": [
+        {
+          "title": "World Models",
+          "authors": "Ha, Schmidhuber",
+          "year": 2018,
+          "venue": "arXiv",
+          "role": "奠基：V(VAE)+M(RNN)+C(控制器)，在梦里训练",
+          "url": "https://arxiv.org/abs/1803.10122",
+          "id": "arXiv:1803.10122",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        },
+        {
+          "title": "Mastering Diverse Domains through World Models (DreamerV3)",
+          "authors": "Hafner, Pasukonis, Ba, Lillicrap",
+          "year": 2023,
+          "venue": "arXiv",
+          "role": "通用世界模型 RL：不调超参通吃 100+ 任务，Minecraft 从零挖钻石",
+          "url": "https://arxiv.org/abs/2301.04104",
+          "id": "arXiv:2301.04104",
+          "verified": "arxiv.org 摘要页标题核对通过"
+        }
+      ]
+    }
+  ],
+  "pending": [
+    "主动推断的工程化入口篇(active inference tutorial) — 待实拉核对后补",
+    "JEPA / V-JEPA 规范引用 — 待实拉核对后补"
+  ]
+}

@@ -171,6 +171,23 @@
       "heartbeat_file": "~/hermes-workspace/world-rts/docs",
       "freshness_hours": 720,
       "manual": true
+    },
+    {
+      "id": "ai-research",
+      "name": "AI Research 门户",
+      "icon": "🧠",
+      "desc": "AI研究论文源门户·首个页签「核心论文链接」汇总少样本学习/世界模型核心论文(arXiv+Crossref逐条核对)·可扩展更多页签",
+      "ports": {
+        "local": 5056,
+        "remote": 6018
+      },
+      "tags": [
+        "研究"
+      ],
+      "health_path": "/healthz",
+      "heartbeat_file": "~/hermes-workspace/ai-research/data/papers.json",
+      "freshness_hours": 720,
+      "manual": true
     }
   ]
 }
