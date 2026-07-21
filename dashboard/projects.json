@@ -163,14 +163,17 @@
       "id": "world-rts",
       "name": "World-RTS 全局态势引擎",
       "icon": "🌍",
-      "desc": "把世界当一局RTS:10阵营×22维状态矩阵,归一化同尺,瓶颈由公式自动浮现(含阵营安全放大器)→读被迫资金流。当前为框架设计阶段,零数据落地,待用户审schema",
-      "ports": null,
+      "desc": "把世界当一局RTS:14单一主权棋手×22维状态矩阵,归一化同尺,瓶颈由四因子公式自动浮现(物理缺口×战略相关性×填补难度×安全放大器)→读被迫资金流。硬资源层4维已灌(能源/粮食/水/关键矿产),矿产维双端soft极值建模(开采+精炼份额),每格挂多源可跳转硬数据",
+      "ports": {
+        "local": 5055,
+        "remote": 6017
+      },
       "tags": [
         "研究"
       ],
-      "heartbeat_file": "~/hermes-workspace/world-rts/docs",
-      "freshness_hours": 720,
-      "manual": true
+      "health_path": "/api/matrix",
+      "heartbeat_file": "~/hermes-workspace/world-rts/data/matrix.json",
+      "freshness_hours": 720
     },
     {
       "id": "ai-research",
