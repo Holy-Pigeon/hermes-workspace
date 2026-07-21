@@ -794,8 +794,13 @@
       "topic": "类别分布（Categorical Distribution）——大语言模型每一步输出的真身",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-20T14:03:00+08:00"
+    },
+    {
+      "topic": "Moore-Penrose 伪逆（Pseudo-inverse）——给不能求逆的矩阵一个最靠谱的替身",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-07-21T08:03:00+08:00"
     }
   ],
-  "total_count": 159,
-  "last_updated": "2026-07-20T14:03:00+08:00"
+  "total_count": 160,
+  "last_updated": "2026-07-21T08:03:00+08:00"
 }
