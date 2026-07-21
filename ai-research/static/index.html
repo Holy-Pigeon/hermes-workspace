@@ -8,14 +8,13 @@
   :root{
     --bg:#0d1117; --panel:#161b22; --panel2:#1c232d; --border:#30363d;
     --text:#e6edf3; --dim:#8b949e; --accent:#58a6ff; --green:#3fb950;
-    --purple:#bc8cff; --amber:#d29922;
+    --purple:#bc8cff; --amber:#d29922; --pink:#f778ba;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
 
-  /* ===== 布局：PC 侧栏 grid / 手机底 tabbar ===== */
   .app{display:grid;min-height:100vh}
   .sidebar{background:var(--panel);border-right:1px solid var(--border);padding:20px 14px}
   .brand{font-size:18px;font-weight:700;margin-bottom:6px}
@@ -27,9 +26,7 @@
   .main{padding:24px;max-width:1000px;width:100%}
   .tabbar{display:none}
 
-  @media(min-width:900px){
-    .app{grid-template-columns:230px 1fr}
-  }
+  @media(min-width:900px){ .app{grid-template-columns:230px 1fr} }
   @media(max-width:899px){
     .app{grid-template-columns:1fr}
     .sidebar{display:none}
@@ -41,24 +38,44 @@
   }
 
   h1{font-size:22px;margin-bottom:4px}
-  .subtitle{color:var(--dim);font-size:13px;margin-bottom:20px}
-  .datanote{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--green);margin-bottom:20px}
+  .subtitle{color:var(--dim);font-size:13px;margin-bottom:16px}
+  .datanote{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.3);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--green);margin-bottom:16px}
+
+  /* ===== 筛选栏 ===== */
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px;padding:12px;background:var(--panel);border:1px solid var(--border);border-radius:10px}
+  .filter-group{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .filter-label{font-size:12px;color:var(--dim);margin-right:2px}
+  .chip{background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12.5px;color:var(--dim);cursor:pointer;transition:all .12s;user-select:none}
+  .chip:hover{color:var(--text);border-color:var(--accent)}
+  .chip.active{background:var(--accent);color:#0d1117;border-color:var(--accent);font-weight:600}
+  .fdiv{width:1px;height:20px;background:var(--border);margin:0 4px}
+  .fcount{font-size:12px;color:var(--dim);margin-left:auto}
 
   .collection{margin-bottom:28px}
-  .col-head{font-size:16px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+  .col-head{font-size:16px;font-weight:700;margin-bottom:4px}
   .col-desc{color:var(--dim);font-size:12.5px;margin-bottom:14px}
+  .col-empty{color:var(--dim);font-size:12.5px;padding:8px 0}
 
   .paper{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:border-color .15s}
   .paper:hover{border-color:var(--accent)}
-  .p-title{font-size:14.5px;font-weight:600;margin-bottom:5px}
+  .p-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
+  .p-title{font-size:14.5px;font-weight:600;flex:1}
   .p-title a{color:var(--text)}
   .p-title a:hover{color:var(--accent)}
+  .type-tag{flex-shrink:0;font-size:11px;padding:2px 9px;border-radius:6px;font-weight:600;white-space:nowrap}
+  .type-预印本{background:rgba(210,153,34,.15);color:var(--amber);border:1px solid rgba(210,153,34,.4)}
+  .type-顶会{background:rgba(88,166,255,.15);color:var(--accent);border:1px solid rgba(88,166,255,.4)}
+  .type-顶刊{background:rgba(247,120,186,.15);color:var(--pink);border:1px solid rgba(247,120,186,.4)}
   .p-meta{font-size:12px;color:var(--dim);margin-bottom:6px}
-  .p-role{font-size:12.5px;color:var(--purple);margin-bottom:6px}
+  .p-role{font-size:12.5px;color:var(--purple);margin-bottom:8px}
   .p-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11px}
-  .badge{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:2px 8px;color:var(--dim)}
+  .badge{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;color:var(--dim)}
   .badge.v{color:var(--green);border-color:rgba(63,185,80,.3)}
-  .p-link{color:var(--accent);font-weight:600}
+  .btn-link{border-radius:6px;padding:3px 10px;font-weight:600;border:1px solid var(--border);cursor:pointer}
+  .btn-arxiv{color:var(--amber);border-color:rgba(210,153,34,.4)}
+  .btn-official{color:var(--accent);border-color:rgba(88,166,255,.4)}
+  .btn-pdf{color:var(--green);border-color:rgba(63,185,80,.4)}
+  .btn-link:hover{text-decoration:none;filter:brightness(1.3)}
 
   .pending{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--amber);margin-top:8px}
   .pending b{display:block;margin-bottom:6px}
@@ -81,15 +98,31 @@
   </aside>
 
   <main class="main">
-    <!-- 论文页签 -->
     <section id="tab-papers" class="tab-pane active">
       <h1 id="papers-title">核心论文链接</h1>
       <div class="subtitle" id="papers-sub">加载中…</div>
       <div class="datanote" id="papers-note"></div>
+
+      <div class="filters" id="filters" style="display:none">
+        <div class="filter-group">
+          <span class="filter-label">类型</span>
+          <span class="chip active" data-filter="type" data-val="all">全部</span>
+          <span class="chip" data-filter="type" data-val="预印本">预印本</span>
+          <span class="chip" data-filter="type" data-val="顶会">顶会</span>
+          <span class="chip" data-filter="type" data-val="顶刊">顶刊</span>
+        </div>
+        <div class="fdiv"></div>
+        <div class="filter-group">
+          <span class="filter-label">全文</span>
+          <span class="chip active" data-filter="pdf" data-val="all">不限</span>
+          <span class="chip" data-filter="pdf" data-val="yes">可下载</span>
+        </div>
+        <span class="fcount" id="fcount"></span>
+      </div>
+
       <div id="papers-body"><div class="loading">加载中…</div></div>
     </section>
 
-    <!-- 框架笔记页签(占位,可后续填) -->
     <section id="tab-notes" class="tab-pane">
       <h1>框架笔记</h1>
       <div class="subtitle">少样本学习统一框架 · 机制映射</div>
@@ -104,6 +137,9 @@
 </nav>
 
 <script>
+let DATA = null;
+const state = { type:'all', pdf:'all' };
+
 function switchTab(name){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
@@ -117,41 +153,77 @@ document.querySelectorAll('[data-tab]').forEach(b=>{
 
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+function matchFilter(p){
+  if(state.type!=='all' && p.type!==state.type) return false;
+  if(state.pdf==='yes' && !p.pdf) return false;
+  return true;
+}
+
+function render(){
+  if(!DATA) return;
+  let html='', shown=0;
+  (DATA.collections||[]).forEach(c=>{
+    const papers=(c.papers||[]).filter(matchFilter);
+    html += `<div class="collection"><div class="col-head">${esc(c.name)}</div>`;
+    html += `<div class="col-desc">${esc(c.desc||'')}</div>`;
+    if(!papers.length){
+      html += `<div class="col-empty">— 无符合当前筛选的论文 —</div>`;
+    }
+    papers.forEach(p=>{
+      shown++;
+      let links='';
+      if(p.arxiv_url) links += `<a class="btn-link btn-arxiv" href="${esc(p.arxiv_url)}" target="_blank" rel="noopener">arXiv ↗</a>`;
+      if(p.official_url) links += `<a class="btn-link btn-official" href="${esc(p.official_url)}" target="_blank" rel="noopener">正式版 ↗</a>`;
+      if(p.pdf){
+        const fname = p.pdf.split('/').pop();
+        links += `<a class="btn-link btn-pdf" href="pdf/${esc(fname)}" target="_blank" rel="noopener">⬇ 全文PDF</a>`;
+      }
+      html += `<div class="paper">
+        <div class="p-top">
+          <div class="p-title">${p.arxiv_url||p.official_url ? `<a href="${esc(p.official_url||p.arxiv_url)}" target="_blank" rel="noopener">${esc(p.title)}</a>` : esc(p.title)}</div>
+          <span class="type-tag type-${esc(p.type)}">${esc(p.type)}</span>
+        </div>
+        <div class="p-meta">${esc(p.authors)} · ${esc(p.year)} · ${esc(p.venue)}</div>
+        <div class="p-role">▸ ${esc(p.role)}</div>
+        <div class="p-foot">
+          <span class="badge v">✓ ${esc(p.verified)}</span>
+          ${links}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  if(DATA.pending && DATA.pending.length){
+    html += `<div class="pending"><b>⏳ 待核对补充(诚实标注,未凑数)</b><ul>`;
+    DATA.pending.forEach(x=>{ html += `<li>${esc(x)}</li>`; });
+    html += `</ul></div>`;
+  }
+  document.getElementById('papers-body').innerHTML = html;
+  document.getElementById('fcount').textContent = `显示 ${shown} 篇`;
+}
+
+document.querySelectorAll('#filters .chip').forEach(ch=>{
+  ch.addEventListener('click',()=>{
+    const dim=ch.getAttribute('data-filter'), val=ch.getAttribute('data-val');
+    state[dim]=val;
+    document.querySelectorAll(`#filters .chip[data-filter="${dim}"]`).forEach(x=>x.classList.remove('active'));
+    ch.classList.add('active');
+    render();
+  });
+});
+
 async function loadPapers(){
   try{
     const r = await fetch('api/papers');
-    const d = await r.json();
-    document.getElementById('papers-title').textContent = d.meta?.title || '核心论文链接';
-    const st = d._stats || {};
+    DATA = await r.json();
+    document.getElementById('papers-title').textContent = DATA.meta?.title || '核心论文链接';
+    const st = DATA._stats || {};
     document.getElementById('papers-sub').textContent =
-      `${st.collections||0} 个专题 · ${st.total_papers||0} 篇 · 更新 ${esc(d.meta?.last_updated||'')}`;
-    document.getElementById('papers-note').textContent = '✓ ' + (d.meta?.note || '');
-
-    let html='';
-    (d.collections||[]).forEach(c=>{
-      html += `<div class="collection"><div class="col-head">${esc(c.name)}</div>`;
-      html += `<div class="col-desc">${esc(c.desc||'')}</div>`;
-      (c.papers||[]).forEach(p=>{
-        html += `<div class="paper">
-          <div class="p-title"><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a></div>
-          <div class="p-meta">${esc(p.authors)} · ${esc(p.year)} · ${esc(p.venue)}</div>
-          <div class="p-role">▸ ${esc(p.role)}</div>
-          <div class="p-foot">
-            <span class="badge">${esc(p.id)}</span>
-            <span class="badge v">✓ ${esc(p.verified)}</span>
-            <a class="p-link" href="${esc(p.url)}" target="_blank" rel="noopener">打开 ↗</a>
-          </div>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-
-    if(d.pending && d.pending.length){
-      html += `<div class="pending"><b>⏳ 待核对补充(诚实标注,未凑数)</b><ul>`;
-      d.pending.forEach(x=>{ html += `<li>${esc(x)}</li>`; });
-      html += `</ul></div>`;
-    }
-    document.getElementById('papers-body').innerHTML = html;
+      `${st.collections||0} 个专题 · ${st.total_papers||0} 篇 · 更新 ${esc(DATA.meta?.last_updated||'')}`;
+    document.getElementById('papers-note').textContent = '✓ ' + (DATA.meta?.note || '');
+    document.getElementById('filters').style.display = 'flex';
+    render();
   }catch(e){
     document.getElementById('papers-body').innerHTML =
       '<div class="loading">加载失败: '+esc(e.message)+'</div>';

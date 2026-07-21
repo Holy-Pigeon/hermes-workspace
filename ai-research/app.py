@@ -7,11 +7,12 @@ import json
 import os
 from datetime import datetime, timezone
 
-from flask import Flask, jsonify, send_from_directory, make_response
+from flask import Flask, jsonify, send_from_directory, make_response, abort
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(BASE, "data")
 STATIC = os.path.join(BASE, "static")
+PDF_DIR = os.path.join(BASE, "papers_pdf")
 
 app = Flask(__name__, static_folder=None)
 
@@ -50,6 +51,17 @@ def api_papers():
     data["_stats"] = {"total_papers": total,
                       "collections": len(data.get("collections", []))}
     return jsonify(data)
+
+
+@app.route("/pdf/<path:fname>")
+def serve_pdf(fname):
+    # 只允许 papers_pdf 目录内的 .pdf, 防目录穿越
+    if not fname.endswith(".pdf") or "/" in fname or ".." in fname:
+        abort(404)
+    safe = os.path.join(PDF_DIR, fname)
+    if not os.path.isfile(safe):
+        abort(404)
+    return send_from_directory(PDF_DIR, fname)
 
 
 if __name__ == "__main__":

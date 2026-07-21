@@ -91,3 +91,6 @@ ai-teacher/scan_comments.log
 # 运行时锁文件
 *.app.lock
 .app.lock
+
+# ai-research 论文全文PDF(可从arXiv重下,不入库)
+ai-research/papers_pdf/
