@@ -85,6 +85,20 @@
   .tab-pane{display:none}
   .tab-pane.active{display:block}
   .placeholder{color:var(--dim);padding:40px;text-align:center;font-size:14px}
+
+  /* ===== 站内 PDF 阅读器 modal ===== */
+  .viewer{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);backdrop-filter:blur(3px)}
+  .viewer.open{display:flex;flex-direction:column}
+  .viewer-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border)}
+  .viewer-title{font-size:13.5px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .viewer-bar a,.viewer-bar button{font-size:12.5px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--panel2);color:var(--text);cursor:pointer;white-space:nowrap}
+  .viewer-bar a:hover,.viewer-bar button:hover{border-color:var(--accent);text-decoration:none}
+  .viewer-bar .close{color:var(--pink);border-color:rgba(247,120,186,.4)}
+  .viewer iframe{flex:1;width:100%;border:none;background:#525659}
+  @media(max-width:899px){
+    .viewer-bar{padding:8px 10px;gap:6px;flex-wrap:wrap}
+    .viewer-title{flex-basis:100%;order:-1}
+  }
 </style>
 </head>
 <body>
@@ -136,6 +150,17 @@
   <button data-tab="notes"><span class="ic">🗂</span>笔记</button>
 </nav>
 
+<!-- 站内 PDF 阅读器 -->
+<div class="viewer" id="viewer">
+  <div class="viewer-bar">
+    <span class="viewer-title" id="viewer-title"></span>
+    <a id="viewer-newtab" href="#" target="_blank" rel="noopener">新标签打开 ↗</a>
+    <a id="viewer-dl" href="#" download>⬇ 下载</a>
+    <button class="close" onclick="closeViewer()">✕ 关闭</button>
+  </div>
+  <iframe id="viewer-frame" title="PDF 阅读器"></iframe>
+</div>
+
 <script>
 let DATA = null;
 const state = { type:'all', pdf:'all' };
@@ -152,6 +177,23 @@ document.querySelectorAll('[data-tab]').forEach(b=>{
 });
 
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// ===== 站内 PDF 阅读器 =====
+function openViewer(fname, title){
+  const url = 'pdf/' + fname;
+  document.getElementById('viewer-title').textContent = title || fname;
+  document.getElementById('viewer-frame').src = url;
+  document.getElementById('viewer-newtab').href = url;
+  document.getElementById('viewer-dl').href = url;
+  document.getElementById('viewer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeViewer(){
+  document.getElementById('viewer').classList.remove('open');
+  document.getElementById('viewer-frame').src = 'about:blank';  // 停止加载/释放
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeViewer(); });
 
 function matchFilter(p){
   if(state.type!=='all' && p.type!==state.type) return false;
@@ -176,7 +218,8 @@ function render(){
       if(p.official_url) links += `<a class="btn-link btn-official" href="${esc(p.official_url)}" target="_blank" rel="noopener">正式版 ↗</a>`;
       if(p.pdf){
         const fname = p.pdf.split('/').pop();
-        links += `<a class="btn-link btn-pdf" href="pdf/${esc(fname)}" target="_blank" rel="noopener">⬇ 全文PDF</a>`;
+        links += `<button class="btn-link btn-pdf" onclick="openViewer('${esc(fname)}','${esc(p.title)}')">📖 站内阅读</button>`;
+        links += `<a class="btn-link btn-pdf" href="pdf/${esc(fname)}" download rel="noopener">⬇ 下载</a>`;
       }
       html += `<div class="paper">
         <div class="p-top">
