@@ -162,9 +162,11 @@
     "3a3d8689-fc19-81cb-9aae-e1fc5545f3c0",
     "3a4d8689-fc19-81e2-b233-d02900189ddf",
     "3a4d8689-fc19-812e-a76d-dcdb6bfcd325",
-    "3a4d8689-fc19-8170-9f7e-e78918e754e9"
+    "3a4d8689-fc19-8170-9f7e-e78918e754e9",
+    "3a5d8689-fc19-8153-998e-e37775d5709c"
   ],
   "page_titles": {
+    "3a5d8689-fc19-8153-998e-e37775d5709c": "自信息（Self-Information / Surprisal）——单个事件有多意外的信息量",
     "3a4d8689-fc19-8170-9f7e-e78918e754e9": "伯努利分布（Bernoulli Distribution）——只有是和否两种结果的最小随机积木",
     "3a4d8689-fc19-812e-a76d-dcdb6bfcd325": "指数移动平均（EMA）——用一个数记住整段历史，还越近越重",
     "3a4d8689-fc19-81e2-b233-d02900189ddf": "Moore-Penrose 伪逆（Pseudo-inverse）——给不能求逆的矩阵一个最靠谱的替身",
@@ -329,7 +331,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 155,
+  "cursor": 136,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -350,6 +352,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-21T20:10:34+0800",
-  "last_order_refresh": "2026-07-21T20:14:12+0800"
+  "last_review": "2026-07-22T08:10:22+0800",
+  "last_order_refresh": "2026-07-22T08:13:26+0800"
 }

@@ -809,8 +809,13 @@
       "topic": "伯努利分布（Bernoulli Distribution）——只有是和否两种结果的最小随机积木",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-21T20:03:00+08:00"
+    },
+    {
+      "topic": "自信息（Self-Information / Surprisal）——单个事件有多意外的信息量",
+      "category": "类目 4：信息论基础",
+      "taught_at": "2026-07-22T08:03:00+08:00"
     }
   ],
-  "total_count": 162,
-  "last_updated": "2026-07-21T20:03:00+08:00"
+  "total_count": 163,
+  "last_updated": "2026-07-22T08:03:00+08:00"
 }
