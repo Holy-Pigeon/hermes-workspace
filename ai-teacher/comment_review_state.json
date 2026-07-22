@@ -164,9 +164,11 @@
     "3a4d8689-fc19-812e-a76d-dcdb6bfcd325",
     "3a4d8689-fc19-8170-9f7e-e78918e754e9",
     "3a5d8689-fc19-8153-998e-e37775d5709c",
-    "3a5d8689-fc19-8195-a0f0-d531ccbe69bf"
+    "3a5d8689-fc19-8195-a0f0-d531ccbe69bf",
+    "3a5d8689-fc19-811d-a6a1-f6cd8bc159e3"
   ],
   "page_titles": {
+    "3a5d8689-fc19-811d-a6a1-f6cd8bc159e3": "重参数化技巧（Reparameterization Trick）——把随机性挪到一边，让梯度能穿过\"抽签\"这一步",
     "3a5d8689-fc19-8195-a0f0-d531ccbe69bf": "Gumbel-Softmax（可微分采样）——让\"抽签\"这个动作也能传回梯度",
     "3a5d8689-fc19-8153-998e-e37775d5709c": "自信息（Self-Information / Surprisal）——单个事件有多意外的信息量",
     "3a4d8689-fc19-8170-9f7e-e78918e754e9": "伯努利分布（Bernoulli Distribution）——只有是和否两种结果的最小随机积木",
@@ -333,7 +335,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 44,
+  "cursor": 116,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -354,6 +356,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-22T14:10:38+0800",
-  "last_order_refresh": "2026-07-22T14:14:18+0800"
+  "last_review": "2026-07-22T20:11:05+0800",
+  "last_order_refresh": "2026-07-22T20:14:39+0800"
 }
