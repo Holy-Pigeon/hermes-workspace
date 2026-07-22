@@ -814,8 +814,13 @@
       "topic": "自信息（Self-Information / Surprisal）——单个事件有多意外的信息量",
       "category": "类目 4：信息论基础",
       "taught_at": "2026-07-22T08:03:00+08:00"
+    },
+    {
+      "topic": "Gumbel-Softmax（可微分采样）——让\"抽签\"这个动作也能传回梯度",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-22T14:03:00+08:00"
     }
   ],
-  "total_count": 163,
-  "last_updated": "2026-07-22T08:03:00+08:00"
+  "total_count": 164,
+  "last_updated": "2026-07-22T14:03:00+08:00"
 }
