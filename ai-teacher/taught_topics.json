@@ -819,8 +819,13 @@
       "topic": "Gumbel-Softmax（可微分采样）——让\"抽签\"这个动作也能传回梯度",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-22T14:03:00+08:00"
+    },
+    {
+      "topic": "重参数化技巧（Reparameterization Trick）——把随机性挪到一边，让梯度能穿过\"抽签\"这一步",
+      "category": "类目 3：概率与统计",
+      "taught_at": "2026-07-22T20:03:00+08:00"
     }
   ],
-  "total_count": 164,
-  "last_updated": "2026-07-22T14:03:00+08:00"
+  "total_count": 165,
+  "last_updated": "2026-07-22T20:03:00+08:00"
 }
