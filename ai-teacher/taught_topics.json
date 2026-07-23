@@ -834,8 +834,13 @@
       "topic": "Softmax 的雅可比矩阵（Softmax Jacobian）——反向传播时梯度到底怎么穿过 Softmax",
       "category": "类目 7：反向传播算法",
       "taught_at": "2026-07-23T14:03:00+08:00"
+    },
+    {
+      "topic": "注意力汇聚点（Attention Sink）——模型偷偷把注意力倒进第一个 token 的\"泄压阀\"",
+      "category": "类目 19：高效注意力",
+      "taught_at": "2026-07-23T20:03:00+08:00"
     }
   ],
-  "total_count": 167,
-  "last_updated": "2026-07-23T14:03:00+08:00"
+  "total_count": 168,
+  "last_updated": "2026-07-23T20:03:00+08:00"
 }
