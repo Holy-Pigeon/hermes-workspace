@@ -824,8 +824,13 @@
       "topic": "重参数化技巧（Reparameterization Trick）——把随机性挪到一边，让梯度能穿过\"抽签\"这一步",
       "category": "类目 3：概率与统计",
       "taught_at": "2026-07-22T20:03:00+08:00"
+    },
+    {
+      "topic": "牛顿法（Newton's Method）——借二阶曲率一步跳向谷底，以及深度学习为何偏偏不用它",
+      "category": "类目 8：优化算法",
+      "taught_at": "2026-07-23T08:03:00+08:00"
     }
   ],
-  "total_count": 165,
-  "last_updated": "2026-07-22T20:03:00+08:00"
+  "total_count": 166,
+  "last_updated": "2026-07-23T08:03:00+08:00"
 }
