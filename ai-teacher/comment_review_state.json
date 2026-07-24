@@ -168,9 +168,11 @@
     "3a5d8689-fc19-811d-a6a1-f6cd8bc159e3",
     "3a6d8689-fc19-81ac-8d06-d313252750c4",
     "3a6d8689-fc19-81ba-a09f-d35c7d3b1ccd",
-    "3a6d8689-fc19-81ca-9330-e0c7cc988b44"
+    "3a6d8689-fc19-81ca-9330-e0c7cc988b44",
+    "3a7d8689-fc19-811e-9354-f79a8ef15246"
   ],
   "page_titles": {
+    "3a7d8689-fc19-811e-9354-f79a8ef15246": "Gram-Schmidt 正交化过程——把一组歪斜的向量，掰成互不干扰的直角坐标轴",
     "3a6d8689-fc19-81ca-9330-e0c7cc988b44": "注意力汇聚点（Attention Sink）——模型偷偷把注意力倒进第一个 token 的\"泄压阀\"",
     "3a6d8689-fc19-81ba-a09f-d35c7d3b1ccd": "Softmax 的雅可比矩阵（Softmax Jacobian）——反向传播时梯度到底怎么穿过 Softmax",
     "3a6d8689-fc19-81ac-8d06-d313252750c4": "牛顿法（Newton's Method）——借二阶曲率一步跳向谷底，以及深度学习为何偏偏不用它",
@@ -341,7 +343,7 @@
     "372d8689-fc19-8154-bf12-f0b0666bafb7": "神经元模型（Artificial Neuron）——把多个输入压缩成一个可学习判断",
     "371d8689-fc19-812b-ace5-d4005fc4f91d": "张量操作（Tensor Operations）——让多维数据变成可批量计算的对象"
   },
-  "cursor": 70,
+  "cursor": 45,
   "resolved": {
     "37ed8689-fc19-8015-aac7-001d22ca1321": {
       "resolved_at": "2026-06-14T00:48:18+0800"
@@ -362,6 +364,6 @@
       "resolved_at": "2026-06-19T08:01:11+0800"
     }
   },
-  "last_review": "2026-07-23T20:10:46+0800",
-  "last_order_refresh": "2026-07-23T20:14:51+0800"
+  "last_review": "2026-07-24T08:10:36+0800",
+  "last_order_refresh": "2026-07-24T08:13:27+0800"
 }
