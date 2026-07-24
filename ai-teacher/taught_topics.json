@@ -844,8 +844,13 @@
       "topic": "Gram-Schmidt 正交化过程——把一组歪斜的向量，掰成互不干扰的直角坐标轴",
       "category": "类目 1：线性代数基础",
       "taught_at": "2026-07-24T08:03:00+08:00"
+    },
+    {
+      "topic": "QR 分解（QR Decomposition）——把任意矩阵拆成一次正交旋转加一次上三角拉伸",
+      "category": "类目 1：线性代数基础",
+      "taught_at": "2026-07-24T14:03:00+08:00"
     }
   ],
-  "total_count": 169,
-  "last_updated": "2026-07-24T08:03:00+08:00"
+  "total_count": 170,
+  "last_updated": "2026-07-24T14:03:00+08:00"
 }
